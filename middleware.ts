@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { NextResponse } from "next/server";
 
 import authConfig from "@/auth.config";
 import {
@@ -11,6 +12,7 @@ import {
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
+  // console.log("middleware.ts", req);
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -23,7 +25,14 @@ export default auth((req) => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+    return;
+  }
+
+  if (isPublicRoute) {
+    if (isLoggedIn) {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
     return;
   }
@@ -37,7 +46,7 @@ export default auth((req) => {
 
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
-    return Response.redirect(
+    return NextResponse.redirect(
       new URL(`/authentication/login?callback=${encodedCallbackUrl}`, nextUrl)
     );
   }
