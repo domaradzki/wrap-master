@@ -18,7 +18,7 @@
     "@mui/icons-material": "5.15.15",
     "@mui/lab": "5.0.0-alpha.170",
     "@mui/material": "5.15.15",
-    "@prisma/client": "^5.16.1",
+    "@prisma/client": "^5.16.2",
     "@tabler/icons-react": "2.30.0",
     "apexcharts": "3.41.1",
     "bcryptjs": "^2.4.3",
@@ -49,7 +49,7 @@
     "@types/uuid": "^9.0.8",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
-    "prisma": "^5.16.1",
+    "prisma": "^5.16.2",
     "typescript": "5.1.6"
   }
 }

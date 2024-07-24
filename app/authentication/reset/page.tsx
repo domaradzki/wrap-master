@@ -5,10 +5,11 @@ import { Grid, Box, Card, Stack, Typography } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthLogin from "../auth/AuthLogin";
+import AuthReset from "../auth/AuthReset";
 
-const LoginPage = () => {
+const ResetPage = () => {
   return (
-    <PageContainer title="Login" description="this is Login page">
+    <PageContainer title="Reset hasła" description="strona resetowania">
       <Box
         sx={{
           position: "relative",
@@ -47,7 +48,7 @@ const LoginPage = () => {
               <Box display="flex" alignItems="center" justifyContent="center">
                 <Logo />
               </Box>
-              <AuthLogin
+              <AuthReset
                 subtext={
                   <Typography
                     variant="subtitle1"
@@ -55,7 +56,7 @@ const LoginPage = () => {
                     color="textSecondary"
                     mb={1}
                   >
-                    Logowanie
+                    Resetowanie hasła
                   </Typography>
                 }
                 subtitle={
@@ -93,4 +94,4 @@ const LoginPage = () => {
     </PageContainer>
   );
 };
-export default LoginPage;
+export default ResetPage;

@@ -12,8 +12,12 @@ import {
 } from "@mui/material";
 
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { LogoutButton } from "@/app/authentication/auth/logout-button";
 
 const Profile = () => {
+  const user = useCurrentUser();
+  console.log(user);
   const [anchorEl2, setAnchorEl2] = useState(null);
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
@@ -82,15 +86,17 @@ const Profile = () => {
           <ListItemText>My Tasks</ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
-          <Button
-            href="/authentication/login"
-            variant="outlined"
-            color="primary"
-            component={Link}
-            fullWidth
-          >
-            Logout
-          </Button>
+          <LogoutButton>
+            <Button
+              href="/authentication/login"
+              variant="outlined"
+              color="primary"
+              component={Link}
+              fullWidth
+            >
+              Wyloguj
+            </Button>
+          </LogoutButton>
         </Box>
       </Menu>
     </Box>

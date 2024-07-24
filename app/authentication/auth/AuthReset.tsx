@@ -8,33 +8,33 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
-import { RegisterSchema } from "@/schemas";
-import { register } from "@/actions/register";
+import { ResetSchema } from "@/schemas";
+import { reset } from "@/actions/reset";
 
-interface registerType {
+interface resetType {
   title?: string;
   subtitle?: JSX.Element | JSX.Element[];
   subtext?: JSX.Element | JSX.Element[];
 }
 
-const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
+const AuthReset = ({ title, subtitle, subtext }: resetType) => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
-    defaultValues: { email: "", password: "", name: "" },
+  const form = useForm<z.infer<typeof ResetSchema>>({
+    resolver: zodResolver(ResetSchema),
+    defaultValues: { email: "" },
   });
 
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = (values: z.infer<typeof ResetSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      register(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+      reset(values).then((data) => {
+        setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   };
@@ -56,36 +56,8 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
               variant="subtitle1"
               fontWeight={600}
               component="label"
-              htmlFor="name"
-              mb="5px"
-            >
-              Nazwa
-            </Typography>
-            <Controller
-              name="name"
-              control={form.control}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <CustomTextField
-                    {...field}
-                    id="name"
-                    variant="outlined"
-                    fullWidth
-                    error={!!error}
-                    helperText={error?.message}
-                    disabled={isPending}
-                  />
-                </>
-              )}
-            />
-
-            <Typography
-              variant="subtitle1"
-              fontWeight={600}
-              component="label"
               htmlFor="email"
               mb="5px"
-              mt="25px"
             >
               Adres Email
             </Typography>
@@ -98,36 +70,11 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
                   id="email"
                   variant="outlined"
                   fullWidth
+                  placeholder="twoj@email.com"
                   error={!!error}
                   helperText={error?.message}
                   disabled={isPending}
-                />
-              )}
-            />
-
-            <Typography
-              variant="subtitle1"
-              fontWeight={600}
-              component="label"
-              htmlFor="password"
-              mb="5px"
-              mt="25px"
-            >
-              Hasło
-            </Typography>
-            <Controller
-              name="password"
-              control={form.control}
-              render={({ field, fieldState: { error } }) => (
-                <CustomTextField
-                  {...field}
-                  id="password"
-                  variant="outlined"
-                  fullWidth
-                  type="password"
-                  error={!!error}
-                  helperText={error?.message}
-                  disabled={isPending}
+                  type="email"
                 />
               )}
             />
@@ -150,13 +97,26 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
             type="submit"
             disabled={isPending}
           >
-            Zarejestruj
+            Resetuj hasło
           </Button>
         </form>
       </Box>
       {subtitle}
+      <Box mt={2}>
+        <Typography
+          component={Link}
+          href="/authentication/login"
+          fontWeight="500"
+          sx={{
+            textDecoration: "none",
+            color: "primary.main",
+          }}
+        >
+          Powrót do logowania
+        </Typography>
+      </Box>
     </>
   );
 };
 
-export default AuthRegister;
+export default AuthReset;

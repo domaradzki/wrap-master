@@ -5,20 +5,20 @@ import PageContainer from "@/app/(DashboardLayout)/components/container/PageCont
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthRegister from "../auth/AuthRegister";
 
-const Register2 = () => (
+const RegisterPage = () => (
   <PageContainer title="Register" description="this is Register page">
     <Box
       sx={{
         position: "relative",
         "&:before": {
           content: '""',
-          background: "radial-gradient(#d2f1df, #d3d7fa, #bad8f4)",
+          background: "radial-gradient(#3e5269, #4850bd, #0d2a46)",
           backgroundSize: "400% 400%",
           animation: "gradient 15s ease infinite",
           position: "absolute",
           height: "100%",
           width: "100%",
-          opacity: "0.3",
+          opacity: "0.8",
         },
       }}
     >
@@ -91,4 +91,4 @@ const Register2 = () => (
   </PageContainer>
 );
 
-export default Register2;
+export default RegisterPage;

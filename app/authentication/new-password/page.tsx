@@ -4,11 +4,12 @@ import { Grid, Box, Card, Stack, Typography } from "@mui/material";
 // components
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
-import AuthLogin from "../auth/AuthLogin";
+import AuthReset from "../auth/AuthReset";
+import AuthNewPassword from "../auth/AuthNewPassword";
 
-const LoginPage = () => {
+const NewPasswordPage = () => {
   return (
-    <PageContainer title="Login" description="this is Login page">
+    <PageContainer title="Nowe hasło" description="strona resetowania">
       <Box
         sx={{
           position: "relative",
@@ -47,7 +48,7 @@ const LoginPage = () => {
               <Box display="flex" alignItems="center" justifyContent="center">
                 <Logo />
               </Box>
-              <AuthLogin
+              <AuthNewPassword
                 subtext={
                   <Typography
                     variant="subtitle1"
@@ -55,7 +56,7 @@ const LoginPage = () => {
                     color="textSecondary"
                     mb={1}
                   >
-                    Logowanie
+                    Wpisz nowe hasło
                   </Typography>
                 }
                 subtitle={
@@ -70,18 +71,18 @@ const LoginPage = () => {
                       variant="h6"
                       fontWeight="500"
                     >
-                      Nie masz konta?
+                      Jednak pamiętasz?
                     </Typography>
                     <Typography
                       component={Link}
-                      href="/authentication/register"
+                      href="/authentication/login"
                       fontWeight="500"
                       sx={{
                         textDecoration: "none",
                         color: "primary.main",
                       }}
                     >
-                      Skontaktuj się z administratorem
+                      Powrót do logowania
                     </Typography>
                   </Stack>
                 }
@@ -93,4 +94,4 @@ const LoginPage = () => {
     </PageContainer>
   );
 };
-export default LoginPage;
+export default NewPasswordPage;

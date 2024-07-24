@@ -4,11 +4,11 @@ import { Grid, Box, Card, Stack, Typography } from "@mui/material";
 // components
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
-import AuthLogin from "../auth/AuthLogin";
+import AuthNewVerification from "../auth/AuthNewVerification";
 
-const LoginPage = () => {
+const NewVerificationPage = () => {
   return (
-    <PageContainer title="Login" description="this is Login page">
+    <PageContainer title="Reset hasła" description="strona resetowania">
       <Box
         sx={{
           position: "relative",
@@ -47,7 +47,7 @@ const LoginPage = () => {
               <Box display="flex" alignItems="center" justifyContent="center">
                 <Logo />
               </Box>
-              <AuthLogin
+              <AuthNewVerification
                 subtext={
                   <Typography
                     variant="subtitle1"
@@ -55,7 +55,7 @@ const LoginPage = () => {
                     color="textSecondary"
                     mb={1}
                   >
-                    Logowanie
+                    Potwierdzenie weryfikacji
                   </Typography>
                 }
                 subtitle={
@@ -70,18 +70,18 @@ const LoginPage = () => {
                       variant="h6"
                       fontWeight="500"
                     >
-                      Nie masz konta?
+                      Od nowa?
                     </Typography>
                     <Typography
                       component={Link}
-                      href="/authentication/register"
+                      href="/authentication/login"
                       fontWeight="500"
                       sx={{
                         textDecoration: "none",
                         color: "primary.main",
                       }}
                     >
-                      Skontaktuj się z administratorem
+                      Wróć do logowania
                     </Typography>
                   </Stack>
                 }
@@ -93,4 +93,4 @@ const LoginPage = () => {
     </PageContainer>
   );
 };
-export default LoginPage;
+export default NewVerificationPage;
