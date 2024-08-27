@@ -1,19 +1,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Avatar,
-  Box,
-  Menu,
-  Button,
-  IconButton,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Avatar, Box, Menu, Button, IconButton } from "@mui/material";
 
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { LogoutButton } from "@/app/authentication/auth/logout-button";
+import ProfileItem from "@/components/profile-item";
 
 const Profile = () => {
   const user = useCurrentUser();
@@ -67,24 +59,7 @@ const Profile = () => {
           },
         }}
       >
-        <MenuItem>
-          <ListItemIcon>
-            <IconUser width={20} />
-          </ListItemIcon>
-          <ListItemText>My Profile</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconMail width={20} />
-          </ListItemIcon>
-          <ListItemText>My Account</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconListCheck width={20} />
-          </ListItemIcon>
-          <ListItemText>My Tasks</ListItemText>
-        </MenuItem>
+        <ProfileItem title="Mój profil" href="/profile" icon={IconUser} />
         <Box mt={1} py={1} px={2}>
           <LogoutButton>
             <Button

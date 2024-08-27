@@ -1,11 +1,13 @@
 import {
-  IconAperture,
-  IconCopy,
+  IconReport,
+  IconPaint,
   IconLayoutDashboard,
   IconLogin,
-  IconMoodHappy,
-  IconTypography,
+  IconHomeUp,
+  IconFolderOpen,
   IconUserPlus,
+  IconBriefcase,
+  IconSettings,
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -15,7 +17,43 @@ const Menuitems = [
     id: uniqueId(),
     title: "Pulpit",
     icon: IconLayoutDashboard,
-    href: "/",
+    href: "/dashboard",
+  },
+  {
+    id: uniqueId(),
+    title: "Zamówienia",
+    icon: IconFolderOpen,
+    href: "/orders",
+  },
+  {
+    id: uniqueId(),
+    title: "Produkcja",
+    icon: IconHomeUp,
+    href: "/production",
+  },
+  {
+    id: uniqueId(),
+    title: "Nadruk",
+    icon: IconPaint,
+    href: "/prints",
+  },
+  {
+    id: uniqueId(),
+    title: "Raporty",
+    icon: IconReport,
+    href: "/raports",
+  },
+  {
+    id: uniqueId(),
+    title: "Administracja",
+    icon: IconBriefcase,
+    href: "/administration",
+  },
+  {
+    id: uniqueId(),
+    title: "Ustawienia",
+    icon: IconSettings,
+    href: "/settings",
   },
   {
     navlabel: true,

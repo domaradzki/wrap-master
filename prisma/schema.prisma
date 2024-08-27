@@ -2,8 +2,6 @@
 datasource db {
   provider  = "postgresql"
   url  	    = env("DATABASE_URL")
-  // uncomment next line if you use Prisma <5.10
-  // directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 generator client {
@@ -81,4 +79,33 @@ model TwoFactorConfirmation {
   user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+}
+
+model Product {
+  id              Int      @id @default(autoincrement())
+  documentId      Int
+  dateInsert      DateTime
+  signature       String
+  symbol          String
+  details         String?
+  closed          Boolean
+  documentStatus  Int
+  client          String
+  companyId       Int
+  trader          String
+  deliveryAddress String?
+  quantity        Int
+  price           Float
+  netValue        Float
+  itemId          String
+  currency        String
+  exchangeRate    Float
+  code            String
+  assortment      String
+  unit            String
+  type            String
+  kind            String
+  numberOfDocumentInvoice Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
