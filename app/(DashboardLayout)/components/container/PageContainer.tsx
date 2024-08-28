@@ -1,6 +1,6 @@
 // import { Helmet } from 'react-helmet';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
-
+import { Helmet, HelmetProvider } from "react-helmet-async";
+import NavbarBreadcrumbs from "../navbreadcrumbs/navbreadcrumbs";
 
 type Props = {
   description?: string;
@@ -15,6 +15,7 @@ const PageContainer = ({ title, description, children }: Props) => (
         <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet>
+      <NavbarBreadcrumbs title={title ?? ""} />
       {children}
     </div>
   </HelmetProvider>

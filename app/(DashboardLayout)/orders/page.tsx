@@ -1,8 +1,8 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
+import { reduceDocuments, ReducedDocument } from "@/lib/reducer";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
-  Box,
   Table,
   TableBody,
   TableCell,
@@ -12,102 +12,122 @@ import {
   Typography,
   Paper,
   Container,
+  Stack,
+  Box,
+  Tab,
 } from "@mui/material";
 import PageContainer from "../components/container/PageContainer";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import Link from "next/link";
+import { IconButton, Tooltip } from "@mui/material";
+import { CheckCircleOutline, Edit } from "@mui/icons-material";
 
-interface Order {
-  documentId: number;
-  dateInsert: string;
-  signature: string;
-  symbol: string;
-  details: string;
-  closed: boolean;
-  documentStatus: number;
-  client: string;
-  companyId: number;
-  trader: string;
-  deliveryAddress: string;
-  quantity: number;
-  price: number;
-  netValue: number;
-  itemId: string;
-  currency: string;
-  exchangeRate: number;
-  code: string;
-  assortment: string;
-  unit: string;
-  type: string;
-  kind: string;
-  numberOfDocumentInvoice?: number;
-}
+const fetchOrders = async () => {
+  const response = await fetch("/api/orders");
+  if (!response.ok) {
+    throw new Error("Failed to fetch orders");
+  }
+  const data = await response.json();
+  return reduceDocuments(data);
+};
 
 const OrdersPage = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [value, setValue] = React.useState("1");
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await fetch("/api/orders");
-        if (!response.ok) {
-          throw new Error("Failed to fetch orders");
-        }
-        const data = await response.json();
-        setOrders(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
-    fetchOrders();
-  }, []);
-  console.log(orders);
+  const {
+    data: orders,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["orders"], // Key for the query
+    queryFn: fetchOrders, // Function to fetch the data
+  });
 
-  if (loading) {
+  if (isLoading) {
     return <Typography>Loading...</Typography>;
   }
 
   if (error) {
-    return <Typography color="error">{error}</Typography>;
+    return <Typography color="error">{error.message}</Typography>;
   }
 
   return (
     <PageContainer title="Zamówienia" description="Twoje zamówienia">
-      <Container>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Document</TableCell>
-                <TableCell>Date Insert</TableCell>
-                <TableCell>Client</TableCell>
-                <TableCell>Symbol</TableCell>
-                <TableCell>Handlowiec</TableCell>
-                <TableCell>Closed</TableCell>
-                <TableCell>Kwota</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.documentId}>
-                  <TableCell>{order.signature}</TableCell>
-                  <TableCell>
-                    {new Date(order.dateInsert).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>{order.client}</TableCell>
-                  <TableCell>{order.symbol}</TableCell>
-                  <TableCell>{order.trader}</TableCell>
-                  <TableCell>{order.closed ? "Yes" : "No"}</TableCell>
-                  <TableCell>{order.netValues}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
+      <Box sx={{ width: "100%", typography: "body1" }}>
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleChange} aria-label="lista zamówień">
+              <Tab label="Nowe" value="1" />
+              <Tab label="Wprowadzone" value="2" />
+            </TabList>
+          </Box>
+
+          <TabPanel value="1">
+            <Stack
+              spacing={2}
+              sx={{
+                pt: 2,
+                pb: 4,
+              }}
+            >
+              <Typography variant="h4">Nowe Zamówienia</Typography>
+            </Stack>
+            <Paper sx={{ width: "100%", overflow: "hidden" }}>
+              <TableContainer>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Numer dokumentu</TableCell>
+                      <TableCell>Data wprowadzenia</TableCell>
+                      <TableCell>Zamawiający</TableCell>
+                      <TableCell>Symbol</TableCell>
+                      <TableCell>Handlowiec</TableCell>
+                      <TableCell>Zamkniety</TableCell>
+                      <TableCell>Szczegóły</TableCell>
+                      <TableCell>Akcje</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {orders?.map((order: ReducedDocument) => (
+                      <TableRow key={order.documentId}>
+                        <TableCell>{order.signature}</TableCell>
+                        <TableCell>
+                          {new Date(order.dateInsert).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>{order.client}</TableCell>
+                        <TableCell>{order.symbol}</TableCell>
+                        <TableCell>{order.trader}</TableCell>
+                        <TableCell>{order.closed ? "Yes" : "No"}</TableCell>
+                        <TableCell>{order.details}</TableCell>{" "}
+                        <TableCell>
+                          <Stack direction="row" spacing={1}>
+                            <Link href={`/orders/${order.documentId}`} passHref>
+                              <Tooltip title="Edytuj">
+                                <IconButton>
+                                  <Edit />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                            <Tooltip title="Zatwierdź">
+                              <IconButton>
+                                <CheckCircleOutline />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </TabPanel>
+        </TabContext>
+      </Box>
     </PageContainer>
   );
 };
