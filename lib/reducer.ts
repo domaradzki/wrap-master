@@ -1,5 +1,4 @@
 interface Document {
-  assortment: string;
   client: string;
   closed: boolean;
   code: string;
@@ -11,8 +10,8 @@ interface Document {
   documentId: number;
   documentStatus: number;
   exchangeRate: null | number;
-  itemId: number;
-  itemRef: string;
+  orderId: number;
+  productId: string;
   kind: string;
   netValue: number;
   price: number;
@@ -22,17 +21,17 @@ interface Document {
   trader: string;
   type: string;
   unit: string;
+  assortment: string;
   TimeStamp: { data: number[] };
 }
 
 export interface ReducedDocument {
-  assortment: string;
   client: string;
-  closed: boolean;
   companyId: number;
+  closed: boolean;
+  deliveryAddress: string;
   currency: string;
   dateInsert: string;
-  deliveryAddress: string;
   details: string;
   documentId: number;
   documentStatus: number;
@@ -42,11 +41,11 @@ export interface ReducedDocument {
   trader: string;
   timestamp: number;
   products: {
-    itemId: number;
+    orderId: number;
     quantity: number;
     price: number;
     netValue: number;
-    itemRef: string;
+    productId: string;
     code: string;
     assortment: string;
     unit: string;
@@ -63,11 +62,11 @@ export const reduceDocuments = (documents: Document[]): ReducedDocument[] => {
 
     if (existingDocument) {
       existingDocument.products.push({
-        itemId: current.itemId,
+        orderId: current.orderId,
         quantity: current.quantity,
         price: current.price,
         netValue: current.netValue,
-        itemRef: current.itemRef,
+        productId: current.productId,
         code: current.code,
         assortment: current.assortment,
         unit: current.unit,
@@ -76,7 +75,6 @@ export const reduceDocuments = (documents: Document[]): ReducedDocument[] => {
       });
     } else {
       acc.push({
-        assortment: current.assortment,
         client: current.client,
         closed: current.closed,
         companyId: current.companyId,
@@ -93,11 +91,11 @@ export const reduceDocuments = (documents: Document[]): ReducedDocument[] => {
         timestamp: current.TimeStamp.data[current.TimeStamp.data.length - 1],
         products: [
           {
-            itemId: current.itemId,
+            orderId: current.orderId,
             quantity: current.quantity,
             price: current.price,
             netValue: current.netValue,
-            itemRef: current.itemRef,
+            productId: current.productId,
             code: current.code,
             assortment: current.assortment,
             unit: current.unit,

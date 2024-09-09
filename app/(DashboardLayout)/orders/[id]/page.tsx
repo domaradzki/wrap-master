@@ -1,4 +1,5 @@
-import { useRouter } from "next/router";
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,
@@ -10,74 +11,138 @@ import {
   Typography,
   Paper,
   Container,
+  Box,
+  Button,
+  Modal,
+  Stack,
 } from "@mui/material";
 import PageContainer from "../../components/container/PageContainer";
+import { newOrdersFetch } from "@/data/new-orders";
+import { ReducedDocument } from "@/lib/reducer";
+import { useEffect, useState } from "react";
+import ProductEditForm from "../components/ProductEditForm";
+import DetailsEditForm from "../components/DetailsEditForm";
+// import structureDocumentWithProducts from "@/utils/structure";
+import { newOrderActiveFetch } from "@/data/new-active-order";
 
-const fetchDocument = async (id: string) => {
-  const response = await fetch(`/api/documents/${id}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch document");
+const OrderPage = ({ params }: { params: { id: string } }) => {
+  // const [order, setOrder] = useState<ReducedDocument | null>(null);
+  const { id } = params;
+
+  const {
+    data: order,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["order"], // Key for the query
+    queryFn: () => newOrderActiveFetch({ id }), // Function to fetch the data
+  });
+
+  // useEffect(() => {
+  //   if (orders) {
+  //     const [data] =
+  //       orders?.filter((order) => order.documentId === Number(id)) ?? [];
+  //     // console.log("Structured-Order", structureDocumentWithProducts(order));
+  //     const ed = structureDocumentWithProducts(data);
+  //     setOrder(ed);
+  //   }
+  // }, [orders]);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+
+  const handleOpenEditModal = () => {
+    setOpenEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false);
+  };
+
+  const [editedOrder, setEditedOrder] = useState<ReducedDocument | null>(null);
+
+  useEffect(() => {
+    if (order) {
+      setEditedOrder({ ...order });
+    }
+  }, [order]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Handle form submission logic here
+    console.log("Form submitted:", editedOrder);
+    // Update the order data here
+    // setOrder(editedOrder);
+    handleCloseEditModal();
+  };
+  console.log("ORDER", order);
+
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
   }
-  const data = await response.json();
-  return data;
-};
 
-const DocumentPage = () => {
-  const router = useRouter();
-  const { id } = router.query;
-
-  //   const {
-  //     data: document,
-  //     isLoading,
-  //     error,
-  //   } = useQuery({
-  //     queryKey: ["document", id], // Key for the query
-  //     queryFn: () => fetchDocument(id as string), // Function to fetch the data
-  //   });
-
-  //   if (isLoading) {
-  //     return <Typography>Loading...</Typography>;
-  //   }
-
-  //   if (error) {
-  //     return <Typography color="error">{error.message}</Typography>;
-  //   }
+  if (error) {
+    return <Typography color="error">{error.message}</Typography>;
+  }
 
   return (
-    <PageContainer title={id} description="Szczegóły dokumentu">
-      <Container>
-        <TableContainer component={Paper}>
+    <PageContainer title="Zamówienie" description="Szczegóły zamówienia">
+      <Container sx={{ maxWidth: "100%", padding: 2 }}>
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="h4">Dane dokumentu</Typography>
+        </Box>
+        <TableContainer component={Paper} sx={{ width: "100%" }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Numer dokumentu</TableCell>
                 <TableCell>Data wprowadzenia</TableCell>
+                <TableCell>Numer dokumentu</TableCell>
                 <TableCell>Zamawiający</TableCell>
                 <TableCell>Symbol</TableCell>
                 <TableCell>Handlowiec</TableCell>
-                <TableCell>Zamkniety</TableCell>
+                <TableCell>Status dokumentu</TableCell>
                 <TableCell>Szczegóły</TableCell>
+                <TableCell>Akcje</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* <TableRow key={document.documentId}>
-                <TableCell>{document.signature}</TableCell>
-                <TableCell>
-                  {new Date(document.dateInsert).toLocaleDateString()}
-                </TableCell>
-                <TableCell>{document.client}</TableCell>
-                <TableCell>{document.symbol}</TableCell>
-                <TableCell>{document.trader}</TableCell>
-                <TableCell>{document.closed ? "Yes" : "No"}</TableCell>
-                <TableCell>{document.details}</TableCell>
-              </TableRow> */}
+              {order && (
+                <TableRow key={order.documentId}>
+                  <TableCell>
+                    {new Date(order.dateInsert).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>{order.signature}</TableCell>
+                  <TableCell>{order.client}</TableCell>
+                  <TableCell>{order.symbol}</TableCell>
+                  <TableCell>{order.trader}</TableCell>
+                  <TableCell>
+                    {order.closed ? "Zamkniety" : "Otwarty"}
+                  </TableCell>
+                  <TableCell>{order.details}</TableCell>
+                  <TableCell>
+                    <Button onClick={handleOpenEditModal}>Edytuj</Button>
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
 
-        {/* Add a form or other details as needed */}
-        <Typography variant="h5">Produkty</Typography>
-        <TableContainer component={Paper}>
+        <Box sx={{ marginTop: 2, marginBottom: 2 }}>
+          <Typography variant="h5">Produkty</Typography>
+        </Box>
+        <TableContainer component={Paper} sx={{ width: "100%" }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -85,23 +150,77 @@ const DocumentPage = () => {
                 <TableCell>Ilość</TableCell>
                 <TableCell>Cena</TableCell>
                 <TableCell>Wartość netto</TableCell>
+                <TableCell>Status produktu</TableCell>
+                <TableCell>Akcje</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {document.products.map((product) => (
-                <TableRow key={product.itemId}>
-                  <TableCell>{product.assortment}</TableCell>
-                  <TableCell>{product.quantity}</TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.netValue}</TableCell>
-                </TableRow>
-              ))} */}
+              {order &&
+                order.products.map((product) => (
+                  <TableRow key={product.orderId}>
+                    <TableCell>{product.assortment}</TableCell>
+                    <TableCell>{product.quantity}</TableCell>
+                    <TableCell>{product.price}</TableCell>
+                    <TableCell>{product.netValue}</TableCell>
+                    <TableCell>{product.status || "Brak statusu"}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => handleOpenModal(product)}>
+                        Edytuj
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Container>
+
+      {/* Modal for editing document */}
+      <Modal open={openEditModal} onClose={handleCloseEditModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 800,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <DetailsEditForm
+            order={editedOrder}
+            onSubmit={handleSubmit}
+            onClose={handleCloseEditModal}
+          />
+        </Box>
+      </Modal>
+
+      {/* Modal for editing product */}
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "1px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <ProductEditForm
+            product={selectedProduct}
+            onClose={handleCloseModal}
+          />
+        </Box>
+      </Modal>
     </PageContainer>
   );
 };
 
-export default DocumentPage;
+export default OrderPage;

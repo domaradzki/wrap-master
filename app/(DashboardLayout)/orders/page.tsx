@@ -1,4 +1,5 @@
 "use client";
+
 import { reduceDocuments, ReducedDocument } from "@/lib/reducer";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -21,15 +22,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Link from "next/link";
 import { IconButton, Tooltip } from "@mui/material";
 import { CheckCircleOutline, Edit } from "@mui/icons-material";
-
-const fetchOrders = async () => {
-  const response = await fetch("/api/orders");
-  if (!response.ok) {
-    throw new Error("Failed to fetch orders");
-  }
-  const data = await response.json();
-  return reduceDocuments(data);
-};
+import { newOrdersFetch } from "@/data/new-orders";
 
 const OrdersPage = () => {
   const [value, setValue] = React.useState("1");
@@ -44,7 +37,7 @@ const OrdersPage = () => {
     error,
   } = useQuery({
     queryKey: ["orders"], // Key for the query
-    queryFn: fetchOrders, // Function to fetch the data
+    queryFn: newOrdersFetch, // Function to fetch the data
   });
 
   if (isLoading) {
@@ -102,7 +95,7 @@ const OrdersPage = () => {
                         <TableCell>{order.symbol}</TableCell>
                         <TableCell>{order.trader}</TableCell>
                         <TableCell>{order.closed ? "Yes" : "No"}</TableCell>
-                        <TableCell>{order.details}</TableCell>{" "}
+                        <TableCell>{order.details}</TableCell>
                         <TableCell>
                           <Stack direction="row" spacing={1}>
                             <Link href={`/orders/${order.documentId}`} passHref>

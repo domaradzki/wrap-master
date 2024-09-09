@@ -1,7 +1,7 @@
 // prisma/schema.prisma
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -14,31 +14,31 @@ enum UserRole {
 }
 
 model User {
-  id                  String    @id @default(cuid())
-  name                String?
-  email               String?   @unique
-  emailVerified       DateTime?
-  image               String?
-  password            String?
-  role                UserRole @default(USER)
-  accounts            Account[]
-  isTwoFactorEnabled  Boolean @default(false)
+  id                    String                 @id @default(cuid())
+  name                  String?
+  email                 String?                @unique
+  emailVerified         DateTime?
+  image                 String?
+  password              String?
+  role                  UserRole               @default(USER)
+  accounts              Account[]
+  isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -46,66 +46,106 @@ model Account {
 }
 
 model VerificationToken {
-  id                String @id @default(cuid())
-  email             String
-  token             String @unique
-  expires           DateTime
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
 
   @@unique([email, token])
 }
 
 model PasswordResetToken {
-  id                String @id @default(cuid())
-  email             String
-  token             String @unique
-  expires           DateTime
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
 
   @@unique([email, token])
 }
 
 model TwoFactorToken {
-  id                String @id @default(cuid())
-  email             String
-  token             String @unique
-  expires           DateTime
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
 
   @@unique([email, token])
 }
 
 model TwoFactorConfirmation {
-  id      String @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId   String
-  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
 }
 
-model Product {
-  id              Int      @id @default(autoincrement())
-  documentId      Int
-  dateInsert      DateTime
-  signature       String
-  symbol          String
-  details         String?
-  closed          Boolean
-  documentStatus  Int
+model Document {
+  id             String   @id @default(cuid())
+  documentId     String   @unique
+  documentStatus Int
+  symbol         String
+  signature      String
+  trader         String
+  companyId      String
+  currency       String
+  dateInsert     DateTime
+  details        String
+  exchangeRate   Float?
+  timestamp      Int
+  company        Company  @relation(fields: [companyId], references: [id])
+  orders         Order[]
+  closed         Boolean
+}
+
+model Company {
+  id              String     @id @default(cuid())
+  deliveryAddress String
   client          String
-  companyId       Int
-  trader          String
-  deliveryAddress String?
-  quantity        Int
-  price           Float
-  netValue        Float
-  itemId          String
-  currency        String
-  exchangeRate    Float
-  code            String
-  assortment      String
-  unit            String
-  type            String
-  kind            String
-  numberOfDocumentInvoice Int?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  companyId       String     @unique
+  documents       Document[]
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  orderId    String   @unique
+  documentId String
+  document   Document @relation(fields: [documentId], references: [documentId])
+  productId  String?
+  product    Product? @relation(fields: [productId], references: [id])
+  netValue   Float
+  price      Float
+  quantity   Int
+}
+
+model Product {
+  id                String    @id @default(cuid())
+  productId         String    @unique
+  assortment        String
+  code              String
+  kind              String
+  type              String
+  unit              String
+  productCode       String?
+  postfix           String?
+  dateOfRealisation DateTime?
+
+  sleeve           Int?
+  stretchThickness Int?
+  netWeight        Float?
+  grossWeight      Float?
+  stretchColor     String?
+
+  tapeLong       Int?
+  tapeWidth      Int?
+  tapeThickness  Int?
+  numberOfColors Int?
+  glue           String?
+  tapeColor      String?
+  color1         String?
+  color2         String?
+  color3         String?
+
+  orders Order[]
 }
