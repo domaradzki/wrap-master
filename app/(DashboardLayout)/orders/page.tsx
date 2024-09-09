@@ -74,14 +74,46 @@ const OrdersPage = () => {
                 <Table stickyHeader aria-label="sticky table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Numer dokumentu</TableCell>
-                      <TableCell>Data wprowadzenia</TableCell>
-                      <TableCell>Zamawiający</TableCell>
-                      <TableCell>Symbol</TableCell>
-                      <TableCell>Handlowiec</TableCell>
-                      <TableCell>Zamkniety</TableCell>
-                      <TableCell>Szczegóły</TableCell>
-                      <TableCell>Akcje</TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                      >
+                        Numer dokumentu
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                      >
+                        Data wprowadzenia
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                      >
+                        Zamawiający
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                      >
+                        Symbol
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                      >
+                        Handlowiec
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                      >
+                        Zamkniety
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                      >
+                        Szczegóły
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                      >
+                        Akcje
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

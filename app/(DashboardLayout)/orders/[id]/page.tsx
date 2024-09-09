@@ -17,12 +17,10 @@ import {
   Stack,
 } from "@mui/material";
 import PageContainer from "../../components/container/PageContainer";
-import { newOrdersFetch } from "@/data/new-orders";
 import { ReducedDocument } from "@/lib/reducer";
 import { useEffect, useState } from "react";
 import ProductEditForm from "../components/ProductEditForm";
 import DetailsEditForm from "../components/DetailsEditForm";
-// import structureDocumentWithProducts from "@/utils/structure";
 import { newOrderActiveFetch } from "@/data/new-active-order";
 
 const OrderPage = ({ params }: { params: { id: string } }) => {
@@ -37,16 +35,6 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     queryKey: ["order"], // Key for the query
     queryFn: () => newOrderActiveFetch({ id }), // Function to fetch the data
   });
-
-  // useEffect(() => {
-  //   if (orders) {
-  //     const [data] =
-  //       orders?.filter((order) => order.documentId === Number(id)) ?? [];
-  //     // console.log("Structured-Order", structureDocumentWithProducts(order));
-  //     const ed = structureDocumentWithProducts(data);
-  //     setOrder(ed);
-  //   }
-  // }, [orders]);
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
