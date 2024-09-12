@@ -1,5 +1,6 @@
 "use client";
 
+import { styled } from "@mui/material/styles";
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,
@@ -22,9 +23,14 @@ import { useEffect, useState } from "react";
 import ProductEditForm from "../components/ProductEditForm";
 import DetailsEditForm from "../components/DetailsEditForm";
 import { newOrderActiveFetch } from "@/data/new-active-order";
+import { Document, Order } from "@/utils/structure";
+
+const HeadCell = styled(TableCell)({
+  fontWeight: "bold",
+  backgroundColor: "#f5f5f5",
+});
 
 const OrderPage = ({ params }: { params: { id: string } }) => {
-  // const [order, setOrder] = useState<ReducedDocument | null>(null);
   const { id } = params;
 
   const {
@@ -37,9 +43,18 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
   });
 
   const [openModal, setOpenModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState<Order | null>(null);
 
-  const handleOpenModal = (product) => {
+  interface Product {
+    orderId: string;
+    assortment: string;
+    quantity: number;
+    price: number;
+    netValue: number;
+    status?: string;
+  }
+
+  const handleOpenModal = (product: Order) => {
     setSelectedProduct(product);
     setOpenModal(true);
   };
@@ -58,7 +73,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     setOpenEditModal(false);
   };
 
-  const [editedOrder, setEditedOrder] = useState<ReducedDocument | null>(null);
+  const [editedOrder, setEditedOrder] = useState<Document | null>(null);
 
   useEffect(() => {
     if (order) {
@@ -94,32 +109,26 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Data wprowadzenia</TableCell>
-                <TableCell>Numer dokumentu</TableCell>
-                <TableCell>Zamawiający</TableCell>
-                <TableCell>Symbol</TableCell>
-                <TableCell>Handlowiec</TableCell>
-                <TableCell>Status dokumentu</TableCell>
-                <TableCell>Szczegóły</TableCell>
-                <TableCell>Akcje</TableCell>
+                <HeadCell>Data wprowadzenia</HeadCell>
+                <HeadCell>Numer dokumentu</HeadCell>
+                <HeadCell>Zamawiający</HeadCell>
+                <HeadCell>Adres</HeadCell>
+                <HeadCell>Handlowiec</HeadCell>
+                <HeadCell>Status dokumentu</HeadCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {order && (
+              {!isLoading && order && (
                 <TableRow key={order.documentId}>
                   <TableCell>
                     {new Date(order.dateInsert).toLocaleDateString()}
                   </TableCell>
                   <TableCell>{order.signature}</TableCell>
-                  <TableCell>{order.client}</TableCell>
-                  <TableCell>{order.symbol}</TableCell>
+                  <TableCell>{order.company.name}</TableCell>
+                  <TableCell>{order.company.deliveryAddress}</TableCell>
                   <TableCell>{order.trader}</TableCell>
                   <TableCell>
                     {order.closed ? "Zamkniety" : "Otwarty"}
-                  </TableCell>
-                  <TableCell>{order.details}</TableCell>
-                  <TableCell>
-                    <Button onClick={handleOpenEditModal}>Edytuj</Button>
                   </TableCell>
                 </TableRow>
               )}
@@ -134,28 +143,22 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Produkt</TableCell>
-                <TableCell>Ilość</TableCell>
-                <TableCell>Cena</TableCell>
-                <TableCell>Wartość netto</TableCell>
-                <TableCell>Status produktu</TableCell>
-                <TableCell>Akcje</TableCell>
+                <HeadCell>Produkt</HeadCell>
+                <HeadCell>Ilość</HeadCell>
+                <HeadCell>Cena</HeadCell>
+                <HeadCell>Wartość netto</HeadCell>
+                <HeadCell>Typ</HeadCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {order &&
-                order.products.map((product) => (
-                  <TableRow key={product.orderId}>
-                    <TableCell>{product.assortment}</TableCell>
-                    <TableCell>{product.quantity}</TableCell>
-                    <TableCell>{product.price}</TableCell>
-                    <TableCell>{product.netValue}</TableCell>
-                    <TableCell>{product.status || "Brak statusu"}</TableCell>
-                    <TableCell>
-                      <Button onClick={() => handleOpenModal(product)}>
-                        Edytuj
-                      </Button>
-                    </TableCell>
+              {!isLoading &&
+                order?.orders.map((order: Order) => (
+                  <TableRow key={order.orderId}>
+                    <TableCell>{order.product.assortment}</TableCell>
+                    <TableCell>{order.quantity}</TableCell>
+                    <TableCell>{order.price}</TableCell>
+                    <TableCell>{order.netValue}</TableCell>
+                    <TableCell>{order.product.type}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>

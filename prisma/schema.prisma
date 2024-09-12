@@ -100,65 +100,64 @@ model Document {
 }
 
 model Company {
-  id              String     @id @default(cuid())
-  deliveryAddress String
-  client          String
-  companyId       String     @unique
-  documents       Document[]
+  id        String     @id @default(cuid())
+  companyId String     @unique
+  name      String
+  address   String
+  documents Document[]
 }
 
 model Order {
-  id         String   @id @default(cuid())
-  orderId    String   @unique
-  documentId String
-  document   Document @relation(fields: [documentId], references: [documentId])
-  productId  String?
-  product    Product? @relation(fields: [productId], references: [id])
-  netValue   Float
-  price      Float
-  quantity   Int
+  id                String    @id @default(cuid())
+  orderId           String    @unique
+  documentId        String
+  document          Document  @relation(fields: [documentId], references: [documentId])
+  netValue          Float
+  price             Float
+  quantity          Int
+  dateOfRealisation DateTime?
+  productType       String
+  productId         String?
+  product           Product?  @relation(fields: [productId], references: [productId])
 }
 
 model Product {
-  id                String      @id @default(cuid())
-  productId         String      @unique
-  assortment        String
-  code              String
-  kind              ProductKind
-  type              ProductType // Type of product (e.g., "FSRG", "FSMG", "FSM", "TPD")
-  unit              String
-  postfix           String?
-  dateOfRealisation DateTime?
-  productCode       String?
-
-  sleeve           Int?    @map("sleeve_FSRG")
-  stretchThickness Int?    @map("stretchThickness_FSRG")
-  netWeight        Float?  @map("netWeight_FSRG")
-  grossWeight      Float?  @map("grossWeight_FSRG")
-  stretchColor     String? @map("stretchColor_FSRG")
-
-  tapeLong       Int?    @map("tapeLong_TPD")
-  tapeWidth      Int?    @map("tapeWidth_TPD")
-  tapeThickness  Int?    @map("tapeThickness_TPD")
-  numberOfColors Int?    @map("numberOfColors_TPD")
-  glue           String? @map("glue_TPD")
-  tapeColor      String? @map("tapeColor_TPD")
-  color1         String? @map("color1_TPD")
-  color2         String? @map("color2_TPD")
-  color3         String? @map("color3_TPD")
-
-  orders Order[]
+  id          String  @id @default(cuid())
+  productId   String  @unique
+  assortment  String
+  code        String
+  kind        String
+  type        String
+  unit        String
+  postfix     String?
+  productCode String?
+  orders      Order[]
+  stretch     FS[]
+  tape        Tape[]
 }
 
-enum ProductType {
-  FSRG
-  FSMG
-  FSM
-  TPD
-  TP
+model FS {
+  id               String  @id @default(cuid())
+  sleeve           Int?
+  stretchThickness Int?
+  netWeight        Float?
+  grossWeight      Float?
+  stretchColor     String?
+  productId        String  @unique
+  product          Product @relation(fields: [productId], references: [productId])
 }
 
-enum ProductKind {
-  KT
-  TW
+model Tape {
+  id             String  @id @default(cuid())
+  tapeLong       Int?
+  tapeWidth      Int?
+  tapeThickness  Int?
+  numberOfColors Int?
+  glue           String?
+  tapeColor      String?
+  color1         String?
+  color2         String?
+  color3         String?
+  productId      String  @unique
+  product        Product @relation(fields: [productId], references: [productId])
 }

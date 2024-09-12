@@ -1,5 +1,5 @@
 import { reduceDocuments } from "@/lib/reducer";
-import structureDocumentWithProducts from "@/utils/structure";
+import structureDocumentWithProducts, { Document } from "@/utils/structure";
 
 export const newOrderActiveFetch = async ({ id }: { id: string }) => {
   const response = await fetch("../../orders.json");
@@ -13,5 +13,5 @@ export const newOrderActiveFetch = async ({ id }: { id: string }) => {
   const [filtered] =
     reduced?.filter((order) => order.documentId === Number(id)) ?? [];
   const activeOrder = structureDocumentWithProducts(filtered);
-  return activeOrder;
+  return activeOrder as Document;
 };

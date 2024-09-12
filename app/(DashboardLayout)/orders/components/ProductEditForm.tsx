@@ -1,3 +1,4 @@
+import { Order } from "@/utils/structure";
 import {
   Box,
   Button,
@@ -8,16 +9,8 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-interface Product {
-  itemId: number;
-  quantity: number;
-  price: number;
-  netValue: number;
-  assortment: string;
-}
-
 interface ProductEditFormProps {
-  product: Product | null;
+  product: Order | null;
   onClose: () => void;
 }
 

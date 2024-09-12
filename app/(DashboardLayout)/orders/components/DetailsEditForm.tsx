@@ -1,4 +1,5 @@
 import { ReducedDocument } from "@/lib/reducer";
+import { Document } from "@/utils/structure";
 import {
   Box,
   Button,
@@ -14,7 +15,7 @@ import {
 import { useState } from "react";
 
 interface DetailsEditFormProps {
-  order: ReducedDocument | null;
+  order: Document | null;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
 }
@@ -25,15 +26,15 @@ const DetailsEditForm = ({
   onClose,
 }: DetailsEditFormProps) => {
   const [assortment, setAssortment] = useState(order?.signature || "");
-  const [client, setClient] = useState(order?.client || "");
+  const [name, setName] = useState(order?.company.name || "");
   const [trader, setTrader] = useState(order?.trader || "");
   const [details, setDetails] = useState(order?.details || "");
   const [closed, setClosed] = useState(order?.closed || false);
-  const [companyId, setCompanyId] = useState(order?.companyId || 0);
+  const [companyId, setCompanyId] = useState(order?.company.companyId || 0);
   const [currency, setCurrency] = useState(order?.currency || "");
   const [dateInsert, setDateInsert] = useState(order?.dateInsert || "");
   const [deliveryAddress, setDeliveryAddress] = useState(
-    order?.deliveryAddress || ""
+    order?.company.deliveryAddress || ""
   );
   const [documentId, setDocumentId] = useState(order?.documentId || 0);
   const [documentStatus, setDocumentStatus] = useState(
@@ -50,8 +51,8 @@ const DetailsEditForm = ({
     setAssortment(event.target.value);
   };
 
-  const handleChangeClient = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setClient(event.target.value);
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
   };
 
   const handleChangeTrader = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,8 +127,7 @@ const DetailsEditForm = ({
     event.preventDefault();
     const updatedOrder = {
       ...order,
-      // signature: assortment,
-      client,
+      name,
       trader,
       details,
       closed,
@@ -177,8 +177,8 @@ const DetailsEditForm = ({
           <Grid item xs={12} sm={4}>
             <TextField
               label="Zamawiający"
-              value={client}
-              onChange={handleChangeClient}
+              value={name}
+              onChange={handleChangeName}
               required
               size="small"
             />

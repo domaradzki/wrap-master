@@ -77,12 +77,12 @@ const OrdersPage = () => {
                       <TableCell
                         sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
                       >
-                        Numer dokumentu
+                        Data wprowadzenia
                       </TableCell>
                       <TableCell
                         sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
                       >
-                        Data wprowadzenia
+                        Numer dokumentu
                       </TableCell>
                       <TableCell
                         sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
@@ -119,11 +119,11 @@ const OrdersPage = () => {
                   <TableBody>
                     {orders?.map((order: ReducedDocument) => (
                       <TableRow key={order.documentId}>
-                        <TableCell>{order.signature}</TableCell>
                         <TableCell>
                           {new Date(order.dateInsert).toLocaleDateString()}
                         </TableCell>
-                        <TableCell>{order.client}</TableCell>
+                        <TableCell>{order.signature}</TableCell>
+                        <TableCell>{order.company.client}</TableCell>
                         <TableCell>{order.symbol}</TableCell>
                         <TableCell>{order.trader}</TableCell>
                         <TableCell>{order.closed ? "Yes" : "No"}</TableCell>

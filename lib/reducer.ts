@@ -26,21 +26,23 @@ interface Document {
 }
 
 export interface ReducedDocument {
-  client: string;
-  companyId: number;
-  closed: boolean;
-  deliveryAddress: string;
+  documentId: number;
+  documentStatus: number;
+  symbol: string;
+  signature: string;
   currency: string;
   dateInsert: string;
   details: string;
-  documentId: number;
-  documentStatus: number;
   exchangeRate: null | number;
-  signature: string;
-  symbol: string;
-  trader: string;
+  closed: boolean;
   timestamp: number;
-  products: {
+  trader: string;
+  company: {
+    name: string;
+    companyId: number;
+    deliveryAddress: string;
+  };
+  orders: {
     orderId: number;
     quantity: number;
     price: number;
@@ -61,7 +63,7 @@ export const reduceDocuments = (documents: Document[]): ReducedDocument[] => {
     );
 
     if (existingDocument) {
-      existingDocument.products.push({
+      existingDocument.orders.push({
         orderId: current.orderId,
         quantity: current.quantity,
         price: current.price,
@@ -70,17 +72,14 @@ export const reduceDocuments = (documents: Document[]): ReducedDocument[] => {
         code: current.code,
         assortment: current.assortment,
         unit: current.unit,
-        type: current.type,
+        type: current.type.toUpperCase(),
         kind: current.kind,
       });
     } else {
       acc.push({
-        client: current.client,
         closed: current.closed,
-        companyId: current.companyId,
         currency: current.currency,
         dateInsert: current.dateInsert,
-        deliveryAddress: current.deliveryAddress,
         details: current.details,
         documentId: current.documentId,
         documentStatus: current.documentStatus,
@@ -89,7 +88,12 @@ export const reduceDocuments = (documents: Document[]): ReducedDocument[] => {
         symbol: current.symbol,
         trader: current.trader,
         timestamp: current.TimeStamp.data[current.TimeStamp.data.length - 1],
-        products: [
+        company: {
+          name: current.client,
+          companyId: current.companyId,
+          deliveryAddress: current.deliveryAddress,
+        },
+        orders: [
           {
             orderId: current.orderId,
             quantity: current.quantity,
@@ -99,7 +103,7 @@ export const reduceDocuments = (documents: Document[]): ReducedDocument[] => {
             code: current.code,
             assortment: current.assortment,
             unit: current.unit,
-            type: current.type,
+            type: current.type.toUpperCase(),
             kind: current.kind,
           },
         ],
