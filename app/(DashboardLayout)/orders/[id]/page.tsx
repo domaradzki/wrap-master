@@ -16,12 +16,11 @@ import {
   Button,
   Modal,
   Stack,
+  Grid,
 } from "@mui/material";
 import PageContainer from "../../components/container/PageContainer";
-import { ReducedDocument } from "@/lib/reducer";
 import { useEffect, useState } from "react";
-import ProductEditForm from "../components/ProductEditForm";
-import DetailsEditForm from "../components/DetailsEditForm";
+import Checkout from "../components/checkout";
 import { newOrderActiveFetch } from "@/data/new-active-order";
 import { Document, Order } from "@/utils/structure";
 
@@ -143,27 +142,44 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
           <Table>
             <TableHead>
               <TableRow>
+                <HeadCell>Lp</HeadCell>
                 <HeadCell>Produkt</HeadCell>
-                <HeadCell>Ilość</HeadCell>
-                <HeadCell>Cena</HeadCell>
-                <HeadCell>Wartość netto</HeadCell>
                 <HeadCell>Typ</HeadCell>
+                <HeadCell>Cena</HeadCell>
+                <HeadCell>Ilość</HeadCell>
+                <HeadCell>Wartość netto</HeadCell>
+                <HeadCell>Data realizacji</HeadCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {!isLoading &&
-                order?.orders.map((order: Order) => (
+                order?.orders.map((order: Order, index) => (
                   <TableRow key={order.orderId}>
+                    <TableCell>{index + 1}</TableCell>
                     <TableCell>{order.product.assortment}</TableCell>
-                    <TableCell>{order.quantity}</TableCell>
-                    <TableCell>{order.price}</TableCell>
-                    <TableCell>{order.netValue}</TableCell>
                     <TableCell>{order.product.type}</TableCell>
+                    <TableCell>{order.price}</TableCell>
+                    <TableCell>{order.quantity}</TableCell>
+                    <TableCell>{order.netValue}</TableCell>
+                    <TableCell>
+                      {order.dateOfRealisation.toLocaleDateString()}
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ marginTop: 2, justifyContent: "end" }}
+        >
+          <Grid item xs={12}>
+            <Button onClick={handleOpenEditModal} variant="outlined">
+              <i className="fa fa-save" aria-hidden="true"></i> Zatwierdź
+            </Button>
+          </Grid>
+        </Stack>
       </Container>
 
       {/* Modal for editing document */}
@@ -181,32 +197,10 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
             borderRadius: 2,
           }}
         >
-          <DetailsEditForm
+          <Checkout
             order={editedOrder}
             onSubmit={handleSubmit}
             onClose={handleCloseEditModal}
-          />
-        </Box>
-      </Modal>
-
-      {/* Modal for editing product */}
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "1px solid #000",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <ProductEditForm
-            product={selectedProduct}
-            onClose={handleCloseModal}
           />
         </Box>
       </Modal>

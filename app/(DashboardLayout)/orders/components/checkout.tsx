@@ -14,17 +14,13 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-interface DetailsEditFormProps {
+interface CheckoutProps {
   order: Document | null;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
 }
 
-const DetailsEditForm = ({
-  order,
-  onSubmit,
-  onClose,
-}: DetailsEditFormProps) => {
+const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   const [assortment, setAssortment] = useState(order?.signature || "");
   const [name, setName] = useState(order?.company.name || "");
   const [trader, setTrader] = useState(order?.trader || "");
@@ -307,4 +303,4 @@ const DetailsEditForm = ({
   );
 };
 
-export default DetailsEditForm;
+export default Checkout;
