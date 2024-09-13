@@ -1,4 +1,3 @@
-import { ReducedDocument } from "@/lib/reducer";
 import { Document } from "@/utils/structure";
 import {
   Box,
@@ -11,14 +10,19 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  Paper,
 } from "@mui/material";
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import StepSuccess from "./step-success";
+import CheckoutStepper from "./stepper";
 
 interface CheckoutProps {
-  order: Document | null;
+  order: Document;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
 }
+const stepsProduct = ["Informacje ogólne", "Parametry produktu", "Weryfikacja"];
+const stepsTransportOnly = ["Informacje ogólne", "Weryfikacja"];
 
 const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   const [assortment, setAssortment] = useState(order?.signature || "");
@@ -40,6 +44,20 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   const [signature, setSignature] = useState(order?.signature || "");
   const [symbol, setSymbol] = useState(order?.symbol || "");
   const [timestamp, setTimestamp] = useState(order?.timestamp || 0);
+
+  const [activeStep, setActiveStep] = useState(0);
+
+  const steps = 2 + order?.orders?.length;
+
+  const handleNext = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    setActiveStep(activeStep + 1);
+  };
+
+  const handleBack = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    setActiveStep(activeStep - 1);
+  };
 
   const handleChangeAssortment = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -142,164 +160,44 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   };
 
   return (
-    <Container sx={{ maxWidth: "100%", padding: 2, margin: "20px" }}>
-      <Box sx={{ width: "100%", marginBottom: 2 }}>
-        <Typography variant="h6">Edytuj dokument</Typography>
-      </Box>
-
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="closed"
-                  checked={closed}
-                  onChange={handleChangeClosed}
-                />
-              }
-              label="Zamkniety"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Numer dokumentu"
-              value={signature}
-              onChange={handleChangeSignature}
-              required
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Zamawiający"
-              value={name}
-              onChange={handleChangeName}
-              required
-              size="small"
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Handlowiec"
-              value={trader}
-              onChange={handleChangeTrader}
-              required
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Szczegóły"
-              value={details}
-              onChange={handleChangeDetails}
-              required
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="ID firmy"
-              type="number"
-              value={companyId}
-              onChange={handleChangeCompanyId}
-              required
-              size="small"
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Waluta"
-              value={currency}
-              onChange={handleChangeCurrency}
-              required
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Data wprowadzenia"
-              type="datetime-local"
-              value={dateInsert}
-              onChange={handleChangeDateInsert}
-              required
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Adres dostawy"
-              value={deliveryAddress}
-              onChange={handleChangeDeliveryAddress}
-              required
-              size="small"
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="ID dokumentu"
-              type="number"
-              value={documentId}
-              onChange={handleChangeDocumentId}
-              required
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Status dokumentu"
-              type="number"
-              value={documentStatus}
-              onChange={handleChangeDocumentStatus}
-              required
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Kurs wymiany"
-              type="number"
-              value={exchangeRate || ""}
-              onChange={handleChangeExchangeRate}
-              required
-              size="small"
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Symbol"
-              value={symbol}
-              onChange={handleChangeSymbol}
-              required
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Czas"
-              type="number"
-              value={timestamp}
-              onChange={handleChangeTimestamp}
-              required
-              size="small"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <Button type="submit" variant="outlined">
-              <i className="fa fa-save" aria-hidden="true"></i> Zapisz
-            </Button>
-            <Button onClick={onClose} variant="outlined">
-              <i className="fa fa-times" aria-hidden="true"></i> Anuluj
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </Container>
+    <Fragment>
+      <Paper sx={{ marginBottom: 6, padding: 3 }}>
+        <Typography component="h1" variant="h4" align="center">
+          Kontrola zamówienia
+        </Typography>
+        <CheckoutStepper steps={steps} activeStep={activeStep} />
+        <Fragment>
+          {activeStep === steps ? (
+            <StepSuccess />
+          ) : (
+            <form
+              onSubmit={handleNext}
+              encType="multipart/form-data"
+              method="POST"
+            >
+              {/* <GetStepContent
+                step={activeStep}
+                stepsLength={steps.length}
+                input={input}
+                activeOrder={activeOrder}
+                type={activeOrder.type}
+                kind={activeOrder.kind}
+                handleInputChange={handleInputChange}
+                handleDateChange={handleDateChange}
+                handleChangeFile={handleChangeFile}
+              />
+              <FormButtons
+                steps={steps}
+                activeStep={activeStep}
+                handleBack={handleBack}
+                handleAddOrder={handleAddOrder}
+                history={props.history}
+              /> */}
+            </form>
+          )}
+        </Fragment>
+      </Paper>
+    </Fragment>
   );
 };
 
