@@ -3,7 +3,13 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 
-const CheckoutStepper = ({ steps, activeStep }) => {
+const CheckoutStepper = ({
+  steps,
+  activeStep,
+}: {
+  steps: string[];
+  activeStep: number;
+}) => {
   return (
     <Stepper
       activeStep={activeStep}

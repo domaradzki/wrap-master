@@ -15,148 +15,81 @@ import {
 import { Fragment, useState } from "react";
 import StepSuccess from "./step-success";
 import CheckoutStepper from "./stepper";
+import StepButtons from "./step-buttons";
+import { useRouter } from "next/navigation";
+import StepContent from "./step-content";
+import dayjs, { Dayjs } from "dayjs";
 
 interface CheckoutProps {
   order: Document;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
 }
+
 const stepsProduct = ["Informacje ogólne", "Parametry produktu", "Weryfikacja"];
 const stepsTransportOnly = ["Informacje ogólne", "Weryfikacja"];
 
 const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
-  const [assortment, setAssortment] = useState(order?.signature || "");
-  const [name, setName] = useState(order?.company.name || "");
-  const [trader, setTrader] = useState(order?.trader || "");
-  const [details, setDetails] = useState(order?.details || "");
-  const [closed, setClosed] = useState(order?.closed || false);
-  const [companyId, setCompanyId] = useState(order?.company.companyId || 0);
-  const [currency, setCurrency] = useState(order?.currency || "");
-  const [dateInsert, setDateInsert] = useState(order?.dateInsert || "");
-  const [deliveryAddress, setDeliveryAddress] = useState(
-    order?.company.deliveryAddress || ""
-  );
-  const [documentId, setDocumentId] = useState(order?.documentId || 0);
-  const [documentStatus, setDocumentStatus] = useState(
-    order?.documentStatus || 0
-  );
-  const [exchangeRate, setExchangeRate] = useState(order?.exchangeRate || null);
-  const [signature, setSignature] = useState(order?.signature || "");
-  const [symbol, setSymbol] = useState(order?.symbol || "");
-  const [timestamp, setTimestamp] = useState(order?.timestamp || 0);
-
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
 
-  const steps = 2 + order?.orders?.length;
+  const steps = ["Informacje ogólne", "Parametry produktu", "Weryfikacja"];
+
+  const initialValues = {
+    name: order.company.name,
+    quantity: order.quantity,
+    unit: order.unit,
+    price: order.price,
+    netValue: order.netValue,
+    details: `${order.details} ${order.postfix ? order.postfix : ""}`,
+    deliveryAddress: order.company.deliveryAddress,
+    transport: "",
+    margin: "",
+    paymentMethod: "",
+    dateInsert: dayjs(order.dateInsert),
+    dateOfRealisation: order.dateOfRealisation,
+    dateOfPay: null,
+    sleeve: order.sleeve,
+    stretchColor: order.stretchColor,
+    stretchThickness: order.stretchThickness,
+    netWeight: order.netWeight,
+    grossWeight: order.grossWeight,
+    tapeLong: order.tapeLong,
+    tapeWidth: order.tapeWidth,
+    tapeThickness: order.tapeThickness,
+    tapeColor: order.tapeColor,
+    numberOfColors: order.numberOfColors,
+    glue: order.glue,
+    printName: "",
+    roller: "",
+    dateOfAcceptation: null,
+    color1: "",
+    color2: "",
+    color3: "",
+    file: null,
+  };
+
+  const [input, setInput] = useState(initialValues);
+  const handleInputChange = (event) => {
+    setInput({
+      ...input,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   const handleNext = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     setActiveStep(activeStep + 1);
   };
 
-  const handleBack = (event: { preventDefault: () => void }) => {
+  const handleBack = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setActiveStep(activeStep - 1);
   };
 
-  const handleChangeAssortment = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setAssortment(event.target.value);
-  };
-
-  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
-
-  const handleChangeTrader = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTrader(event.target.value);
-  };
-
-  const handleChangeDetails = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDetails(event.target.value);
-  };
-
-  const handleChangeClosed = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setClosed(event.target.checked);
-  };
-
-  const handleChangeCompanyId = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setCompanyId(Number(event.target.value));
-  };
-
-  const handleChangeCurrency = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrency(event.target.value);
-  };
-
-  const handleChangeDateInsert = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDateInsert(event.target.value);
-  };
-
-  const handleChangeDeliveryAddress = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDeliveryAddress(event.target.value);
-  };
-
-  const handleChangeDocumentId = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDocumentId(Number(event.target.value));
-  };
-
-  const handleChangeDocumentStatus = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDocumentStatus(Number(event.target.value));
-  };
-
-  const handleChangeExchangeRate = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setExchangeRate(Number(event.target.value));
-  };
-
-  const handleChangeSignature = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSignature(event.target.value);
-  };
-
-  const handleChangeSymbol = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSymbol(event.target.value);
-  };
-
-  const handleChangeTimestamp = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setTimestamp(Number(event.target.value));
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleAddOrder = (event) => {
     event.preventDefault();
-    const updatedOrder = {
-      ...order,
-      name,
-      trader,
-      details,
-      closed,
-      companyId,
-      currency,
-      dateInsert,
-      deliveryAddress,
-      documentId,
-      documentStatus,
-      exchangeRate,
-      signature,
-      symbol,
-      timestamp,
-    };
-    onSubmit(event);
+    console.log(event);
   };
 
   return (
@@ -167,7 +100,7 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
         </Typography>
         <CheckoutStepper steps={steps} activeStep={activeStep} />
         <Fragment>
-          {activeStep === steps ? (
+          {activeStep === steps.length - 1 ? (
             <StepSuccess />
           ) : (
             <form
@@ -175,24 +108,25 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
               encType="multipart/form-data"
               method="POST"
             >
-              {/* <GetStepContent
+              <StepContent
                 step={activeStep}
                 stepsLength={steps.length}
                 input={input}
-                activeOrder={activeOrder}
-                type={activeOrder.type}
-                kind={activeOrder.kind}
-                handleInputChange={handleInputChange}
-                handleDateChange={handleDateChange}
-                handleChangeFile={handleChangeFile}
+                activeOrder={order}
+                type={order.type}
+                kind={order.kind}
+                // handleInputChange={handleInputChange}
+                // handleDateChange={handleDateChange}
+                // handleChangeFile={handleChangeFile}
               />
-              <FormButtons
+
+              <StepButtons
                 steps={steps}
                 activeStep={activeStep}
                 handleBack={handleBack}
                 handleAddOrder={handleAddOrder}
-                history={props.history}
-              /> */}
+                router={router}
+              />
             </form>
           )}
         </Fragment>
