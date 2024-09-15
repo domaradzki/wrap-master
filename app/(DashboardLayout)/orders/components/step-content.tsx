@@ -9,34 +9,42 @@ const StepContent = ({
   stepsLength,
   input,
   order,
-  type,
-  kind,
+  items,
   handleInputChange,
-  handleDateChange,
-  handleChangeFile,
+  handleProductChange,
+  // handleChangeFile,
 }) => {
   if (step === 0) {
+    console.log("input", input);
+    console.log("items", items);
+
     return (
-      <StepDocumentForm
-        input={input}
-        handleInputChange={handleInputChange}
-        handleDateChange={handleDateChange}
-      />
+      <StepDocumentForm input={input} handleInputChange={handleInputChange} />
     );
-  } else if (step === 1) {
-    if (kind === "KT" && type === "TPD") {
+  } else if (step > 0) {
+    if (
+      items[step - 1].product.productCode === "TPD" ||
+      items[step - 1].product.productCode == "TPD32"
+    ) {
       return (
         <StepTapeForm
-          input={input}
-          handleInputChange={handleInputChange}
-          handleDateChange={handleDateChange}
-          handleChangeFile={handleChangeFile}
+          item={items[step - 1]}
+          handleProductChange={handleProductChange}
+          // handleChangeFile={handleChangeFile}
         />
       );
     }
-    if (kind === "KT" && type === "FS") {
+    if (
+      items[step - 1].product.productCode === "FSM" ||
+      items[step - 1].product.productCode == "FSMG" ||
+      items[step - 1].product.productCode == "FSRG"
+    ) {
       return (
-        <StepStretchForm input={input} handleInputChange={handleInputChange} />
+        <StepStretchForm
+          index={step - 1}
+          item={items[step - 1]}
+          handleProductChange={handleProductChange}
+        />
       );
     }
   }

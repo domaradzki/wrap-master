@@ -23,6 +23,7 @@ interface Product {
   quantity: number;
   type: string;
   unit: string;
+  productCode: string;
   glue?: string; // Optional field
   numberOfColors?: number; // Optional field
   postfix?: string; // Optional field
@@ -120,11 +121,14 @@ const structureDocumentWithProducts = (document: ReducedDocument) => {
         if (productSize === "OCEANIC") {
           order.product.sleeve = productArray[2];
           order.product.postfix = productArray[1];
+          order.product.productCode = productCode;
         } else {
           const size = productSize.split("/");
           order = {
             ...order,
             product: {
+              ...order.product,
+              productCode,
               assortment: product.assortment,
               sleeve: +size[1],
               stretchThickness: +size[0].slice(3),
@@ -152,6 +156,8 @@ const structureDocumentWithProducts = (document: ReducedDocument) => {
         order = {
           ...order,
           product: {
+            ...order.product,
+            productCode,
             assortment: product.assortment,
             stretchThickness: +productSize.slice(4),
             sleeve: 1600,
@@ -178,6 +184,8 @@ const structureDocumentWithProducts = (document: ReducedDocument) => {
         order = {
           ...order,
           product: {
+            ...order.product,
+            productCode,
             assortment: product.assortment,
             stretchThickness: +productSize.slice(3),
             sleeve: 1600,
@@ -239,6 +247,8 @@ const structureDocumentWithProducts = (document: ReducedDocument) => {
           },
         };
       }
+    } else {
+      order.product.productCode = "TW";
     }
 
     products.push({ ...order });

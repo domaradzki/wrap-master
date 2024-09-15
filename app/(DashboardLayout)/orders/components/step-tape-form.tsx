@@ -9,18 +9,14 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import "dayjs/locale/pl";
 
-// import DateFnsUtils from "@date-io/date-fns";
-// import plLocale from "date-fns/locale/pl";
-
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateField } from "@mui/x-date-pickers/DateField";
 
 export default function StepTapeForm({
-  input,
-  handleInputChange,
-  handleDateChange,
-  handleChangeFile,
+  item,
+  handleProductChange,
+  // handleChangeFile,
 }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
@@ -35,33 +31,19 @@ export default function StepTapeForm({
               id="printName"
               name="printName"
               label="Nadruk"
-              onChange={handleInputChange}
-              value={input.printName}
+              onChange={handleProductChange}
+              value={item.printName}
               type="text"
               fullWidth
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            {/* <KeyboardDatePicker
-                fullWidth
-                format="dd/MM/yyyy"
-                margin="normal"
-                id="dateOfAcceptation"
-                name="dateOfAcceptation"
-                helperText="Data akceptacji"
-                value={input.dateOfAcceptation}
-                type="text"
-                onChange={handleDateChange("dateOfAcceptation")}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
-              /> */}
             <DateField
               id="dateOfAcceptation"
               name="dateOfAcceptation"
               helperText="Data akceptacji"
-              value={input.dateOfAcceptation}
-              onChange={handleDateChange("dateOfAcceptation")}
+              value={item.dateOfAcceptation}
+              onChange={handleProductChange}
             />
           </Grid>
           <Grid item xs={12} md={2}>
@@ -70,8 +52,8 @@ export default function StepTapeForm({
               id="tapeLong"
               name="tapeLong"
               label="Długość"
-              onChange={handleInputChange}
-              value={input.tapeLong}
+              onChange={handleProductChange}
+              value={item.tapeLong}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -87,8 +69,8 @@ export default function StepTapeForm({
               id="tapeWidth"
               name="tapeWidth"
               label="Szerokość"
-              onChange={handleInputChange}
-              value={input.tapeWidth}
+              onChange={handleProductChange}
+              value={item.tapeWidth}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -104,8 +86,8 @@ export default function StepTapeForm({
               id="tapeThickness"
               name="tapeThickness"
               label="Grubość"
-              onChange={handleInputChange}
-              value={input.tapeThickness}
+              onChange={handleProductChange}
+              value={item.tapeThickness}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -121,8 +103,8 @@ export default function StepTapeForm({
               id="tapeColor"
               name="tapeColor"
               label="Kolor taśmy"
-              onChange={handleInputChange}
-              value={input.tapeColor}
+              onChange={handleProductChange}
+              value={item.tapeColor}
               type="text"
               fullWidth
             />
@@ -135,10 +117,10 @@ export default function StepTapeForm({
                 labelId="rollerLabel"
                 id="roller"
                 name="roller"
-                value={input.roller}
+                value={item.roller}
                 type="number"
-                onChange={handleInputChange}
-                className={classes.selectEmpty}
+                onChange={handleProductChange}
+                // className={classes.selectEmpty}
               >
                 <option />
                 <option value={144}>144</option>
@@ -155,8 +137,8 @@ export default function StepTapeForm({
               id="glue"
               name="glue"
               label="Klej"
-              onChange={handleInputChange}
-              value={input.glue}
+              onChange={handleProductChange}
+              value={item.glue}
               type="text"
               fullWidth
             />
@@ -167,8 +149,8 @@ export default function StepTapeForm({
               id="numberOfColors"
               name="numberOfColors"
               label="Ilość kolorów"
-              onChange={handleInputChange}
-              value={input.numberOfColors}
+              onChange={handleProductChange}
+              value={item.numberOfColors}
               type="number"
               fullWidth
             />
@@ -179,33 +161,33 @@ export default function StepTapeForm({
               id="color1"
               name="color1"
               label="Kolor 1"
-              onChange={handleInputChange}
-              value={input.color1}
+              onChange={handleProductChange}
+              value={item.color1}
               type="text"
               fullWidth
             />
           </Grid>
-          {+input.numberOfColors >= 2 && (
+          {+item.numberOfColors >= 2 && (
             <Grid item xs={12} md={3}>
               <TextField
                 id="color2"
                 name="color2"
                 label="Kolor 2"
-                onChange={handleInputChange}
-                value={input.color2}
+                onChange={handleProductChange}
+                value={item.color2}
                 type="text"
                 fullWidth
               />
             </Grid>
           )}
-          {+input.numberOfColors === 3 && (
+          {+item.numberOfColors === 3 && (
             <Grid item xs={12} md={3}>
               <TextField
                 id="color3"
                 name="color3"
                 label="Kolor 3"
-                onChange={handleInputChange}
-                value={input.color3}
+                onChange={handleProductChange}
+                value={item.color3}
                 type="text"
                 fullWidth
               />
@@ -214,12 +196,12 @@ export default function StepTapeForm({
           <Grid item xs={12} md={6}>
             <input
               accept="image/*"
-              className={classes.input}
+              // className={classes.input}
               id="fileX"
               name="imageFile"
               multiple
               type="file"
-              onChange={handleChangeFile}
+              // onChange={handleChangeFile}
             />
             <label htmlFor="fileX">
               <Button variant="contained" color="primary" component="span">

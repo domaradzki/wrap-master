@@ -26,47 +26,62 @@ interface CheckoutProps {
   onClose: () => void;
 }
 
-const stepsProduct = ["Informacje ogólne", "Parametry produktu", "Weryfikacja"];
-const stepsTransportOnly = ["Informacje ogólne", "Weryfikacja"];
+type stepsKeys = {
+  [key: string]: string;
+};
+
+const stepsLegend: stepsKeys = {
+  TW: "Towar",
+  TPD: "Taśma z nadrukiem",
+  TPD32: "Taśma z nadrukiem",
+  FSM: "Folia Stretch",
+  FSMG: "Folia Stretch",
+  FSRG: "Folia Stretch",
+};
 
 const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
 
-  const steps = ["Informacje ogólne", "Parametry produktu", "Weryfikacja"];
+  const stepsArray = order.orders.map((order) => order.product?.productCode);
+
+  let steps = stepsArray.map((item) => stepsLegend[item]);
+  steps = ["Informacje ogólne", ...steps, "Weryfikacja"];
 
   const initialValues = {
-    name: order.company.name,
-    quantity: order.quantity,
-    unit: order.unit,
-    price: order.price,
-    netValue: order.netValue,
-    details: `${order.details} ${order.postfix ? order.postfix : ""}`,
-    deliveryAddress: order.company.deliveryAddress,
-    transport: "",
-    margin: "",
-    paymentMethod: "",
+    ...order,
     dateInsert: dayjs(order.dateInsert),
-    dateOfRealisation: order.dateOfRealisation,
-    dateOfPay: null,
-    sleeve: order.sleeve,
-    stretchColor: order.stretchColor,
-    stretchThickness: order.stretchThickness,
-    netWeight: order.netWeight,
-    grossWeight: order.grossWeight,
-    tapeLong: order.tapeLong,
-    tapeWidth: order.tapeWidth,
-    tapeThickness: order.tapeThickness,
-    tapeColor: order.tapeColor,
-    numberOfColors: order.numberOfColors,
-    glue: order.glue,
-    printName: "",
-    roller: "",
-    dateOfAcceptation: null,
-    color1: "",
-    color2: "",
-    color3: "",
-    file: null,
+    name: order.company.name,
+    deliveryAddress: order.company.deliveryAddress,
+    // quantity: order.quantity,
+    // unit: order.unit,
+    // price: order.price,
+    // netValue: order.netValue,
+    // details: `${order.details} ${order.postfix ? order.postfix : ""}`,
+    // transport: "",
+    // margin: "",
+    // paymentMethod: "",
+    // dateInsert: dayjs(order.dateInsert),
+    // dateOfRealisation: order.dateOfRealisation,
+    // dateOfPay: null,
+    // sleeve: order.sleeve,
+    // stretchColor: order.stretchColor,
+    // stretchThickness: order.stretchThickness,
+    // netWeight: order.netWeight,
+    // grossWeight: order.grossWeight,
+    // tapeLong: order.tapeLong,
+    // tapeWidth: order.tapeWidth,
+    // tapeThickness: order.tapeThickness,
+    // tapeColor: order.tapeColor,
+    // numberOfColors: order.numberOfColors,
+    // glue: order.glue,
+    // printName: "",
+    // roller: "",
+    // dateOfAcceptation: null,
+    // color1: "",
+    // color2: "",
+    // color3: "",
+    // file: null,
   };
 
   const [input, setInput] = useState(initialValues);
@@ -75,6 +90,16 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
       ...input,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const [items, steItems] = useState(order.orders);
+
+  const handleProductChange = (event) => {
+    steItems([
+      ...items,
+       items[activeStep].[event.target.name]= event.target.value,
+  });
+    console.log(event.target.value);
   };
 
   const handleNext = (event: { preventDefault: () => void }) => {
@@ -111,12 +136,11 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
               <StepContent
                 step={activeStep}
                 stepsLength={steps.length}
+                order={order}
                 input={input}
-                activeOrder={order}
-                type={order.type}
-                kind={order.kind}
-                // handleInputChange={handleInputChange}
-                // handleDateChange={handleDateChange}
+                items={items}
+                handleInputChange={handleInputChange}
+                handleProductChange={handleProductChange}
                 // handleChangeFile={handleChangeFile}
               />
 
@@ -125,6 +149,7 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
                 activeStep={activeStep}
                 handleBack={handleBack}
                 handleAddOrder={handleAddOrder}
+                closeModal={onClose}
                 router={router}
               />
             </form>

@@ -3,8 +3,9 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import { FormControl, InputLabel, Select } from "@mui/material";
 
-export default function StepStretchForm({ input, handleInputChange }) {
+export default function StepStretchForm({ index, item, handleProductChange }) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -17,8 +18,8 @@ export default function StepStretchForm({ input, handleInputChange }) {
             id="sleeve"
             name="sleeve"
             label="Tuleja"
-            onChange={handleInputChange}
-            value={input.sleeve}
+            onChange={handleProductChange}
+            value={item.sleeve}
             type="number"
             InputProps={{
               endAdornment: <InputAdornment position="end">g</InputAdornment>,
@@ -32,8 +33,8 @@ export default function StepStretchForm({ input, handleInputChange }) {
             id="stretchColor"
             name="stretchColor"
             label="Kolor folii"
-            onChange={handleInputChange}
-            value={input.stretchColor}
+            onChange={handleProductChange}
+            value={item.stretchColor}
             type="text"
             fullWidth
           />
@@ -44,8 +45,8 @@ export default function StepStretchForm({ input, handleInputChange }) {
             id="stretchThickness"
             name="stretchThickness"
             label="Grubość folii"
-            onChange={handleInputChange}
-            value={input.stretchThickness}
+            onChange={handleProductChange}
+            value={item.stretchThickness}
             type="text"
             InputProps={{
               endAdornment: <InputAdornment position="end">my</InputAdornment>,
@@ -59,8 +60,8 @@ export default function StepStretchForm({ input, handleInputChange }) {
             id="netWeight"
             name="netWeight"
             label="Waga netto"
-            onChange={handleInputChange}
-            value={input.netWeight}
+            onChange={handleProductChange}
+            value={item.netWeight}
             type="number"
             InputProps={{
               endAdornment: <InputAdornment position="end">kg</InputAdornment>,
@@ -74,14 +75,91 @@ export default function StepStretchForm({ input, handleInputChange }) {
             id="grossWeight"
             name="grossWeight"
             label="Waga brutto"
-            onChange={handleInputChange}
-            value={input.grossWeight}
+            onChange={handleProductChange}
+            value={item.grossWeight}
             type="number"
             InputProps={{
               endAdornment: <InputAdornment position="end">kg</InputAdornment>,
             }}
             fullWidth
           />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            required
+            id="quantity"
+            name="quantity"
+            label="Ilość"
+            onChange={handleProductChange}
+            value={item.quantity}
+            type="number"
+            fullWidth
+            autoComplete="quantity"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">{item.unit}</InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            required
+            id="price"
+            name="price"
+            label="Cena"
+            onChange={handleProductChange}
+            value={item.price}
+            type="number"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">zł</InputAdornment>,
+            }}
+            fullWidth
+            autoComplete="price"
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            required
+            id="netValue"
+            name="netValue"
+            label="Wartość"
+            onChange={handleProductChange}
+            value={item.netValue}
+            type="number"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">zł</InputAdornment>,
+            }}
+            fullWidth
+            autoComplete="net value"
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth required sx={{ minWidth: 120 }}>
+            <InputLabel id="marginLabel">Marża</InputLabel>
+            <Select
+              native
+              labelId="marginLabel"
+              label="Marża"
+              id="margin"
+              name="margin"
+              value={item.margin}
+              type="number"
+              dataset-index={"KARABIN"}
+              tabIndex={4545454545454454545}
+              onChange={handleProductChange}
+              // className={classes.selectEmpty}
+            >
+              <option />
+
+              <option value={0}>0</option>
+              <option value={0.25}>0.25</option>
+              <option value={0.5}>0.5</option>
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
     </React.Fragment>

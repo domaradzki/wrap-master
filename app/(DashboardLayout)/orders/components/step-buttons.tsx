@@ -8,6 +8,7 @@ interface StepButtonsProps {
   handleBack: () => void;
   handleAddOrder: () => void;
   router: { back: () => void };
+  closeModal: () => void;
 }
 
 const StepButtons: React.FC<StepButtonsProps> = ({
@@ -16,26 +17,15 @@ const StepButtons: React.FC<StepButtonsProps> = ({
   handleBack,
   handleAddOrder,
   router,
+  closeModal,
 }) => {
   return (
     <Stack sx={{ display: "flex", justifyContent: "flex-end" }}>
-      {activeStep !== 0 ? (
-        <Button onClick={handleBack} sx={{ marginTop: 3, marginLeft: 1 }}>
-          Powrót
-        </Button>
-      ) : (
-        <Button
-          onClick={() => router.back()}
-          sx={{ marginTop: 3, marginLeft: 1 }}
-        >
-          Anuluj
-        </Button>
-      )}
       {activeStep === steps.length - 1 ? (
         <Button
           variant="contained"
           color="primary"
-          sx={{ marginTop: 3, marginLeft: 1 }}
+          sx={{ marginTop: 4, marginLeft: 1 }}
           onClick={handleAddOrder}
         >
           Potwierdź
@@ -45,9 +35,23 @@ const StepButtons: React.FC<StepButtonsProps> = ({
           variant="contained"
           color="primary"
           type="submit"
-          sx={{ marginTop: 3, marginLeft: 1 }}
+          sx={{ marginTop: 2, marginLeft: 1 }}
         >
           Dalej
+        </Button>
+      )}
+      {activeStep !== 0 ? (
+        <Button onClick={handleBack} sx={{ marginTop: 2, marginLeft: 1 }}>
+          Powrót
+        </Button>
+      ) : (
+        <Button
+          // onClick={() => router.back()}
+          onClick={closeModal}
+          sx={{ marginTop: 2, marginLeft: 1 }}
+          variant="outlined"
+        >
+          Anuluj
         </Button>
       )}
     </Stack>
