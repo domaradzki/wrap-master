@@ -133,7 +133,9 @@ const structureDocumentWithProducts = (document: ReducedDocument) => {
               sleeve: +size[1],
               stretchThickness: +size[0].slice(3),
               netWeight: +size[0].slice(0, 3) / 100,
-              grossWeight: 0,
+              grossWeight: function () {
+                return this.netWeight + this.sleeve / 1000;
+              },
               stretchColor: colors.hasOwnProperty(productArray[2])
                 ? colors[productArray[2]]
                 : colors._,

@@ -3,9 +3,47 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import { FormControl, InputLabel, Select } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 
-export default function StepStretchForm({ index, item, handleProductChange }) {
+interface Item {
+  assortment: string;
+  price: number;
+  unit: string;
+  kind: string;
+  type: string;
+  productCode: string;
+  netValue?: number;
+  margin?: number;
+  dateOfRealisation?: string;
+  product: {
+    productCode: string;
+  };
+  quantity: number;
+  netWeight?: number;
+  grossWeight?: number;
+  stretchThickness?: number;
+  stretchColor?: string;
+  sleeve?: number;
+}
+
+interface StepStretchFormProps {
+  item: Item;
+  handleProductChange: (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<number>
+  ) => void;
+}
+
+export default function StepStretchForm({
+  item,
+  handleProductChange,
+}: StepStretchFormProps) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -145,10 +183,7 @@ export default function StepStretchForm({ index, item, handleProductChange }) {
               name="margin"
               value={item.margin}
               type="number"
-              dataset-index={"KARABIN"}
-              tabIndex={4545454545454454545}
               onChange={handleProductChange}
-              // className={classes.selectEmpty}
             >
               <option />
 

@@ -2,17 +2,45 @@ import React, { Fragment, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 
-import "dayjs/locale/pl";
-
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DateValidationError } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/pl";
 
-export default function StepDocumentForm({ input, handleInputChange }) {
+interface InputProps {
+  name: string;
+  deliveryAddress: string;
+  dateInsert: Date | null;
+  details: string;
+  paymentMethod: string;
+  transport: string;
+}
+
+interface StepDocumentFormProps {
+  input: InputProps;
+  handleInputChange: (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string>
+  ) => void;
+  handleDocumentDateChange: FieldChangeHandler<
+    Dayjs | null,
+    DateValidationError
+  >;
+}
+
+export default function StepDocumentForm({
+  input,
+  handleInputChange,
+  handleDocumentDateChange,
+}: StepDocumentFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
@@ -50,8 +78,8 @@ export default function StepDocumentForm({ input, handleInputChange }) {
             <DatePicker
               name="dateInsert"
               label="Data zamówienia"
-              value={input.dateInsert}
-              onChange={handleInputChange}
+              value={dayjs(input.dateInsert)}
+              onChange={handleDocumentDateChange}
             />
           </Grid>
           <Grid item xs={12} sm={8}>

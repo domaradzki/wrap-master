@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -11,13 +11,56 @@ import "dayjs/locale/pl";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateField } from "@mui/x-date-pickers/DateField";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DateValidationError } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
+import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
+
+interface Item {
+  assortment: string;
+  price: number;
+  unit: string;
+  kind: string;
+  type: string;
+  productCode: string;
+  netValue?: number;
+  margin?: number;
+  dateOfRealisation?: string;
+  product: {
+    productCode: string;
+  };
+  quantity: number;
+  printName?: string;
+  dateOfAcceptation?: string;
+  tapeLong?: number;
+  tapeWidth?: number;
+  tapeThickness?: number;
+  tapeColor?: string;
+  roller?: number;
+  glue?: string;
+  numberOfColors?: number;
+  color1?: string;
+  color2?: string;
+  color3?: string;
+}
+
+interface StepTapeFormProps {
+  item: Item;
+  handleProductChange: (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<number>
+  ) => void;
+  handleDateChange: FieldChangeHandler<Dayjs | null, DateValidationError>;
+  // handleChangeFile?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 export default function StepTapeForm({
   item,
   handleProductChange,
-  // handleChangeFile,
-}) {
+  handleDateChange,
+}: // handleChangeFile,
+StepTapeFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
@@ -30,7 +73,6 @@ export default function StepTapeForm({
               required
               id="printName"
               name="printName"
-              label="Nadruk"
               onChange={handleProductChange}
               value={item.printName}
               type="text"
@@ -38,12 +80,11 @@ export default function StepTapeForm({
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <DateField
-              id="dateOfAcceptation"
+            <DatePicker
               name="dateOfAcceptation"
-              helperText="Data akceptacji"
-              value={item.dateOfAcceptation}
-              onChange={handleProductChange}
+              label="Data akceptacji"
+              value={dayjs(item.dateOfAcceptation)}
+              onChange={handleDateChange}
             />
           </Grid>
           <Grid item xs={12} md={2}>
@@ -167,7 +208,7 @@ export default function StepTapeForm({
               fullWidth
             />
           </Grid>
-          {+item.numberOfColors >= 2 && (
+          {+(item.numberOfColors ?? 0) >= 2 && (
             <Grid item xs={12} md={3}>
               <TextField
                 id="color2"
@@ -180,7 +221,7 @@ export default function StepTapeForm({
               />
             </Grid>
           )}
-          {+item.numberOfColors === 3 && (
+          {+(item.numberOfColors ?? 0) === 3 && (
             <Grid item xs={12} md={3}>
               <TextField
                 id="color3"

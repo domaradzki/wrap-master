@@ -5,8 +5,8 @@ import { Stack } from "@mui/material";
 interface StepButtonsProps {
   steps: string[];
   activeStep: number;
-  handleBack: () => void;
-  handleAddOrder: () => void;
+  handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  handleAddOrder: (event: any) => void;
   router: { back: () => void };
   closeModal: () => void;
 }

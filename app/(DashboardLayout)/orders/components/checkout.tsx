@@ -1,24 +1,12 @@
 import { Document } from "@/utils/structure";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Modal,
-  Stack,
-  TextField,
-  Typography,
-  FormControlLabel,
-  Checkbox,
-  Paper,
-} from "@mui/material";
+import { Typography, Paper } from "@mui/material";
 import { Fragment, useState } from "react";
 import StepSuccess from "./step-success";
 import CheckoutStepper from "./stepper";
 import StepButtons from "./step-buttons";
 import { useRouter } from "next/navigation";
 import StepContent from "./step-content";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 interface CheckoutProps {
   order: Document;
@@ -41,65 +29,65 @@ const stepsLegend: stepsKeys = {
 
 const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   const router = useRouter();
+  const { orders } = order;
+
+  const productValues = orders.map((order) => {
+    return {
+      ...order,
+      ...order.product,
+    };
+  });
+
+  const documentValues = {
+    ...order,
+    dateInsert: dayjs(order.dateInsert),
+    name: order.company.name,
+    deliveryAddress: order.company.deliveryAddress,
+    transport: "",
+    paymentMethod: "",
+  };
+
   const [activeStep, setActiveStep] = useState(0);
+  const [input, setInput] = useState(documentValues);
+  const [items, steItems] = useState<Document["orders"]>(productValues);
 
   const stepsArray = order.orders.map((order) => order.product?.productCode);
 
   let steps = stepsArray.map((item) => stepsLegend[item]);
   steps = ["Informacje ogólne", ...steps, "Weryfikacja"];
 
-  const initialValues = {
-    ...order,
-    dateInsert: dayjs(order.dateInsert),
-    name: order.company.name,
-    deliveryAddress: order.company.deliveryAddress,
-    // quantity: order.quantity,
-    // unit: order.unit,
-    // price: order.price,
-    // netValue: order.netValue,
-    // details: `${order.details} ${order.postfix ? order.postfix : ""}`,
-    // transport: "",
-    // margin: "",
-    // paymentMethod: "",
-    // dateInsert: dayjs(order.dateInsert),
-    // dateOfRealisation: order.dateOfRealisation,
-    // dateOfPay: null,
-    // sleeve: order.sleeve,
-    // stretchColor: order.stretchColor,
-    // stretchThickness: order.stretchThickness,
-    // netWeight: order.netWeight,
-    // grossWeight: order.grossWeight,
-    // tapeLong: order.tapeLong,
-    // tapeWidth: order.tapeWidth,
-    // tapeThickness: order.tapeThickness,
-    // tapeColor: order.tapeColor,
-    // numberOfColors: order.numberOfColors,
-    // glue: order.glue,
-    // printName: "",
-    // roller: "",
-    // dateOfAcceptation: null,
-    // color1: "",
-    // color2: "",
-    // color3: "",
-    // file: null,
-  };
-
-  const [input, setInput] = useState(initialValues);
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput({
       ...input,
       [event.target.name]: event.target.value,
     });
   };
 
-  const [items, steItems] = useState(order.orders);
+  const handleDocumentDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setInput({
+      ...input,
+      [event.target.name]: event.target.value,
+    });
+  };
 
-  const handleProductChange = (event) => {
-    steItems([
-      ...items,
-       items[activeStep].[event.target.name]= event.target.value,
-  });
-    console.log(event.target.value);
+  const handleProductChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const data = [...items];
+    const currentOrder = data[activeStep - 1];
+    if (currentOrder && event.target.name in currentOrder) {
+      (currentOrder as any)[event.target.name] = event.target.value;
+    }
+    steItems([...data]);
+  };
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const data = [...items];
+    const currentOrder = data[activeStep - 1];
+    if (currentOrder && event.target.name in currentOrder) {
+      (currentOrder as any)[event.target.name] = event.target.value;
+    }
+    steItems([...data]);
   };
 
   const handleNext = (event: { preventDefault: () => void }) => {
@@ -116,6 +104,8 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
     event.preventDefault();
     console.log(event);
   };
+
+  console.log("items", items);
 
   return (
     <Fragment>
@@ -141,6 +131,8 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
                 items={items}
                 handleInputChange={handleInputChange}
                 handleProductChange={handleProductChange}
+                handleDateChange={handleDateChange}
+                handleDocumentDateChange={handleDocumentDateChange}
                 // handleChangeFile={handleChangeFile}
               />
 
