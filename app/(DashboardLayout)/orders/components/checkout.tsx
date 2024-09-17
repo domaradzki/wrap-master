@@ -51,10 +51,20 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   const [input, setInput] = useState(documentValues);
   const [items, steItems] = useState<Document["orders"]>(productValues);
 
-  const stepsArray = order.orders.map((order) => order.product?.productCode);
+  const stepsArray = order.orders.map((order) => ({
+    stepName: order.product?.productCode,
+    id: order.product.productId,
+  }));
 
-  let steps = stepsArray.map((item) => stepsLegend[item]);
-  steps = ["Informacje ogólne", ...steps, "Weryfikacja"];
+  let steps = stepsArray.map((item) => ({
+    id: item.id,
+    stepName: stepsLegend[item.stepName],
+  }));
+  steps = [
+    { id: 1, stepName: "Informacje ogólne" },
+    ...steps,
+    { id: 999, stepName: "Weryfikacja" },
+  ];
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput({
@@ -75,18 +85,16 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   const handleProductChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
-    if (currentOrder && event.target.name in currentOrder) {
-      (currentOrder as any)[event.target.name] = event.target.value;
-    }
+    (currentOrder as any)[event.target.name] = event.target.value;
+    console.log("CHANGE", { [event.target.name]: event.target.value });
+
     steItems([...data]);
   };
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
-    if (currentOrder && event.target.name in currentOrder) {
-      (currentOrder as any)[event.target.name] = event.target.value;
-    }
+    (currentOrder as any)[event.target.name] = event.target.value;
     steItems([...data]);
   };
 
@@ -115,7 +123,7 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
         </Typography>
         <CheckoutStepper steps={steps} activeStep={activeStep} />
         <Fragment>
-          {activeStep === steps.length - 1 ? (
+          {activeStep === steps.length ? (
             <StepSuccess />
           ) : (
             <form

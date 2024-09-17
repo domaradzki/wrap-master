@@ -6,7 +6,6 @@ import StepDocumentForm from "./step-document-form";
 import StepTapeForm from "./step-tape-form";
 import StepProductForm from "./step-product-form";
 import StepReview from "./step-review";
-// import Review from "../../components/Review/Review";
 
 interface Item {
   assortment: string;
@@ -76,10 +75,10 @@ const StepContent = ({
   handleDocumentDateChange,
   // handleChangeFile,
 }) => {
+  console.log("step", step);
+  console.log("input", input);
+  console.log("items", items);
   if (step === 0) {
-    console.log("input", input);
-    console.log("items", items);
-
     return (
       <StepDocumentForm
         input={input}
@@ -89,7 +88,7 @@ const StepContent = ({
         }
       />
     );
-  } else if (step > 0) {
+  } else if (step > 0 && step < stepsLength - 1) {
     if (
       items[step - 1].product.productCode === "TPD" ||
       items[step - 1].product.productCode == "TPD32"

@@ -7,7 +7,7 @@ const CheckoutStepper = ({
   steps,
   activeStep,
 }: {
-  steps: string[];
+  steps: { id: number; stepName: string }[];
   activeStep: number;
 }) => {
   return (
@@ -16,22 +16,11 @@ const CheckoutStepper = ({
       alternativeLabel
       sx={{ padding: (theme) => theme.spacing(3, 0, 5) }}
     >
-      {steps.map(
-        (
-          label:
-            | boolean
-            | React.Key
-            | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-            | Iterable<React.ReactNode>
-            | React.PromiseLikeOfReactNode
-            | null
-            | undefined
-        ) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        )
-      )}
+      {steps.map((step) => (
+        <Step key={step.id}>
+          <StepLabel>{step.stepName}</StepLabel>
+        </Step>
+      ))}
     </Stepper>
   );
 };
