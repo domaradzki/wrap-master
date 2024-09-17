@@ -5,6 +5,7 @@ import StepStretchForm from "./step-stretch-form";
 import StepDocumentForm from "./step-document-form";
 import StepTapeForm from "./step-tape-form";
 import StepProductForm from "./step-product-form";
+import StepReview from "./step-review";
 // import Review from "../../components/Review/Review";
 
 interface Item {
@@ -64,8 +65,9 @@ interface StepContentProps {
   // handleChangeFile?: (file: File) => void;
 }
 
-const StepContent: React.FC<StepContentProps> = ({
+const StepContent = ({
   step,
+  stepsLength,
   input,
   items,
   handleInputChange,
@@ -146,9 +148,9 @@ const StepContent: React.FC<StepContentProps> = ({
       );
     }
   }
-  //   if (step === stepsLength - 1) {
-  //     return <Review input={input} data={order} />;
-  //   }
+  if (step === stepsLength - 1) {
+    return <StepReview input={input} data={input} />;
+  }
 };
 
 export default StepContent;
