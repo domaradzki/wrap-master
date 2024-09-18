@@ -73,6 +73,7 @@ StepTapeFormProps) {
               required
               id="printName"
               name="printName"
+              label="Nazwa nadruku"
               onChange={handleProductChange}
               value={item.printName}
               type="text"
@@ -156,6 +157,7 @@ StepTapeFormProps) {
               <Select
                 native
                 labelId="rollerLabel"
+                label="Wałek"
                 id="roller"
                 name="roller"
                 value={item.roller}
@@ -242,6 +244,7 @@ StepTapeFormProps) {
               name="imageFile"
               multiple
               type="file"
+              hidden
               // onChange={handleChangeFile}
             />
             <label htmlFor="fileX">

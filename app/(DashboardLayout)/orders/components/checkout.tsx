@@ -53,7 +53,7 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
 
   const stepsArray = order.orders.map((order) => ({
     stepName: order.product?.productCode,
-    id: order.product.productId,
+    id: order.orderId,
   }));
 
   let steps = stepsArray.map((item) => ({
