@@ -1,5 +1,5 @@
 import { Document } from "@/utils/structure";
-import { Typography, Paper } from "@mui/material";
+import { Typography, Paper, SelectChangeEvent } from "@mui/material";
 import { Fragment, useState } from "react";
 import StepSuccess from "./step-success";
 import CheckoutStepper from "./stepper";
@@ -31,10 +31,11 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
   const router = useRouter();
   const { orders } = order;
 
-  const productValues = orders.map((order) => {
+  const productValues = orders.map((item) => {
     return {
-      ...order,
-      ...order.product,
+      ...item,
+      ...item.product,
+      currency: order.currency,
     };
   });
 
@@ -49,7 +50,7 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
 
   const [activeStep, setActiveStep] = useState(0);
   const [input, setInput] = useState(documentValues);
-  const [items, steItems] = useState<Document["orders"]>(productValues);
+  const [items, steItems] = useState<any[]>(productValues);
 
   const stepsArray = order.orders.map((order) => ({
     stepName: order.product?.productCode,
@@ -66,10 +67,17 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
     { id: 999, stepName: "Weryfikacja" },
   ];
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string>
+  ) => {
+    const { name, value } = event.target as
+      | HTMLInputElement
+      | { name?: string; value: unknown };
     setInput({
       ...input,
-      [event.target.name]: event.target.value,
+      [name!]: value,
     });
   };
 
@@ -82,19 +90,24 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
     });
   };
 
-  const handleProductChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProductChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string>
+  ) => {
+    const { name, value } = event.target as
+      | HTMLInputElement
+      | { name?: string; value: unknown };
     const data = [...items];
     const currentOrder = data[activeStep - 1];
-    (currentOrder as any)[event.target.name] = event.target.value;
-    console.log("CHANGE", { [event.target.name]: event.target.value });
-
+    (currentOrder as any)[name!] = value;
     steItems([...data]);
   };
 
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = (date: dayjs.Dayjs | null, name: string) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
-    (currentOrder as any)[event.target.name] = event.target.value;
+    (currentOrder as any)[name] = date;
     steItems([...data]);
   };
 
@@ -108,12 +121,12 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
     setActiveStep(activeStep - 1);
   };
 
-  const handleAddOrder = (event) => {
+  const handleAddOrder = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(event);
+    setInput({ ...input, orders: items });
+    console.log("FULLORDER", input);
+    onClose();
   };
-
-  console.log("items", items);
 
   return (
     <Fragment>
@@ -134,12 +147,13 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
               <StepContent
                 step={activeStep}
                 stepsLength={steps.length}
-                order={order}
                 input={input}
                 items={items}
                 handleInputChange={handleInputChange}
                 handleProductChange={handleProductChange}
-                handleDateChange={handleDateChange}
+                handleDateChange={(date) =>
+                  handleDateChange(date, "dateFieldName")
+                }
                 handleDocumentDateChange={handleDocumentDateChange}
                 // handleChangeFile={handleChangeFile}
               />

@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import { Stack } from "@mui/material";
 
 interface StepButtonsProps {
-  steps: string[];
+  steps: { id: number; stepName: string }[];
   activeStep: number;
   handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleAddOrder: (event: any) => void;
@@ -16,7 +16,7 @@ const StepButtons: React.FC<StepButtonsProps> = ({
   activeStep,
   handleBack,
   handleAddOrder,
-  router,
+  // router,
   closeModal,
 }) => {
   return (

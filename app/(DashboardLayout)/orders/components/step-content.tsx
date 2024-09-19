@@ -7,16 +7,17 @@ import StepTapeForm from "./step-tape-form";
 import StepProductForm from "./step-product-form";
 import StepReview from "./step-review";
 
-interface Item {
+export interface Item {
   assortment: string;
   price: number;
   unit: string;
   kind: string;
   type: string;
   productCode: string;
-  netValue?: number;
+  netValue: number;
   margin?: number;
   dateOfRealisation?: string;
+  currency: string;
   product: {
     productCode: string;
   };
@@ -48,7 +49,7 @@ interface StepContentProps {
   step: number;
   input: any;
   items: Stretch[] | Tape[];
-
+  stepsLength: number;
   handleInputChange: (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
@@ -73,8 +74,8 @@ const StepContent = ({
   handleProductChange,
   handleDateChange,
   handleDocumentDateChange,
-  // handleChangeFile,
-}) => {
+}: // handleChangeFile,
+StepContentProps) => {
   console.log("step", step);
   console.log("input", input);
   console.log("items", items);
@@ -148,7 +149,7 @@ const StepContent = ({
     }
   }
   if (step === stepsLength - 1) {
-    return <StepReview input={input} data={input} />;
+    return <StepReview document={{ ...input, orders: items }} />;
   }
 };
 
