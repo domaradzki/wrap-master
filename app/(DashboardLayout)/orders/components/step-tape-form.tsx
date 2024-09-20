@@ -15,6 +15,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DateValidationError } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
+import { MenuItem } from "@mui/material";
 
 interface Item {
   assortment: string;
@@ -152,10 +153,9 @@ StepTapeFormProps) {
             />
           </Grid>
           <Grid item xs={12} md={2}>
-            <FormControl fullWidth required sx={{ minWidth: 120 }}>
+            <FormControl fullWidth required sx={{ minWidth: 94 }}>
               <InputLabel id="rollerLabel">Wałek</InputLabel>
               <Select
-                native
                 labelId="rollerLabel"
                 label="Wałek"
                 id="roller"
@@ -163,14 +163,15 @@ StepTapeFormProps) {
                 value={item.roller}
                 type="number"
                 onChange={handleProductChange}
-                // className={classes.selectEmpty}
               >
-                <option />
-                <option value={144}>144</option>
-                <option value={180}>180</option>
-                <option value={244}>244</option>
-                <option value={306}>306</option>
-                <option value={438}>438</option>
+                {/* <MenuItem disabled value="">
+                  <em>Wybierz</em>
+                </MenuItem> */}
+                <MenuItem value={144}>144</MenuItem>
+                <MenuItem value={180}>180</MenuItem>
+                <MenuItem value={244}>244</MenuItem>
+                <MenuItem value={306}>306</MenuItem>
+                <MenuItem value={438}>438</MenuItem>
               </Select>
             </FormControl>
           </Grid>
