@@ -12,7 +12,6 @@ import ReviewStretch from "./review-stretch";
 import ReviewProduct from "./review-product";
 
 export default function StepReview({ document }: { document: any }) {
-  console.log("DOCUMENT", document);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
@@ -20,23 +19,11 @@ export default function StepReview({ document }: { document: any }) {
           Dane dokumentu
         </Typography>
         <Grid container spacing={2} sx={{ width: "100%", margin: "10px 0" }}>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={9}>
             <TextField
               id="outlined-read-only-input"
               label="Firma"
               defaultValue={document.name}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            <TextField
-              id="outlined-read-only-input"
-              label="Adres dostawy"
-              defaultValue={document.deliveryAddress}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -56,7 +43,20 @@ export default function StepReview({ document }: { document: any }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={9}>
+            <TextField
+              id="outlined-read-only-input"
+              label="Adres dostawy"
+              defaultValue={document.deliveryAddress}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Data zamówienia"
@@ -70,7 +70,7 @@ export default function StepReview({ document }: { document: any }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <TextField
               id="outlined-read-only-input"
               label="Data płatności"
@@ -83,8 +83,8 @@ export default function StepReview({ document }: { document: any }) {
                 readOnly: true,
               }}
             />
-          </Grid>
-          <Grid item xs={12} sm={12}>
+          </Grid> */}
+          {/* <Grid item xs={12} sm={12}>
             <TextField
               id="outlined-read-only-input"
               label="Details"
@@ -95,17 +95,17 @@ export default function StepReview({ document }: { document: any }) {
                 readOnly: true,
               }}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
         {document.orders.map((item: any) => (
           <Fragment key={item.orderId}>
-            {item.kind === "KT" && item.type === "TPD" && (
+            {item.kind === "KT" && item.productCode === "TPD" && (
               <ReviewTape item={item} />
             )}
-            {item.kind === "KT" && item.type === "FS" && (
+            {item.kind === "KT" && item.productCode === "FS" && (
               <ReviewStretch item={item} />
             )}
-            {item.kind === "KT" && item.type === "TW" && (
+            {item.kind === "KT" && item.productCode === "TW" && (
               <ReviewProduct item={item} />
             )}
           </Fragment>

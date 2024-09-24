@@ -7,9 +7,10 @@ import StepButtons from "./step-buttons";
 import { useRouter } from "next/navigation";
 import StepContent from "./step-content";
 import dayjs from "dayjs";
+import "dayjs/locale/pl";
 
 interface CheckoutProps {
-  order: Document;
+  document: Document;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
 }
@@ -27,32 +28,45 @@ const stepsLegend: stepsKeys = {
   FSRG: "Folia Stretch",
 };
 
-const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
+const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
+  console.log("Check", document);
   const router = useRouter();
-  const { orders } = order;
+  const { orders } = document;
 
-  const productValues = orders.map((item) => {
+  const orderItems = orders.map((order) => {
     return {
-      ...item,
-      ...item.product,
-      currency: order.currency,
+      ...order.product,
+      currency: document.currency,
+      orderId: order.orderId,
+      dateOfRealisation: dayjs(order.dateOfRealisation).locale("pl"),
+      price: order.price,
+      quantity: order.quantity,
+      netValue: order.netValue,
+      margin: "",
     };
   });
 
   const documentValues = {
-    ...order,
-    dateInsert: dayjs(order.dateInsert),
-    name: order.company.name,
-    deliveryAddress: order.company.deliveryAddress,
+    documentId: document.documentId,
+    name: document.company.name,
+    deliveryAddress: document.company.deliveryAddress,
+    dateInsert: dayjs(document.dateInsert).locale("pl"),
+    details: document.details,
+    documentStatus: document.documentStatus,
+    exchangeRate: document.exchangeRate,
+    signature: document.signature,
+    symbol: document.symbol,
+    timestamp: document.timestamp,
+    trader: document.trader,
     transport: "",
     paymentMethod: "",
   };
 
   const [activeStep, setActiveStep] = useState(0);
   const [input, setInput] = useState(documentValues);
-  const [items, steItems] = useState<any[]>(productValues);
+  const [items, setItems] = useState<any[]>(orderItems);
 
-  const stepsArray = order.orders.map((order) => ({
+  const stepsArray = document.orders.map((order) => ({
     stepName: order.product?.productCode,
     id: order.orderId,
   }));
@@ -101,14 +115,14 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
     (currentOrder as any)[name!] = value;
-    steItems([...data]);
+    setItems([...data]);
   };
 
   const handleDateChange = (date: dayjs.Dayjs | null, name: string) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
     (currentOrder as any)[name] = date;
-    steItems([...data]);
+    setItems([...data]);
   };
 
   const handleNext = (event: { preventDefault: () => void }) => {
@@ -123,8 +137,8 @@ const Checkout = ({ order, onSubmit, onClose }: CheckoutProps) => {
 
   const handleAddOrder = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setInput({ ...input, orders: items });
-    console.log("FULLORDER", input);
+    const editedDocument = { ...input, orders: [...items] };
+    console.log("FULLORDER", editedDocument);
     onClose();
   };
 

@@ -41,27 +41,6 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     queryFn: () => newOrderActiveFetch({ id }), // Function to fetch the data
   });
 
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Order | null>(null);
-
-  interface Product {
-    orderId: string;
-    assortment: string;
-    quantity: number;
-    price: number;
-    netValue: number;
-    status?: string;
-  }
-
-  const handleOpenModal = (product: Order) => {
-    setSelectedProduct(product);
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
   const [openEditModal, setOpenEditModal] = useState(false);
 
   const handleOpenEditModal = () => {
@@ -72,23 +51,22 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     setOpenEditModal(false);
   };
 
-  const [editedOrder, setEditedOrder] = useState<Document | null>(null);
+  const [activeDocument, setActiveDocument] = useState<Document | null>(null);
 
   useEffect(() => {
     if (order) {
-      setEditedOrder({ ...order });
+      setActiveDocument({ ...order });
     }
   }, [order]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Handle form submission logic here
-    console.log("Form submitted:", editedOrder);
+    console.log("Form submitted:", activeDocument);
     // Update the order data here
-    // setOrder(editedOrder);
+    // setOrder(activeDocument);
     handleCloseEditModal();
   };
-  console.log("ORDER", order);
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -97,7 +75,10 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
   if (error) {
     return <Typography color="error">{error.message}</Typography>;
   }
-
+  let zloty = Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+  });
   return (
     <PageContainer title="Zamówienie" description="Szczegóły zamówienia">
       <Container sx={{ maxWidth: "100%", padding: 2 }}>
@@ -158,9 +139,9 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{order.product.assortment}</TableCell>
                     <TableCell>{order.product.type}</TableCell>
-                    <TableCell>{order.price}</TableCell>
+                    <TableCell>{zloty.format(order.price)}</TableCell>
                     <TableCell>{order.quantity}</TableCell>
-                    <TableCell>{order.netValue}</TableCell>
+                    <TableCell>{zloty.format(order.netValue)}</TableCell>
                     <TableCell>
                       {order.dateOfRealisation.toLocaleDateString()}
                     </TableCell>
@@ -198,7 +179,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
           }}
         >
           <Checkout
-            order={editedOrder}
+            document={activeDocument}
             onSubmit={handleSubmit}
             onClose={handleCloseEditModal}
           />

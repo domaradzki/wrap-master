@@ -43,7 +43,6 @@ const SettingsPage = () => {
   });
 
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
-    console.log("Form submitted with values:", values);
     setError(undefined);
     setSuccess(undefined);
 

@@ -76,7 +76,6 @@ const StepContent = ({
   handleDocumentDateChange,
 }: // handleChangeFile,
 StepContentProps) => {
-  console.log("step", step);
   console.log("input", input);
   console.log("items", items);
   if (step === 0) {
@@ -91,8 +90,8 @@ StepContentProps) => {
     );
   } else if (step > 0 && step < stepsLength - 1) {
     if (
-      items[step - 1].product.productCode === "TPD" ||
-      items[step - 1].product.productCode == "TPD32"
+      items[step - 1].productCode === "TPD" ||
+      items[step - 1].productCode == "TPD32"
     ) {
       return (
         <StepTapeForm
@@ -112,9 +111,9 @@ StepContentProps) => {
       );
     }
     if (
-      items[step - 1].product.productCode === "FSM" ||
-      items[step - 1].product.productCode == "FSMG" ||
-      items[step - 1].product.productCode == "FSRG"
+      items[step - 1].productCode === "FSM" ||
+      items[step - 1].productCode == "FSMG" ||
+      items[step - 1].productCode == "FSRG"
     ) {
       return (
         <StepStretchForm

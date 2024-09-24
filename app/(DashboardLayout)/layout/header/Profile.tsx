@@ -9,7 +9,6 @@ import ProfileItem from "@/components/profile-item";
 
 const Profile = () => {
   const user = useCurrentUser();
-  console.log(user);
   const [anchorEl2, setAnchorEl2] = useState(null);
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);

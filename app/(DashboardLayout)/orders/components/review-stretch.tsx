@@ -17,7 +17,6 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
     style: "currency",
     currency: "PLN",
   });
-  console.log("CURENCY", typeof zloty.format(item.netValue));
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
@@ -25,7 +24,19 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
           Parametry folii stretch
         </Typography>
         <Grid container spacing={2} sx={{ width: "100%", margin: "10px 0" }}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={9}>
+            <TextField
+              id="outlined-read-only-input"
+              label="Data realizacji"
+              defaultValue={item.assortment}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Data realizacji"
@@ -39,7 +50,7 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Cena"
@@ -53,11 +64,11 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Ilość"
-              defaultValue={`${item.quantity}${item.unit}`}
+              defaultValue={`${item.quantity} ${item.unit}`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -65,7 +76,7 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Wartość"
@@ -80,7 +91,7 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Marża"
@@ -92,18 +103,7 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
-            <TextField
-              id="outlined-read-only-input"
-              label="Grubość"
-              defaultValue={`${item.stretchThickness}my`}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
+
           <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
@@ -131,6 +131,18 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
           <Grid item xs={12} sm={2}>
             <TextField
               id="outlined-read-only-input"
+              label="Grubość"
+              defaultValue={`${item.stretchThickness}my`}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <TextField
+              id="outlined-read-only-input"
               label="Tuleja"
               defaultValue={`${item.sleeve}g`}
               variant="outlined"
@@ -144,7 +156,7 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
             <TextField
               id="outlined-read-only-input"
               label="Waga brutto"
-              defaultValue={`${item.grossWeight}kg`}
+              defaultValue={`${item.grossWeight?.toFixed(2)}kg`}
               variant="outlined"
               fullWidth
               InputProps={{

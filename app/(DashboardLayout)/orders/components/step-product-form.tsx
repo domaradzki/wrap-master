@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
@@ -15,6 +14,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DateValidationError } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
+import { MenuItem } from "@mui/material";
 
 interface Item {
   assortment: string;
@@ -23,7 +23,7 @@ interface Item {
   kind: string;
   type: string;
   productCode: string;
-  netValue?: number;
+  netValue: number;
   margin?: number;
   dateOfRealisation?: string;
   product: {
@@ -68,6 +68,44 @@ StepProductFormProps) {
           Parametry towaru do wysyłki
         </Typography>
         <Grid container spacing={3}>
+          <Grid item xs={12} md={9}>
+            <TextField
+              required
+              id="assortment"
+              name="assortment"
+              label="Nazwa produktu"
+              onChange={handleProductChange}
+              value={item.assortment}
+              type="text"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <DatePicker
+              name="dateOfRealisation"
+              label="Data realizacji"
+              value={dayjs(item.dateOfRealisation)}
+              onChange={handleDateChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              required
+              id="price"
+              name="price"
+              label="Cena"
+              onChange={handleProductChange}
+              value={item.price.toFixed(2)}
+              type="number"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">zł</InputAdornment>
+                ),
+              }}
+              fullWidth
+              autoComplete="price"
+            />
+          </Grid>
           <Grid item xs={12} sm={3}>
             <TextField
               required
@@ -86,24 +124,7 @@ StepProductFormProps) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              required
-              id="price"
-              name="price"
-              label="Cena"
-              onChange={handleProductChange}
-              value={item.price}
-              type="number"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">zł</InputAdornment>
-                ),
-              }}
-              fullWidth
-              autoComplete="price"
-            />
-          </Grid>
+
           <Grid item xs={12} sm={3}>
             <TextField
               required
@@ -111,7 +132,7 @@ StepProductFormProps) {
               name="netValue"
               label="Wartość"
               onChange={handleProductChange}
-              value={item.netValue}
+              value={item.netValue.toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -122,11 +143,10 @@ StepProductFormProps) {
               autoComplete="net value"
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <FormControl fullWidth required sx={{ minWidth: 120 }}>
               <InputLabel id="marginLabel">Marża</InputLabel>
               <Select
-                native
                 labelId="marginLabel"
                 label="Marża"
                 id="margin"
@@ -135,14 +155,12 @@ StepProductFormProps) {
                 type="number"
                 onChange={handleProductChange}
               >
-                <option />
-
-                <option value={0}>0</option>
-                <option value={0.25}>0.25</option>
-                <option value={0.5}>0.5</option>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
+                <MenuItem value={0}>0</MenuItem>
+                <MenuItem value={0.25}>0.25</MenuItem>
+                <MenuItem value={0.5}>0.5</MenuItem>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
               </Select>
             </FormControl>
           </Grid>

@@ -19,7 +19,19 @@ export default function ReviewTape({ item }: { item: Tape }) {
           Parametry taśmy z nadrukiem
         </Typography>
         <Grid container spacing={2} sx={{ width: "100%", margin: "10px 0" }}>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={9}>
+            <TextField
+              id="outlined-read-only-input"
+              label="Data realizacji"
+              defaultValue={item.assortment}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Data realizacji"
