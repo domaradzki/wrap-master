@@ -46,7 +46,7 @@ export default function StepStretchForm({
 }: StepStretchFormProps) {
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom sx={{ marginBottom: "30px" }}>
         Parametry folii stretch
       </Typography>
       <Grid container spacing={3}>

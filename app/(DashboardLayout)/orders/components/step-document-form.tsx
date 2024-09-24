@@ -44,7 +44,7 @@ export default function StepDocumentForm({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ marginBottom: "30px" }}>
           Informacje podstawowe
         </Typography>
         <Grid container spacing={3}>

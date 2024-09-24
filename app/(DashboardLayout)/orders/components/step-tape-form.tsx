@@ -65,7 +65,7 @@ StepTapeFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ marginBottom: "30px" }}>
           Parametry taśmy z nadrukiem
         </Typography>
         <Grid container spacing={3}>

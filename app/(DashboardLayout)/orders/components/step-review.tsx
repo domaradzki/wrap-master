@@ -1,9 +1,7 @@
 import React, { Fragment } from "react";
 import Typography from "@mui/material/Typography";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
-import { Box } from "@mui/material";
+import { TextField } from "@mui/material";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -18,110 +16,89 @@ export default function StepReview({ document }: { document: any }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
-        <Typography variant="h6" gutterBottom>
-          Podstawowe informacje
+        <Typography variant="h6" gutterBottom sx={{ marginBottom: "20px 0" }}>
+          Dane dokumentu
         </Typography>
         <Grid container spacing={2} sx={{ width: "100%", margin: "10px 0" }}>
           <Grid item xs={12} sm={12}>
-            <Box sx={{ padding: "2px 10px", height: "100%" }} boxShadow={2}>
-              <Typography
-                sx={{ margin: `5px 0 0 2px` }}
-                color="textSecondary"
-                display="block"
-                variant="caption"
-              >
-                Firma
-              </Typography>
-              <ListItem>
-                <ListItemText primary={document.name} />
-              </ListItem>
-            </Box>
+            <TextField
+              id="outlined-read-only-input"
+              label="Firma"
+              defaultValue={document.name}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Grid>
           <Grid item xs={12} sm={9}>
-            <Box sx={{ padding: "2px 10px", height: "100%" }} boxShadow={2}>
-              <Typography
-                sx={{ margin: `5px 0 0 2px` }}
-                color="textSecondary"
-                display="block"
-                variant="caption"
-              >
-                Adres dostawy
-              </Typography>
-              <ListItem>
-                <ListItemText primary={document.deliveryAddress} />
-              </ListItem>
-            </Box>
+            <TextField
+              id="outlined-read-only-input"
+              label="Adres dostawy"
+              defaultValue={document.deliveryAddress}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <Box sx={{ padding: "2px 10px", height: "100%" }} boxShadow={2}>
-              <Typography
-                sx={{ margin: `5px 0 0 2px` }}
-                color="textSecondary"
-                display="block"
-                variant="caption"
-              >
-                Transport
-              </Typography>
-              <ListItem>
-                <ListItemText primary={document.transport} />
-              </ListItem>
-            </Box>
+            <TextField
+              id="outlined-read-only-input"
+              label="Transport"
+              defaultValue={document.transport}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Box sx={{ padding: "2px 10px", height: "100%" }} boxShadow={2}>
-              <Typography
-                sx={{ margin: `5px 0 0 2px` }}
-                color="textSecondary"
-                display="block"
-                variant="caption"
-              >
-                Data zamówienia
-              </Typography>
-              <ListItem>
-                <ListItemText primary={dayjs(document.dateInsert).toString()} />
-              </ListItem>
-            </Box>
+            <TextField
+              id="outlined-read-only-input"
+              label="Data zamówienia"
+              defaultValue={dayjs(document.dateInsert)
+                .format("DD/MM/YYYY")
+                .toString()}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Grid>
-
           <Grid item xs={12} sm={6}>
-            <Box sx={{ padding: "2px 10px", height: "100%" }} boxShadow={2}>
-              <Typography
-                sx={{ margin: `5px 0 0 2px` }}
-                color="textSecondary"
-                display="block"
-                variant="caption"
-              >
-                Data płatności
-              </Typography>
-              <ListItem>
-                <ListItemText primary={dayjs(document.dateOfPay).toString()} />
-              </ListItem>
-            </Box>
+            <TextField
+              id="outlined-read-only-input"
+              label="Data płatności"
+              defaultValue={dayjs(document.dateOfPay)
+                .format("DD/MM/YYYY")
+                .toString()}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Grid>
-
           <Grid item xs={12} sm={12}>
-            <Box sx={{ padding: "2px 10px", height: "100%" }} boxShadow={2}>
-              <Typography
-                sx={{ margin: `5px 0 0 2px` }}
-                color="textSecondary"
-                display="block"
-                variant="caption"
-              >
-                Details
-              </Typography>
-              <ListItem>
-                <ListItemText primary={document.details} />
-              </ListItem>
-            </Box>
+            <TextField
+              id="outlined-read-only-input"
+              label="Details"
+              defaultValue={document.details}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Grid>
         </Grid>
         {document.orders.map((item: any) => (
           <Fragment key={item.orderId}>
-            {item.kind === "KT" && (
-              <Typography variant="h6" gutterBottom>
-                Szczegóły produktu
-              </Typography>
-            )}
             {item.kind === "KT" && item.type === "TPD" && (
               <ReviewTape item={item} />
             )}

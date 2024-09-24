@@ -64,7 +64,7 @@ StepProductFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ marginBottom: "30px" }}>
           Parametry towaru do wysyłki
         </Typography>
         <Grid container spacing={3}>
