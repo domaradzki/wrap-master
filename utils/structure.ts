@@ -218,6 +218,7 @@ const structureDocumentWithProducts = (document: ReducedDocument) => {
         order = {
           ...order,
           product: {
+            ...order.product,
             assortment: product.assortment,
             productCode,
             tapeLong: +productSize.slice(0, ind - 2),

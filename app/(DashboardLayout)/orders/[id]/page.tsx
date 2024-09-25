@@ -51,13 +51,9 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     setOpenEditModal(false);
   };
 
-  const [activeDocument, setActiveDocument] = useState<Document | null>(null);
-
-  useEffect(() => {
-    if (order) {
-      setActiveDocument({ ...order });
-    }
-  }, [order]);
+  const [activeDocument, setActiveDocument] = useState<Document | undefined>(
+    order
+  );
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -157,7 +153,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
         >
           <Grid item xs={12}>
             <Button onClick={handleOpenEditModal} variant="outlined">
-              <i className="fa fa-save" aria-hidden="true"></i> Zatwierdź
+              <i className="fa fa-save" aria-hidden="true"></i> Weryfikacja
             </Button>
           </Grid>
         </Stack>
@@ -178,11 +174,13 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
             borderRadius: 2,
           }}
         >
-          <Checkout
-            document={activeDocument}
-            onSubmit={handleSubmit}
-            onClose={handleCloseEditModal}
-          />
+          {activeDocument && (
+            <Checkout
+              document={activeDocument}
+              onSubmit={handleSubmit}
+              onClose={handleCloseEditModal}
+            />
+          )}
         </Box>
       </Modal>
     </PageContainer>

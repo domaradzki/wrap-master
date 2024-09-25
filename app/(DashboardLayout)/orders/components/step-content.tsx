@@ -36,6 +36,7 @@ export interface Tape extends Item {
   color3?: string;
   printName?: string;
   dateOfAcceptation?: string;
+  file?: File;
 }
 
 export interface Stretch extends Item {
@@ -62,7 +63,6 @@ interface StepContentProps {
   ) => void;
   handleDateChange: (date: Dayjs | null) => void;
   handleDocumentDateChange: (date: Dayjs | null) => void;
-  // handleChangeFile?: (file: File) => void;
 }
 
 const StepContent = ({
@@ -74,7 +74,8 @@ const StepContent = ({
   handleProductChange,
   handleDateChange,
   handleDocumentDateChange,
-}: // handleChangeFile,
+  handleChangeFile,
+}: //
 StepContentProps) => {
   console.log("input", input);
   console.log("items", items);
@@ -106,7 +107,7 @@ StepContentProps) => {
             )
           }
           handleDateChange={(date: Dayjs | null) => handleDateChange(date)}
-          // handleChangeFile={handleChangeFile}
+          handleChangeFile={handleChangeFile}
         />
       );
     }

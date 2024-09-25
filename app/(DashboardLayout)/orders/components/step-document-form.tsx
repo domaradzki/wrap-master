@@ -85,7 +85,7 @@ export default function StepDocumentForm({
           </Grid>
           <Grid item xs={12} sm={3}>
             <FormControl fullWidth required sx={{ minWidth: 120 }}>
-              <InputLabel id="paymentMethodLabel">Sposób płatności</InputLabel>
+              <InputLabel id="paymentMethodLabel">Płatność</InputLabel>
               <Select
                 labelId="paymentMethodLabel"
                 label="Sposób płatności"

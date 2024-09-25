@@ -1,13 +1,11 @@
 import React, { Fragment } from "react";
 import Typography from "@mui/material/Typography";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
-import { Box, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import "dayjs/locale/pl";
 import { Stretch } from "./step-content";
 
@@ -27,7 +25,7 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
           <Grid item xs={12} sm={9}>
             <TextField
               id="outlined-read-only-input"
-              label="Data realizacji"
+              label="Nazwa produktu"
               defaultValue={item.assortment}
               variant="outlined"
               fullWidth
@@ -54,9 +52,7 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
             <TextField
               id="outlined-read-only-input"
               label="Cena"
-              defaultValue={`${item.price.toFixed(2)}${
-                item.currency === "PLN" ? "zł" : item.currency
-              }`}
+              defaultValue={`${zloty.format(item.price)}`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -81,9 +77,6 @@ export default function ReviewStretch({ item }: { item: Stretch }) {
               id="outlined-read-only-input"
               label="Wartość"
               defaultValue={`${zloty.format(item.netValue)}`}
-              // defaultValue={`${item.netValue.toFixed(2)}${
-              //   item.currency === "PLN" ? "zł" : item.currency
-              // }`}
               variant="outlined"
               fullWidth
               InputProps={{

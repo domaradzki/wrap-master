@@ -36,13 +36,13 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
   const orderItems = orders.map((order) => {
     return {
       ...order.product,
-      currency: document.currency,
       orderId: order.orderId,
       dateOfRealisation: dayjs(order.dateOfRealisation).locale("pl"),
       price: order.price,
       quantity: order.quantity,
       netValue: order.netValue,
       margin: "",
+      roller: "",
     };
   });
 
@@ -54,6 +54,7 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
     details: document.details,
     documentStatus: document.documentStatus,
     exchangeRate: document.exchangeRate,
+    currency: document.currency,
     signature: document.signature,
     symbol: document.symbol,
     timestamp: document.timestamp,
@@ -125,6 +126,16 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
     setItems([...data]);
   };
 
+  const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const data = [...items];
+    const currentOrder = data[activeStep - 1];
+    const { files } = event.target;
+    if (files) {
+      (currentOrder as any).file = files[0];
+    }
+    setItems([...data]);
+  };
+
   const handleNext = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     setActiveStep(activeStep + 1);
@@ -169,7 +180,7 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
                   handleDateChange(date, "dateFieldName")
                 }
                 handleDocumentDateChange={handleDocumentDateChange}
-                // handleChangeFile={handleChangeFile}
+                handleChangeFile={handleChangeFile}
               />
 
               <StepButtons

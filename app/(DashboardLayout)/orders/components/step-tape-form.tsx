@@ -24,7 +24,7 @@ interface Item {
   kind: string;
   type: string;
   productCode: string;
-  netValue?: number;
+  netValue: number;
   margin?: number;
   dateOfRealisation?: string;
   product: {
@@ -43,6 +43,7 @@ interface Item {
   color1?: string;
   color2?: string;
   color3?: string;
+  file?: File;
 }
 
 interface StepTapeFormProps {
@@ -53,14 +54,14 @@ interface StepTapeFormProps {
       | SelectChangeEvent<number>
   ) => void;
   handleDateChange: FieldChangeHandler<Dayjs | null, DateValidationError>;
-  // handleChangeFile?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function StepTapeForm({
   item,
   handleProductChange,
   handleDateChange,
-}: // handleChangeFile,
+  handleChangeFile,
+}: //
 StepTapeFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
@@ -197,9 +198,6 @@ StepTapeFormProps) {
                 type="number"
                 onChange={handleProductChange}
               >
-                {/* <MenuItem disabled value="">
-                  <em>Wybierz</em>
-                </MenuItem> */}
                 <MenuItem value={144}>144</MenuItem>
                 <MenuItem value={180}>180</MenuItem>
                 <MenuItem value={244}>244</MenuItem>
@@ -333,7 +331,7 @@ StepTapeFormProps) {
               />
             </Grid>
           )}
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={3}>
             <input
               accept="image/*"
               // className={classes.input}
@@ -342,7 +340,7 @@ StepTapeFormProps) {
               multiple
               type="file"
               hidden
-              // onChange={handleChangeFile}
+              onChange={handleChangeFile}
             />
             <label htmlFor="fileX">
               <Button
@@ -355,13 +353,15 @@ StepTapeFormProps) {
               </Button>
             </label>
           </Grid>
-          {/* <Grid item xs={12} md={6}>
-            <img
-              src={input.file ? URL.createObjectURL(input.file) : null}
-              width="100%"
-              alt={input.file ? "Projekt" : ""}
-            />
-          </Grid> */}
+          <Grid item xs={12} md={3}>
+            {item.file && (
+              <img
+                src={item.file ? URL.createObjectURL(item.file) : undefined}
+                width="100%"
+                alt={item.file ? "Projekt" : ""}
+              />
+            )}
+          </Grid>
         </Grid>
       </Fragment>
     </LocalizationProvider>

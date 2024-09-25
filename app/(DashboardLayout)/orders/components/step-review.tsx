@@ -5,13 +5,14 @@ import { TextField } from "@mui/material";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import "dayjs/locale/pl";
 import ReviewTape from "./review-tape";
 import ReviewStretch from "./review-stretch";
 import ReviewProduct from "./review-product";
 
 export default function StepReview({ document }: { document: any }) {
+  console.log("REVIEW", document);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
@@ -70,44 +71,16 @@ export default function StepReview({ document }: { document: any }) {
               }}
             />
           </Grid>
-          {/* <Grid item xs={12} sm={6}>
-            <TextField
-              id="outlined-read-only-input"
-              label="Data płatności"
-              defaultValue={dayjs(document.dateOfPay)
-                .format("DD/MM/YYYY")
-                .toString()}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid> */}
-          {/* <Grid item xs={12} sm={12}>
-            <TextField
-              id="outlined-read-only-input"
-              label="Details"
-              defaultValue={document.details}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid> */}
         </Grid>
         {document.orders.map((item: any) => (
           <Fragment key={item.orderId}>
             {item.kind === "KT" && item.productCode === "TPD" && (
               <ReviewTape item={item} />
             )}
-            {item.kind === "KT" && item.productCode === "FS" && (
+            {item.kind === "KT" && item.type === "FS" && (
               <ReviewStretch item={item} />
             )}
-            {item.kind === "KT" && item.productCode === "TW" && (
-              <ReviewProduct item={item} />
-            )}
+            {item.productCode === "TW" && <ReviewProduct item={item} />}
           </Fragment>
         ))}
       </Fragment>

@@ -82,58 +82,61 @@ model TwoFactorConfirmation {
 }
 
 model Document {
-  id             String   @id @default(cuid())
-  documentId     String   @unique
+  id             String    @id @default(cuid())
+  documentId     String    @unique
+  dateInsert     DateTime
+  details        String
   documentStatus Int
+  deliveryAdress String
   symbol         String
   signature      String
   trader         String
   companyId      String
   currency       String
-  dateInsert     DateTime
-  details        String
   exchangeRate   Float?
   timestamp      Int
-  company        Company  @relation(fields: [companyId], references: [id])
-  orders         Order[]
   closed         Boolean
+  paymentMethod  String
+  transport      String
+  paymentDate    DateTime?
+  company        Company   @relation(fields: [companyId], references: [id])
+  orders         Order[]
 }
 
 model Company {
   id        String     @id @default(cuid())
   companyId String     @unique
   name      String
-  address   String
   documents Document[]
 }
 
 model Order {
   id                String    @id @default(cuid())
-  orderId           String    @unique
+  orderId           Int       @unique
   documentId        String
   document          Document  @relation(fields: [documentId], references: [documentId])
   netValue          Float
   price             Float
   quantity          Int
+  margin            Float?
+  postfix           String?
   dateOfRealisation DateTime?
-  productType       String
-  productId         String?
+  productId         Int?
   product           Product?  @relation(fields: [productId], references: [productId])
 }
 
 model Product {
   id          String  @id @default(cuid())
-  productId   String  @unique
+  productId   Int     @unique
   assortment  String
   code        String
   kind        String
   type        String
   unit        String
-  postfix     String?
   productCode String?
   orders      Order[]
-  stretch     FS[]
-  tape        Tape[]
+  stretch     FS?
+  tape        Tape?
 }
 
 model FS {
@@ -144,20 +147,22 @@ model FS {
   grossWeight      Float?
   stretchColor     String?
   productId        String  @unique
-  product          Product @relation(fields: [productId], references: [productId])
+  product          Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Tape {
-  id             String  @id @default(cuid())
-  tapeLong       Int?
-  tapeWidth      Int?
-  tapeThickness  Int?
-  numberOfColors Int?
-  glue           String?
-  tapeColor      String?
-  color1         String?
-  color2         String?
-  color3         String?
-  productId      String  @unique
-  product        Product @relation(fields: [productId], references: [productId])
+  id               String    @id @default(cuid())
+  tapeLong         Int?
+  tapeWidth        Int?
+  tapeThickness    Int?
+  numberOfColors   Int?
+  glue             String?
+  tapeColor        String?
+  color1           String?
+  color2           String?
+  color3           String?
+  dateOfAcceptaion DateTime?
+  printName        String?
+  productId        String    @unique
+  product          Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
 }

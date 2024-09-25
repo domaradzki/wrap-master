@@ -1,18 +1,20 @@
 import React, { Fragment } from "react";
-import { makeStyles } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+
 import Grid from "@mui/material/Grid";
-import { Box, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import "dayjs/locale/pl";
 import { Item } from "./step-content";
 
 export default function ReviewProduct({ item }: { item: Item }) {
+  let zloty = Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+  });
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
@@ -20,7 +22,19 @@ export default function ReviewProduct({ item }: { item: Item }) {
           Szczegóły produktu
         </Typography>
         <Grid container spacing={2} sx={{ width: "100%", margin: "10px 0" }}>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={9}>
+            <TextField
+              id="outlined-read-only-input"
+              label="Nazwa produktu"
+              defaultValue={item.assortment}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Data realizacji"
@@ -34,25 +48,11 @@ export default function ReviewProduct({ item }: { item: Item }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
-            <TextField
-              id="outlined-read-only-input"
-              label="Ilość"
-              defaultValue={`${item.quantity}${item.unit}`}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Cena"
-              defaultValue={`${item.price.toFixed(2)}${
-                item.currency === "PLN" ? "zł" : item.currency
-              }`}
+              defaultValue={`${zloty.format(item.price)}`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -60,13 +60,23 @@ export default function ReviewProduct({ item }: { item: Item }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              id="outlined-read-only-input"
+              label="Ilość"
+              defaultValue={`${item.quantity} ${item.unit}`}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Wartość"
-              defaultValue={`${item.netValue.toFixed(2)}${
-                item.currency === "PLN" ? "zł" : item.currency
-              }`}
+              defaultValue={`${zloty.format(item.netValue)}`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -74,7 +84,7 @@ export default function ReviewProduct({ item }: { item: Item }) {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={1}>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="outlined-read-only-input"
               label="Marża"
