@@ -1,16 +1,16 @@
 import React, { Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import "dayjs/locale/pl";
+
 import { Stretch } from "./step-content";
 
 export default function ReviewStretch({ item }: { item: Stretch }) {
-  // format number to Euro
   let zloty = Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency: "PLN",

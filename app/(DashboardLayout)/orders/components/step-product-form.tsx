@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { ChangeEvent, Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -6,61 +6,31 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
-import "dayjs/locale/pl";
+import { MenuItem } from "@mui/material";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DateValidationError } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
-import { MenuItem } from "@mui/material";
+import "dayjs/locale/pl";
 
-interface Item {
-  assortment: string;
-  price: number;
-  unit: string;
-  kind: string;
-  type: string;
-  productCode: string;
-  netValue: number;
-  margin?: number;
-  dateOfRealisation?: string;
-  product: {
-    productCode: string;
-  };
-  quantity: number;
-  printName?: string;
-  dateOfAcceptation?: string;
-  tapeLong?: number;
-  tapeWidth?: number;
-  tapeThickness?: number;
-  tapeColor?: string;
-  roller?: number;
-  glue?: string;
-  numberOfColors?: number;
-  color1?: string;
-  color2?: string;
-  color3?: string;
-}
+import { Item } from "./step-content";
 
 interface StepProductFormProps {
   item: Item;
   handleProductChange: (
     event:
-      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent<number>
   ) => void;
-  handleDateChange: FieldChangeHandler<Dayjs | null, DateValidationError>;
-  // handleChangeFile?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleRealisationDateChange: (value: Dayjs) => void;
 }
 
 export default function StepProductForm({
   item,
   handleProductChange,
-  handleDateChange,
-}: // handleChangeFile,
-StepProductFormProps) {
+  handleRealisationDateChange,
+}: StepProductFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
@@ -85,7 +55,9 @@ StepProductFormProps) {
               name="dateOfRealisation"
               label="Data realizacji"
               value={dayjs(item.dateOfRealisation)}
-              onChange={handleDateChange}
+              onChange={(newValue) =>
+                handleRealisationDateChange(newValue as Dayjs)
+              }
             />
           </Grid>
           <Grid item xs={12} sm={3}>

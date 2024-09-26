@@ -16,7 +16,6 @@ const StepButtons: React.FC<StepButtonsProps> = ({
   activeStep,
   handleBack,
   handleAddOrder,
-  // router,
   closeModal,
 }) => {
   return (
@@ -46,7 +45,6 @@ const StepButtons: React.FC<StepButtonsProps> = ({
         </Button>
       ) : (
         <Button
-          // onClick={() => router.back()}
           onClick={closeModal}
           sx={{ marginTop: 2, marginLeft: 1 }}
           variant="outlined"

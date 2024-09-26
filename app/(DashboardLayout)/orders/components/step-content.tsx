@@ -62,8 +62,9 @@ interface StepContentProps {
       | SelectChangeEvent<string>
   ) => void;
   handleChangeFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  // handleDateChange: (date: Dayjs | null, name: string) => void;
   handleInsertDateChange: (value: Dayjs) => void;
+  handleRealisationDateChange: (value: Dayjs) => void;
+  handleAcceptationnDateChange: (value: Dayjs) => void;
 }
 
 const StepContent = ({
@@ -73,12 +74,11 @@ const StepContent = ({
   items,
   handleInputChange,
   handleProductChange,
-  handleDateChange,
   handleInsertDateChange,
+  handleRealisationDateChange,
+  handleAcceptationnDateChange,
   handleChangeFile,
 }: StepContentProps) => {
-  console.log("input", input);
-  console.log("items", items);
   if (step === 0) {
     return (
       <StepDocumentForm
@@ -104,7 +104,8 @@ const StepContent = ({
                 | SelectChangeEvent<string>
             )
           }
-          handleDateChange={handleDateChange}
+          handleRealisationDateChange={handleRealisationDateChange}
+          handleAcceptationnDateChange={handleAcceptationnDateChange}
           handleChangeFile={handleChangeFile}
         />
       );
@@ -126,6 +127,7 @@ const StepContent = ({
                 | SelectChangeEvent<string>
             )
           }
+          handleRealisationDateChange={handleRealisationDateChange}
         />
       );
     } else {
@@ -141,7 +143,7 @@ const StepContent = ({
                 | SelectChangeEvent<string>
             )
           }
-          handleDateChange={(date: Dayjs | null) => handleDateChange(date)}
+          handleRealisationDateChange={handleRealisationDateChange}
         />
       );
     }

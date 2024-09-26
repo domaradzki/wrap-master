@@ -2,57 +2,34 @@ import React, { ChangeEvent, Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import { MenuItem } from "@mui/material";
+
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DateValidationError } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
-import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
 
-interface Item {
-  assortment: string;
-  price: number;
-  unit: string;
-  kind: string;
-  type: string;
-  productCode: string;
-  netValue: number;
-  margin?: number;
-  dateOfRealisation?: string;
-  product: {
-    productCode: string;
-  };
-  quantity: number;
-  netWeight: number;
-  grossWeight: number;
-  stretchThickness: number;
-  stretchColor?: string;
-  sleeve: number;
-}
+import { Stretch } from "./step-content";
 
 interface StepStretchFormProps {
-  item: Item;
+  item: Stretch;
   handleProductChange: (
     event:
       | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent<number>
   ) => void;
-  handleDateChange: FieldChangeHandler<Dayjs | null, DateValidationError>;
+  handleRealisationDateChange: (value: Dayjs) => void;
 }
 
 export default function StepStretchForm({
   item,
   handleProductChange,
-  handleDateChange,
+  handleRealisationDateChange,
 }: StepStretchFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
@@ -78,7 +55,9 @@ export default function StepStretchForm({
               name="dateOfRealisation"
               label="Data realizacji"
               value={dayjs(item.dateOfRealisation)}
-              onChange={handleDateChange}
+              onChange={(newValue) =>
+                handleRealisationDateChange(newValue as Dayjs)
+              }
             />
           </Grid>
           <Grid item xs={12} md={2}>
@@ -132,7 +111,7 @@ export default function StepStretchForm({
               name="netWeight"
               label="Waga netto"
               onChange={handleProductChange}
-              value={item.netWeight.toFixed(2)}
+              value={(item.netWeight ?? 0).toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -149,7 +128,7 @@ export default function StepStretchForm({
               name="grossWeight"
               label="Waga brutto"
               onChange={handleProductChange}
-              value={item.grossWeight.toFixed(2)}
+              value={(item.grossWeight ?? 0).toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (

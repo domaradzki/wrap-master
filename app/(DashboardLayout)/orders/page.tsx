@@ -1,7 +1,7 @@
 "use client";
 
 import { reduceDocuments, ReducedDocument } from "@/lib/reducer";
-import React from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,
@@ -25,9 +25,9 @@ import { CheckCircleOutline, Edit } from "@mui/icons-material";
 import { newOrdersFetch } from "@/data/new-orders";
 
 const OrdersPage = () => {
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useState("1");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
@@ -123,7 +123,7 @@ const OrdersPage = () => {
                           {new Date(order.dateInsert).toLocaleDateString()}
                         </TableCell>
                         <TableCell>{order.signature}</TableCell>
-                        <TableCell>{order.company.client}</TableCell>
+                        <TableCell>{order.company.name}</TableCell>
                         <TableCell>{order.symbol}</TableCell>
                         <TableCell>{order.trader}</TableCell>
                         <TableCell>{order.closed ? "Yes" : "No"}</TableCell>

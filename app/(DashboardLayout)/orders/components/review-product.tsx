@@ -2,12 +2,13 @@ import React, { Fragment } from "react";
 import Typography from "@mui/material/Typography";
 
 import Grid from "@mui/material/Grid";
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import "dayjs/locale/pl";
+
 import { Item } from "./step-content";
 
 export default function ReviewProduct({ item }: { item: Item }) {

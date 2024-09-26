@@ -121,13 +121,20 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
     setItems([...data]);
   };
 
-  const handleDateChange = (event) => {
-    console.log("event", event);
+  const handleRealisationDateChange = (value: Dayjs) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
-    // (currentOrder as any)[name] = date;
+    (currentOrder as any).dateOfRealisation = value;
     setItems([...data]);
   };
+
+  const handleAcceptationnDateChange = (value: Dayjs) => {
+    const data = [...items];
+    const currentOrder = data[activeStep - 1];
+    (currentOrder as any).dateOfAcceptation = value;
+    setItems([...data]);
+  };
+
   const handleInsertDateChange = (value: Dayjs) => {
     setInput({
       ...input,
@@ -176,8 +183,9 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
                 handleInputChange={handleInputChange}
                 handleProductChange={handleProductChange}
                 handleChangeFile={handleChangeFile}
-                handleDateChange={handleDateChange}
                 handleInsertDateChange={handleInsertDateChange}
+                handleRealisationDateChange={handleRealisationDateChange}
+                handleAcceptationnDateChange={handleAcceptationnDateChange}
               />
 
               <StepButtons

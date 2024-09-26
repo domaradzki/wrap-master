@@ -64,7 +64,7 @@ export default function StepDocumentForm({
               name="dateInsert"
               label="Data zamówienia"
               value={dayjs(input.dateInsert)}
-              onChange={handleInsertDateChange}
+              onChange={(newValue) => handleInsertDateChange(newValue as Dayjs)}
             />
           </Grid>
           <Grid item xs={12} sm={6}>

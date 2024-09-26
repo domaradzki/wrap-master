@@ -63,8 +63,6 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     event.preventDefault();
     // Handle form submission logic here
     console.log("Form submitted:", activeDocument);
-    // Update the order data here
-    // setOrder(activeDocument);
     handleCloseEditModal();
   };
 
