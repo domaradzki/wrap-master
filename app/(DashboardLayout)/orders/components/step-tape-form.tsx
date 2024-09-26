@@ -53,7 +53,8 @@ interface StepTapeFormProps {
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent<number>
   ) => void;
-  handleDateChange: FieldChangeHandler<Dayjs | null, DateValidationError>;
+  handleChangeFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  // handleDateChange: (date: Dayjs | null, name: string) => void;
 }
 
 export default function StepTapeForm({
@@ -61,8 +62,7 @@ export default function StepTapeForm({
   handleProductChange,
   handleDateChange,
   handleChangeFile,
-}: //
-StepTapeFormProps) {
+}: StepTapeFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
@@ -87,7 +87,11 @@ StepTapeFormProps) {
               name="dateOfRealisation"
               label="Data realizacji"
               value={dayjs(item.dateOfRealisation)}
-              onChange={handleDateChange}
+              onChange={(newValue) =>
+                handleDateChange({
+                  target: { name: "dateOfRealisation", value: newValue },
+                })
+              }
             />
           </Grid>
           <Grid item xs={12} sm={3}>

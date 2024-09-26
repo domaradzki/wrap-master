@@ -18,7 +18,7 @@ import { MenuItem } from "@mui/material";
 interface InputProps {
   name: string;
   deliveryAddress: string;
-  dateInsert: Date | null;
+  dateInsert: Date;
   details: string;
   paymentMethod: string;
   transport: string;
@@ -31,16 +31,13 @@ interface StepDocumentFormProps {
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent<string>
   ) => void;
-  handleDocumentDateChange: FieldChangeHandler<
-    Dayjs | null,
-    DateValidationError
-  >;
+  handleInsertDateChange: (value: Dayjs) => void;
 }
 
 export default function StepDocumentForm({
   input,
   handleInputChange,
-  handleDocumentDateChange,
+  handleInsertDateChange,
 }: StepDocumentFormProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
@@ -67,7 +64,7 @@ export default function StepDocumentForm({
               name="dateInsert"
               label="Data zamówienia"
               value={dayjs(input.dateInsert)}
-              onChange={handleDocumentDateChange}
+              onChange={handleInsertDateChange}
             />
           </Grid>
           <Grid item xs={12} sm={6}>

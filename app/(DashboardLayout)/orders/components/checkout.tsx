@@ -6,8 +6,10 @@ import CheckoutStepper from "./stepper";
 import StepButtons from "./step-buttons";
 import { useRouter } from "next/navigation";
 import StepContent from "./step-content";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
+import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
+import { DateValidationError } from "@mui/x-date-pickers";
 
 interface CheckoutProps {
   document: Document;
@@ -29,7 +31,6 @@ const stepsLegend: stepsKeys = {
 };
 
 const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
-  console.log("Check", document);
   const router = useRouter();
   const { orders } = document;
 
@@ -96,15 +97,6 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
     });
   };
 
-  const handleDocumentDateChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setInput({
-      ...input,
-      [event.target.name]: event.target.value,
-    });
-  };
-
   const handleProductChange = (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
@@ -119,13 +111,6 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
     setItems([...data]);
   };
 
-  const handleDateChange = (date: dayjs.Dayjs | null, name: string) => {
-    const data = [...items];
-    const currentOrder = data[activeStep - 1];
-    (currentOrder as any)[name] = date;
-    setItems([...data]);
-  };
-
   const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
@@ -134,6 +119,20 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
       (currentOrder as any).file = files[0];
     }
     setItems([...data]);
+  };
+
+  const handleDateChange = (event) => {
+    console.log("event", event);
+    const data = [...items];
+    const currentOrder = data[activeStep - 1];
+    // (currentOrder as any)[name] = date;
+    setItems([...data]);
+  };
+  const handleInsertDateChange = (value: Dayjs) => {
+    setInput({
+      ...input,
+      dateInsert: value,
+    });
   };
 
   const handleNext = (event: { preventDefault: () => void }) => {
@@ -155,7 +154,7 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
 
   return (
     <Fragment>
-      <Paper sx={{ marginBottom: 6, padding: 3 }}>
+      <Paper sx={{ marginBottom: 2, padding: 3 }}>
         <Typography component="h1" variant="h4" align="center">
           Kontrola zamówienia
         </Typography>
@@ -176,11 +175,9 @@ const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
                 items={items}
                 handleInputChange={handleInputChange}
                 handleProductChange={handleProductChange}
-                handleDateChange={(date) =>
-                  handleDateChange(date, "dateFieldName")
-                }
-                handleDocumentDateChange={handleDocumentDateChange}
                 handleChangeFile={handleChangeFile}
+                handleDateChange={handleDateChange}
+                handleInsertDateChange={handleInsertDateChange}
               />
 
               <StepButtons

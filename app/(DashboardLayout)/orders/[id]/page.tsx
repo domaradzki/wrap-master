@@ -51,9 +51,13 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     setOpenEditModal(false);
   };
 
-  const [activeDocument, setActiveDocument] = useState<Document | undefined>(
-    order
-  );
+  const [activeDocument, setActiveDocument] = useState<Document | null>(null);
+
+  useEffect(() => {
+    if (order) {
+      setActiveDocument({ ...order });
+    }
+  }, [order]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -172,6 +176,8 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
+            maxHeight: "98%",
+            overflowY: "scroll",
           }}
         >
           {activeDocument && (
