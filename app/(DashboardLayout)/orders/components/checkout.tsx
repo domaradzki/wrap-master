@@ -8,12 +8,10 @@ import { useRouter } from "next/navigation";
 import StepContent from "./step-content";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
-import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
-import { DateValidationError } from "@mui/x-date-pickers";
 
 interface CheckoutProps {
   document: Document;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  // onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
 }
 
@@ -30,7 +28,11 @@ const stepsLegend: stepsKeys = {
   FSRG: "Folia Stretch",
 };
 
-const Checkout = ({ document, onSubmit, onClose }: CheckoutProps) => {
+const Checkout = ({
+  document,
+  //  onSubmit,
+  onClose,
+}: CheckoutProps) => {
   const router = useRouter();
   const { orders } = document;
 

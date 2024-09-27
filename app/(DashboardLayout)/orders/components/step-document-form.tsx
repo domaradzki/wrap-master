@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { ChangeEvent, Fragment } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -8,9 +8,7 @@ import FormControl from "@mui/material/FormControl";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { FieldChangeHandler } from "@mui/x-date-pickers/internals";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DateValidationError } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
 import { MenuItem } from "@mui/material";
@@ -28,7 +26,7 @@ interface StepDocumentFormProps {
   input: InputProps;
   handleInputChange: (
     event:
-      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent<string>
   ) => void;
   handleInsertDateChange: (value: Dayjs) => void;

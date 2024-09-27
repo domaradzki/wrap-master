@@ -181,7 +181,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
           {activeDocument && (
             <Checkout
               document={activeDocument}
-              onSubmit={handleSubmit}
+              // onSubmit={handleSubmit}
               onClose={handleCloseEditModal}
             />
           )}
