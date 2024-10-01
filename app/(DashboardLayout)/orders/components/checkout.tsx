@@ -9,6 +9,11 @@ import StepContent from "./step-content";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
 
+// import * as z from "zod";
+// import { useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import CheckoutSchema from "@/schemas/checkout";
+
 interface CheckoutProps {
   document: Document;
   // onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -154,10 +159,18 @@ const Checkout = ({
     setActiveStep(activeStep - 1);
   };
 
-  const handleAddOrder = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleAddOrder = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const editedDocument = { ...input, orders: [...items] };
-    console.log("FULLORDER", editedDocument);
+    const data = { ...input, orders: [...items] };
+    try {
+      await addDocumentWithItems(data);
+
+      console.log("Document successfuly added");
+      // Handle success
+    } catch (error) {
+      // Handle error
+      console.log("error", error);
+    }
     onClose();
   };
 
