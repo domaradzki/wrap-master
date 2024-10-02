@@ -34,7 +34,7 @@ export default function StepStretchForm({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
-        <Typography variant="h6" gutterBottom sx={{ marginBottom: "30px" }}>
+        <Typography variant="h6" gutterBottom sx={{ marginBottom: "10px" }}>
           Parametry folii stretch
         </Typography>
         <Grid container spacing={3}>

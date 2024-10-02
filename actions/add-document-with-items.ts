@@ -1,36 +1,121 @@
-import { z } from "zod";
-import { db } from "@/lib/db";
-import { documentSchema } from "@/schemas/checkout";
+import { db } from "@/lib/db"; // Adjust the import path based on your project structure
+import { DocumentSchema } from "@/schemas/checkout";
+import { Document } from "@/utils/structure"; // Assuming this is your Document type
 
-const addDocumentWithItems = async (data: z.infer<typeof documentSchema>) => {
+// Action to add a document with items
+export const addDocumentWithItems = async (data: Document) => {
   try {
-    const { file, ...rest } = data;
+    // Validate the data using Zod schema
+    const validatedData = DocumentSchema.parse(data);
 
-    // Create a document
-    const document = await db.document.create({
+    // Create the document in the database
+    const createdDocument = await db.document.create({
       data: {
-        // Map data to document fields
+        documentId: validatedData.documentId,
+        dateInsert: validatedData.dateInsert,
+        details: validatedData.details,
+        documentStatus: validatedData.documentStatus,
+        deliveryAdress: validatedData.deliveryAddress,
+        symbol: validatedData.symbol,
+        signature: validatedData.signature,
+        trader: validatedData.trader,
+        currency: validatedData.currency,
+        exchangeRate: validatedData.exchangeRate || null,
+        timestamp: validatedData.timestamp,
+        closed: validatedData.closed,
+        paymentMethod: validatedData.paymentMethod,
+        transport: validatedData.transport,
+        paymentDate: null, // Set as needed
+        company: {
+          connectOrCreate: {
+            where: {
+              companyId: validatedData.companyId,
+            },
+            create: {
+              name: validatedData.name,
+              companyId: validatedData.companyId,
+            },
+          },
+        },
+      },
+      include: {
+        company: true,
+        orders: true,
       },
     });
 
-    // Create items associated with the document
-    const items = await db.order.createMany({
-      data: [
-        {
-          documentId: document.id,
-          orderId: orderId,
-        },
-      ],
-    });
+    // Create associated orders in the database
+    const orders = await Promise.all(
+      validatedData.orders.map(async (order) => {
+        return await db.order.create({
+          data: {
+            orderId: order.orderId,
+            netValue: order.netValue,
+            price: order.price,
+            quantity: order.quantity,
+            margin: order.margin || null,
+            postfix: order.postfix || "", // Set as needed
+            dateOfRealisation: order.dateOfRealisation,
+            document: {
+              connect: {
+                documentId: createdDocument.documentId,
+              },
+            },
+            product: {
+              connectOrCreate: {
+                where: {
+                  productId: order.productId,
+                },
+                create: {
+                  productId: order.productId,
+                  assortment: order.assortment,
+                  code: order.code,
+                  kind: order.kind,
+                  type: order.type,
+                  unit: order.unit,
+                  productCode: order.productCode,
+                  ...((order.productCode === "TPD" ||
+                    order.productCode === "TPD32") && {
+                    tape: {
+                      create: {
+                        tapeLong: order.tapeLong || null,
+                        tapeWidth: order.tapeWidth || null,
+                        tapeThickness: order.tapeThickness || null,
+                        numberOfColors: order.numberOfColors || null,
+                        glue: order.glue || "",
+                        tapeColor: order.tapeColor || "",
+                        color1: order.color1 || "",
+                        color2: order.color2 || "",
+                        color3: order.color3 || "",
+                        dateOfAcceptaion: order.dateOfAcceptaion || null,
+                        printName: order.printName || "",
+                      },
+                    },
+                  }),
+                  ...((order.productCode === "FSM" ||
+                    order.productCode === "FSMG" ||
+                    order.productCode === "FSRG") && {
+                    stretch: {
+                      create: {
+                        sleeve: order.sleeve || null,
+                        stretchThickness: order.stretchThickness || null,
+                        netWeight: order.netWeight || null,
+                        grossWeight: order.grossWeight || null,
+                        stretchColor: order.stretchColor || "",
+                      },
+                    },
+                  }),
+                },
+              },
+            },
+          },
+        });
+      })
+    );
 
-    // Handle file upload if needed
-    if (file) {
-      // Upload file to storage and associate it with the document or items
-    }
-
-    return { document, items };
+    return { documentId: createdDocument.id, orders };
   } catch (error) {
     console.error("Error adding document with items:", error);
-    throw error;
+    throw new Error("Failed to add document with items.");
   }
 };

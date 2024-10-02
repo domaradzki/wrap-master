@@ -57,6 +57,8 @@ const Checkout = ({
   const documentValues = {
     documentId: document.documentId,
     name: document.company.name,
+    companyId: document.company.companyId,
+    closed: document.closed,
     deliveryAddress: document.company.deliveryAddress,
     dateInsert: dayjs(document.dateInsert).locale("pl"),
     details: document.details,
@@ -162,15 +164,15 @@ const Checkout = ({
   const handleAddOrder = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = { ...input, orders: [...items] };
-    try {
-      await addDocumentWithItems(data);
+    // try {
+    //   await addDocumentWithItems(data);
 
-      console.log("Document successfuly added");
-      // Handle success
-    } catch (error) {
-      // Handle error
-      console.log("error", error);
-    }
+    console.log("Document successfuly added", data);
+    //   // Handle success
+    // } catch (error) {
+    //   // Handle error
+    //   console.log("error", error);
+    // }
     onClose();
   };
 

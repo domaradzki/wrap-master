@@ -19,7 +19,7 @@ export default function ReviewProduct({ item }: { item: Item }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
-        <Typography variant="h6" gutterBottom sx={{ marginBottom: "30px" }}>
+        <Typography variant="h6" gutterBottom sx={{ margin: "10px 0 0" }}>
           Szczegóły produktu
         </Typography>
         <Grid container spacing={2} sx={{ width: "100%", margin: "10px 0" }}>

@@ -95,9 +95,9 @@ model Document {
   currency       String
   exchangeRate   Float?
   timestamp      Int
+  transport      String
   closed         Boolean
   paymentMethod  String
-  transport      String
   paymentDate    DateTime?
   company        Company   @relation(fields: [companyId], references: [id])
   orders         Order[]
@@ -114,15 +114,15 @@ model Order {
   id                String    @id @default(cuid())
   orderId           Int       @unique
   documentId        String
-  document          Document  @relation(fields: [documentId], references: [documentId])
+  document          Document  @relation(fields: [documentId], references: [id])
   netValue          Float
   price             Float
   quantity          Int
   margin            Float?
   postfix           String?
-  dateOfRealisation DateTime?
-  productId         Int?
-  product           Product?  @relation(fields: [productId], references: [productId])
+  dateOfRealisation DateTime
+  productId         String?
+  product           Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Product {

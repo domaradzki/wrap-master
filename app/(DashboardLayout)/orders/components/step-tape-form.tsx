@@ -38,7 +38,7 @@ export default function StepTapeForm({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
       <Fragment>
-        <Typography variant="h6" gutterBottom sx={{ marginBottom: "30px" }}>
+        <Typography variant="h6" gutterBottom sx={{ marginBottom: "10px" }}>
           Parametry taśmy z nadrukiem
         </Typography>
         <Grid container spacing={3}>
