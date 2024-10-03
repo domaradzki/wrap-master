@@ -1,13 +1,19 @@
-import { Document } from "@/utils/structure";
 import { Typography, Paper, SelectChangeEvent } from "@mui/material";
-import { Fragment, useState } from "react";
-import StepSuccess from "./step-success";
-import CheckoutStepper from "./stepper";
-import StepButtons from "./step-buttons";
+import { Fragment, useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { useSession } from "next-auth/react";
+import CheckoutStepper from "./stepper";
 import StepContent from "./step-content";
+import StepSuccess from "./step-success";
+import StepButtons from "./step-buttons";
+
+import { Document } from "@/utils/structure";
+import { DocumentSchema } from "@/schemas/checkout";
+
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
+import { addDocumentWithItems } from "@/actions/add-document-with-items";
 
 // import * as z from "zod";
 // import { useForm } from "react-hook-form";
@@ -60,7 +66,7 @@ const Checkout = ({
     companyId: document.company.companyId,
     closed: document.closed,
     deliveryAddress: document.company.deliveryAddress,
-    dateInsert: dayjs(document.dateInsert).locale("pl"),
+    dateInsert: document.dateInsert,
     details: document.details,
     documentStatus: document.documentStatus,
     exchangeRate: document.exchangeRate,
@@ -76,6 +82,10 @@ const Checkout = ({
   const [activeStep, setActiveStep] = useState(0);
   const [input, setInput] = useState(documentValues);
   const [items, setItems] = useState<any[]>(orderItems);
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
+  const { update } = useSession();
+  const [isPending, startTransition] = useTransition();
 
   const stepsArray = document.orders.map((order) => ({
     stepName: order.product?.productCode,
@@ -133,21 +143,21 @@ const Checkout = ({
   const handleRealisationDateChange = (value: Dayjs) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
-    (currentOrder as any).dateOfRealisation = value;
+    (currentOrder as any).dateOfRealisation = value.toString();
     setItems([...data]);
   };
 
   const handleAcceptationnDateChange = (value: Dayjs) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
-    (currentOrder as any).dateOfAcceptation = value;
+    (currentOrder as any).dateOfAcceptation = value.toString();
     setItems([...data]);
   };
 
   const handleInsertDateChange = (value: Dayjs) => {
     setInput({
       ...input,
-      dateInsert: value,
+      dateInsert: value.toString(),
     });
   };
 
@@ -163,16 +173,25 @@ const Checkout = ({
 
   const handleAddOrder = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = { ...input, orders: [...items] };
-    // try {
-    //   await addDocumentWithItems(data);
-
-    console.log("Document successfuly added", data);
-    //   // Handle success
-    // } catch (error) {
-    //   // Handle error
-    //   console.log("error", error);
-    // }
+    const data = JSON.parse(JSON.stringify({ ...input, orders: [...items] }));
+    startTransition(() => {
+      addDocumentWithItems(data)
+        .then((data) => {
+          if (data.error) {
+            console.log("Error:", data.error);
+            setError(data.error);
+          }
+          if (data.success) {
+            console.log("Success:", data.success);
+            update();
+            setSuccess(data.success);
+          }
+        })
+        .catch((error) => {
+          console.error("Unexpected error:", error);
+          setError("Coś poszło nie tak!");
+        });
+    });
     onClose();
   };
 

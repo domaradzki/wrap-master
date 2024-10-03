@@ -1,3 +1,6 @@
+"use server";
+
+import { getDocumentByDocumentId } from "@/data/new-document";
 import { db } from "@/lib/db"; // Adjust the import path based on your project structure
 import { DocumentSchema } from "@/schemas/checkout";
 import { Document } from "@/utils/structure"; // Assuming this is your Document type
@@ -8,6 +11,13 @@ export const addDocumentWithItems = async (data: Document) => {
     // Validate the data using Zod schema
     const validatedData = DocumentSchema.parse(data);
 
+    const dbDocument = await getDocumentByDocumentId(validatedData.documentId);
+
+    if (dbDocument) {
+      return {
+        error: `Dokument o numerze ${validatedData.documentId} juz istnieje w bazie!`,
+      };
+    }
     // Create the document in the database
     const createdDocument = await db.document.create({
       data: {
@@ -87,7 +97,7 @@ export const addDocumentWithItems = async (data: Document) => {
                         color1: order.color1 || "",
                         color2: order.color2 || "",
                         color3: order.color3 || "",
-                        dateOfAcceptaion: order.dateOfAcceptaion || null,
+                        dateOfAcceptaion: order.dateOfAcceptaion ?? null,
                         printName: order.printName || "",
                       },
                     },
@@ -113,7 +123,10 @@ export const addDocumentWithItems = async (data: Document) => {
       })
     );
 
-    return { documentId: createdDocument.id, orders };
+    return {
+      success: "Document with items added successfully.",
+      data: { ...createdDocument, orders: orders },
+    };
   } catch (error) {
     console.error("Error adding document with items:", error);
     throw new Error("Failed to add document with items.");

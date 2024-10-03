@@ -83,7 +83,7 @@ model TwoFactorConfirmation {
 
 model Document {
   id             String    @id @default(cuid())
-  documentId     String    @unique
+  documentId     Int       @unique
   dateInsert     DateTime
   details        String
   documentStatus Int
@@ -105,16 +105,16 @@ model Document {
 
 model Company {
   id        String     @id @default(cuid())
-  companyId String     @unique
+  companyId Int        @unique
   name      String
   documents Document[]
 }
 
 model Order {
-  id                String    @id @default(cuid())
-  orderId           Int       @unique
+  id                String   @id @default(cuid())
+  orderId           Int      @unique
   documentId        String
-  document          Document  @relation(fields: [documentId], references: [id])
+  document          Document @relation(fields: [documentId], references: [id])
   netValue          Float
   price             Float
   quantity          Int
@@ -122,7 +122,7 @@ model Order {
   postfix           String?
   dateOfRealisation DateTime
   productId         String?
-  product           Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product           Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Product {
