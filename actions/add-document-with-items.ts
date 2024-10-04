@@ -1,6 +1,6 @@
 "use server";
 
-import { getDocumentByDocumentId } from "@/data/new-document";
+import { getDocumentByDocumentId } from "@/data/db-document";
 import { db } from "@/lib/db"; // Adjust the import path based on your project structure
 import { DocumentSchema } from "@/schemas/checkout";
 import { Document } from "@/utils/structure"; // Assuming this is your Document type

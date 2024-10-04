@@ -104,7 +104,9 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
               <TablePagination
                 rowsPerPageOptions={[6, 12, 24, { label: "All", value: -1 }]}
                 colSpan={8}
-                count={orders.length}
+                count={
+                  orders.filter((doc) => doc.trader === name || isAdmin).length
+                }
                 rowsPerPage={rowsPerPage}
                 page={page}
                 slotProps={{

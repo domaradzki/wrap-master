@@ -1,6 +1,8 @@
 import { reduceDocuments } from "@/lib/reducer";
+// import { getIdsDocuments } from "@/data/db-documents";
 
 export const newOrdersFetch = async () => {
+  // const documents = await getIdsDocuments();
   const response = await fetch("../../orders.json");
   // const response = await fetch("/api/orders");
 
@@ -8,5 +10,7 @@ export const newOrdersFetch = async () => {
     throw new Error("Failed to fetch orders");
   }
   const data = await response.json();
-  return reduceDocuments(data);
+  const reduced = reduceDocuments(data);
+  // console.log(documents);
+  return reduced;
 };

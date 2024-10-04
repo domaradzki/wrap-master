@@ -9,16 +9,10 @@ import StepSuccess from "./step-success";
 import StepButtons from "./step-buttons";
 
 import { Document } from "@/utils/structure";
-import { DocumentSchema } from "@/schemas/checkout";
 
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
 import { addDocumentWithItems } from "@/actions/add-document-with-items";
-
-// import * as z from "zod";
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import CheckoutSchema from "@/schemas/checkout";
 
 interface CheckoutProps {
   document: Document;
