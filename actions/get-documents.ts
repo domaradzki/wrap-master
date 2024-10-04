@@ -1,6 +1,6 @@
 "use server";
 
-import { getAllDocuments, getIdsDocuments } from "@/data/db-documents";
+import { getAllDocuments } from "@/data/db-documents";
 import { currentRole } from "@/lib/auth";
 import { UserRole } from "@prisma/client";
 

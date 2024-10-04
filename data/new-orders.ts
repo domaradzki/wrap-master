@@ -1,16 +1,20 @@
 import { reduceDocuments } from "@/lib/reducer";
-// import { getIdsDocuments } from "@/data/db-documents";
 
 export const newOrdersFetch = async () => {
-  // const documents = await getIdsDocuments();
   const response = await fetch("../../orders.json");
-  // const response = await fetch("/api/orders");
+  const documents = await fetch("/api/dborders");
 
   if (!response.ok) {
     throw new Error("Failed to fetch orders");
   }
   const data = await response.json();
   const reduced = reduceDocuments(data);
-  // console.log(documents);
-  return reduced;
+
+  const docs = await documents.json();
+  const docsIds = docs.map((doc: any) => doc.documentId);
+  const onlyNewDocuments = reduced.filter((doc) => {
+    return !docsIds.includes(doc.documentId);
+  });
+
+  return onlyNewDocuments;
 };

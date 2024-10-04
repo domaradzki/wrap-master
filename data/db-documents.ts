@@ -31,12 +31,4 @@ export const getAllDocuments = async ({
   }
 };
 
-export const getIdsDocuments = async () => {
-  try {
-    const documents = await db.document.findMany();
-    return documents;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
+
