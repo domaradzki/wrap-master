@@ -30,6 +30,7 @@ interface DBOrdersTableProps {
   page: number;
   rowsPerPage: number;
   emptyRows: number;
+  isAdmin: boolean;
   handleChangePage: (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -44,6 +45,7 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
   page,
   rowsPerPage,
   emptyRows,
+  isAdmin,
   handleChangePage,
   handleChangeRowsPerPage,
 }) => {
@@ -57,10 +59,9 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
               <HeadCell>Data wprowadzenia</HeadCell>
               <HeadCell>Numer dokumentu</HeadCell>
               <HeadCell>Zamawiający</HeadCell>
-              <HeadCell>Symbol</HeadCell>
               <HeadCell>Handlowiec</HeadCell>
-              <HeadCell>Zamkniety</HeadCell>
               <HeadCell>Szczegóły</HeadCell>
+              <HeadCell>Status</HeadCell>
               <HeadCell>Dodaj</HeadCell>
             </TableRow>
           </TableHead>
@@ -69,7 +70,7 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
               orders.length > 0 &&
               (rowsPerPage > 0
                 ? orders
-                    .filter((doc) => doc.trader === name)
+                    .filter((doc) => doc.trader === name || isAdmin)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : orders
               ).map((order: ReducedDocument) => (
@@ -79,13 +80,12 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
                   </TableCell>
                   <TableCell>{order.signature}</TableCell>
                   <TableCell>{order.company.name}</TableCell>
-                  <TableCell>{order.symbol}</TableCell>
                   <TableCell>{order.trader}</TableCell>
-                  <TableCell>{order.closed ? "Yes" : "No"}</TableCell>
+                  <TableCell>{order.closed ? "Tak" : "Nie"}</TableCell>
                   <TableCell>{order.details}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
-                      <Link href={`/orders/${order.documentId}`} passHref>
+                      <Link href={`/zamowienia/${order.documentId}`} passHref>
                         <Tooltip title="Edytuj">
                           <IconButton>
                             <QueueOutlinedIcon />

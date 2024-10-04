@@ -18,6 +18,7 @@ import Link from "next/link";
 import QueueOutlinedIcon from "@mui/icons-material/QueueOutlined";
 import { ReducedDocument } from "@/lib/reducer";
 import CustomTablePagination from "./table-pagination";
+import { useSession } from "next-auth/react";
 
 const HeadCell = styled(TableCell)({
   fontWeight: "bold",
@@ -29,6 +30,7 @@ interface NewOrdersTableProps {
   page: number;
   rowsPerPage: number;
   emptyRows: number;
+  isAdmin: boolean;
   handleChangePage: (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -43,9 +45,11 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
   page,
   rowsPerPage,
   emptyRows,
+  isAdmin,
   handleChangePage,
   handleChangeRowsPerPage,
 }) => {
+  const name = useSession().data?.user?.name;
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer>
@@ -55,20 +59,17 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
               <HeadCell>Data wprowadzenia</HeadCell>
               <HeadCell>Numer dokumentu</HeadCell>
               <HeadCell>Zamawiający</HeadCell>
-              <HeadCell>Symbol</HeadCell>
               <HeadCell>Handlowiec</HeadCell>
-              <HeadCell>Zamkniety</HeadCell>
               <HeadCell>Szczegóły</HeadCell>
-              <HeadCell>Dodaj</HeadCell>
+              <HeadCell>Akcje</HeadCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {orders &&
               (rowsPerPage > 0
-                ? orders.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
+                ? orders
+                    .filter((doc) => doc.trader === name || isAdmin)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : orders
               ).map((order: ReducedDocument) => (
                 <TableRow key={order.documentId}>
@@ -77,13 +78,11 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
                   </TableCell>
                   <TableCell>{order.signature}</TableCell>
                   <TableCell>{order.company.name}</TableCell>
-                  <TableCell>{order.symbol}</TableCell>
                   <TableCell>{order.trader}</TableCell>
-                  <TableCell>{order.closed ? "Yes" : "No"}</TableCell>
                   <TableCell>{order.details}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
-                      <Link href={`/orders/${order.documentId}`} passHref>
+                      <Link href={`/zamowienia/${order.documentId}`} passHref>
                         <Tooltip title="Edytuj">
                           <IconButton>
                             <QueueOutlinedIcon />

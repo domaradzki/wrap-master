@@ -192,7 +192,9 @@ const Checkout = ({
           setError("Coś poszło nie tak!");
         });
     });
+
     onClose();
+    router.back();
   };
 
   return (

@@ -12,7 +12,7 @@ import {
 import PropTypes from "prop-types";
 import Link from "next/link";
 // components
-import Profile from "./Profile";
+import Profile from "./profil";
 import { IconBellRinging, IconMenu } from "@tabler/icons-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 

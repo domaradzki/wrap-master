@@ -2,7 +2,16 @@
 
 import React, { SyntheticEvent, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Typography, Stack, Box, Tab } from "@mui/material";
+import {
+  Typography,
+  Stack,
+  Box,
+  Tab,
+  Button,
+  Grid,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import PageContainer from "../components/container/PageContainer";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { newOrdersFetch } from "@/data/new-orders";
@@ -12,12 +21,13 @@ import DBOrdersTable from "./components/db-orders-table";
 import { useSession } from "next-auth/react";
 
 const OrdersPage = () => {
+  const name = useSession().data?.user?.name;
+  const role = useSession().data?.user?.role;
+
   const [value, setValue] = useState("1");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
-
-  const name = useSession().data?.user?.name;
-  console.log(name);
+  const [isAdmin, setIsAdmin] = useState(role === "ADMIN");
 
   const {
     data: orders,
@@ -60,6 +70,10 @@ const OrdersPage = () => {
     setValue(newValue);
   };
 
+  const handleAdminMode = (event: SyntheticEvent) => {
+    setIsAdmin(!isAdmin);
+  };
+
   if (isLoading) {
     return <Typography>Loading...</Typography>;
   }
@@ -68,17 +82,32 @@ const OrdersPage = () => {
     return <Typography color="error">{error.message}</Typography>;
   }
 
-  console.log(DBorders);
+  console.log(isAdmin);
   return (
     <PageContainer title="Zamówienia" description="Twoje zamówienia">
       <Box sx={{ width: "100%", typography: "body1" }}>
         <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Box sx={{ borderColor: "divider" }}>
             <TabList onChange={handleChange} aria-label="lista zamówień">
               <Tab label="Nowe" value="1" />
               <Tab label="Wprowadzone" value="2" />
             </TabList>
           </Box>
+          {role === "ADMIN" && (
+            <Stack
+              direction="row"
+              sx={{ justifyContent: "end", marginTop: "-48px" }}
+            >
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox onChange={handleAdminMode} checked={isAdmin} />
+                  }
+                  label="Tryb administratora"
+                />
+              </Grid>
+            </Stack>
+          )}
           <TabPanel value="1">
             <Stack
               spacing={2}
@@ -86,7 +115,7 @@ const OrdersPage = () => {
                 py: 2,
               }}
             >
-              <Typography variant="h4">Nowe Zamówienia</Typography>
+              <Typography variant="h4">Nowe zamówienia</Typography>
             </Stack>
             <NewOrdersTable
               orders={orders ?? []}
@@ -95,6 +124,7 @@ const OrdersPage = () => {
               emptyRows={emptyRows}
               handleChangePage={handleChangePage}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
+              isAdmin={isAdmin}
             />
           </TabPanel>
           <TabPanel value="2">
@@ -104,7 +134,7 @@ const OrdersPage = () => {
                 py: 2,
               }}
             >
-              <Typography variant="h4">Aktualne Zamówienia</Typography>
+              <Typography variant="h4">Aktualne zamówienia</Typography>
             </Stack>
             {!DBisLoading && (
               <DBOrdersTable
@@ -114,6 +144,7 @@ const OrdersPage = () => {
                 emptyRows={emptyRows}
                 handleChangePage={handleChangePage}
                 handleChangeRowsPerPage={handleChangeRowsPerPage}
+                isAdmin={isAdmin}
               />
             )}
           </TabPanel>

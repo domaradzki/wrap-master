@@ -58,7 +58,7 @@ const Profile = () => {
           },
         }}
       >
-        <ProfileItem title="Mój profil" href="/profile" icon={IconUser} />
+        <ProfileItem title="Móje konto" href="/konto" icon={IconUser} />
         <Box mt={1} py={1} px={2}>
           <LogoutButton>
             <Button

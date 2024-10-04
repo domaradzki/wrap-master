@@ -150,7 +150,7 @@ const StepContent = ({
   }
   if (step === stepsLength - 1) {
     return <StepReview document={{ ...input, orders: items }} />;
-  }
+  } else return <></>;
 };
 
 export default StepContent;

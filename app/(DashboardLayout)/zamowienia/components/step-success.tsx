@@ -16,7 +16,7 @@ const StepSuccess = () => {
         zamówienia.
       </Typography>
       <Stack sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Link href="/orders">
+        <Link href="/zamowienia">
           <Button
             variant="contained"
             color="primary"

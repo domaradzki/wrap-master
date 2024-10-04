@@ -155,7 +155,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
         >
           <Grid item xs={12}>
             <Button onClick={handleOpenEditModal} variant="outlined">
-              <i className="fa fa-save" aria-hidden="true"></i> Weryfikacja
+              <i className="fa fa-save"></i> Weryfikacja
             </Button>
           </Grid>
         </Stack>
