@@ -2,14 +2,14 @@
 
 import { getDocumentByDocumentId } from "@/data/db-document";
 import { db } from "@/lib/db"; // Adjust the import path based on your project structure
-import { DocumentSchema } from "@/schemas/checkout";
+import { CheckoutSchema } from "@/schemas/checkout";
 import { Document } from "@/utils/structure"; // Assuming this is your Document type
 
 // Action to add a document with items
 export const addDocumentWithItems = async (data: Document) => {
   try {
     // Validate the data using Zod schema
-    const validatedData = DocumentSchema.parse(data);
+    const validatedData = CheckoutSchema.parse(data);
 
     const dbDocument = await getDocumentByDocumentId(validatedData.documentId);
 
@@ -25,7 +25,7 @@ export const addDocumentWithItems = async (data: Document) => {
         dateInsert: validatedData.dateInsert,
         details: validatedData.details,
         documentStatus: validatedData.documentStatus,
-        deliveryAdress: validatedData.deliveryAddress,
+        deliveryAddress: validatedData.deliveryAddress,
         symbol: validatedData.symbol,
         signature: validatedData.signature,
         trader: validatedData.trader,

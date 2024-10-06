@@ -83,7 +83,7 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
                   <TableCell>
                     <Stack direction="row" spacing={1}>
                       <Link href={`/zamowienia/${order.documentId}`} passHref>
-                        <Tooltip title="Edytuj">
+                        <Tooltip title="Wprowadź">
                           <IconButton>
                             <QueueOutlinedIcon />
                           </IconButton>

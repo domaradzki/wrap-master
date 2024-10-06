@@ -2,23 +2,24 @@
 
 import React, { SyntheticEvent, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import {
   Typography,
   Stack,
   Box,
   Tab,
-  Button,
   Grid,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import PageContainer from "../components/container/PageContainer";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { newOrdersFetch } from "@/data/new-orders";
+
+import PageContainer from "../components/container/PageContainer";
 import NewOrdersTable from "./components/new-orders-table";
-import { getDocuments } from "@/actions/get-documents";
 import DBOrdersTable from "./components/db-orders-table";
-import { useSession } from "next-auth/react";
+import { getDocuments } from "@/actions/get-documents";
+import { newOrdersFetch } from "@/data/new-orders";
+import { DocumentSchema } from "@/schemas/document";
 
 const OrdersPage = () => {
   const name = useSession().data?.user?.name;
@@ -39,11 +40,11 @@ const OrdersPage = () => {
   });
 
   const {
-    data: DBorders,
+    data: documents,
     isLoading: DBisLoading,
     error: DBerror,
   } = useQuery({
-    queryKey: ["dborders"], // Key for the query
+    queryKey: ["documents"], // Key for the query
     queryFn: () => getDocuments(name ?? ""), // Function to fetch the data
   });
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -74,6 +75,8 @@ const OrdersPage = () => {
     setIsAdmin(!isAdmin);
   };
 
+  const validatedDocuments = DocumentSchema.array().parse(documents);
+
   if (isLoading) {
     return <Typography>Loading...</Typography>;
   }
@@ -82,7 +85,6 @@ const OrdersPage = () => {
     return <Typography color="error">{error.message}</Typography>;
   }
 
-  console.log(isAdmin);
   return (
     <PageContainer title="Zamówienia" description="Twoje zamówienia">
       <Box sx={{ width: "100%", typography: "body1" }}>
@@ -138,7 +140,7 @@ const OrdersPage = () => {
             </Stack>
             {!DBisLoading && (
               <DBOrdersTable
-                orders={DBorders ?? []}
+                orders={validatedDocuments ?? []}
                 page={page}
                 rowsPerPage={rowsPerPage}
                 emptyRows={emptyRows}

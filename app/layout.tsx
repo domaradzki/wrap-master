@@ -6,8 +6,8 @@ import { SessionProvider } from "next-auth/react";
 // import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import { baselightTheme } from "@/utils/theme/DefaultColors";
-import ReactQueryContextProvider from "./context/reactQuery";
-import { AppProvider } from "./context/appContext";
+import ReactQueryContextProvider from "../context/reactQuery";
+import { AppProvider } from "../context/appContext";
 
 export const metadata: Metadata = {
   title: "Wrap Master",

@@ -1,14 +1,11 @@
 import { z } from "zod"; // Import zod if you're using it for validation
-import dayjs, { type Dayjs } from "dayjs";
 
 // Assuming you have a Zod schema for validation
-export const DocumentSchema = z.object({
+export const CheckoutSchema = z.object({
   name: z.string(),
   closed: z.boolean(),
   companyId: z.number(),
   currency: z.string(),
-  // dateInsert: z.instanceof(dayjs as unknown as typeof Dayjs),
-  // dateInsert: z.instanceof(dayjs as unknown as typeof Dayjs),
   dateInsert: z.string(),
   deliveryAddress: z.string(),
   details: z.string(),
@@ -33,7 +30,6 @@ export const DocumentSchema = z.object({
       type: z.string(),
       quantity: z.number(),
       unit: z.string(),
-      // dateOfRealisation: z.instanceof(dayjs as unknown as typeof Dayjs),
       dateOfRealisation: z.string(),
       productCode: z.string(),
       productId: z.number(),
@@ -53,11 +49,7 @@ export const DocumentSchema = z.object({
       color1: z.string().optional().nullable(),
       color2: z.string().optional().nullable(),
       color3: z.string().optional().nullable(),
-      dateOfAcceptaion: z
-        // .instanceof(dayjs as unknown as typeof Dayjs)
-        .string()
-        .optional()
-        .nullable(),
+      dateOfAcceptaion: z.string().optional().nullable(),
       printName: z.string().optional().nullable(),
     })
   ),

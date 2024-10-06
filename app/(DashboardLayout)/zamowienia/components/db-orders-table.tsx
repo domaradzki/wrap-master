@@ -15,10 +15,11 @@ import {
   IconButton,
 } from "@mui/material";
 import Link from "next/link";
-import QueueOutlinedIcon from "@mui/icons-material/QueueOutlined";
-import { ReducedDocument } from "@/lib/reducer";
 import CustomTablePagination from "./table-pagination";
 import { useSession } from "next-auth/react";
+import { IconEdit } from "@tabler/icons-react";
+import { DocumentSchema } from "../../../../schemas/document";
+import { z } from "zod";
 
 const HeadCell = styled(TableCell)({
   fontWeight: "bold",
@@ -26,7 +27,7 @@ const HeadCell = styled(TableCell)({
 });
 
 interface DBOrdersTableProps {
-  orders: ReducedDocument[];
+  orders: z.infer<typeof DocumentSchema>[];
   page: number;
   rowsPerPage: number;
   emptyRows: number;
@@ -73,8 +74,8 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
                     .filter((doc) => doc.trader === name || isAdmin)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : orders
-              ).map((order: ReducedDocument) => (
-                <TableRow key={order.documentId}>
+              ).map((order: z.infer<typeof DocumentSchema>) => (
+                <TableRow key={order.id}>
                   <TableCell>
                     {new Date(order.dateInsert).toLocaleDateString()}
                   </TableCell>
@@ -85,10 +86,13 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
                   <TableCell>{order.details}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
-                      <Link href={`/zamowienia/${order.documentId}`} passHref>
+                      <Link
+                        href={`/zamowienia/wprowadzone/${order.id}`}
+                        passHref
+                      >
                         <Tooltip title="Edytuj">
                           <IconButton>
-                            <QueueOutlinedIcon />
+                            <IconEdit />
                           </IconButton>
                         </Tooltip>
                       </Link>

@@ -82,25 +82,25 @@ model TwoFactorConfirmation {
 }
 
 model Document {
-  id             String    @id @default(cuid())
-  documentId     Int       @unique
-  dateInsert     DateTime
-  details        String
-  documentStatus Int
-  deliveryAdress String
-  symbol         String
-  signature      String
-  trader         String
-  companyId      String
-  currency       String
-  exchangeRate   Float?
-  timestamp      Int
-  transport      String
-  closed         Boolean
-  paymentMethod  String
-  paymentDate    DateTime?
-  company        Company   @relation(fields: [companyId], references: [id])
-  orders         Order[]
+  id              String    @id @default(cuid())
+  documentId      Int       @unique
+  dateInsert      DateTime
+  details         String
+  documentStatus  Int
+  deliveryAddress String
+  symbol          String
+  signature       String
+  trader          String
+  companyId       String
+  currency        String
+  exchangeRate    Float?
+  timestamp       Int
+  transport       String
+  closed          Boolean
+  paymentMethod   String
+  paymentDate     DateTime?
+  company         Company   @relation(fields: [companyId], references: [id])
+  orders          Order[]
 }
 
 model Company {
