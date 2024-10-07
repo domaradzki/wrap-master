@@ -1,6 +1,6 @@
 "use client";
-import { styled, Container, Box } from "@mui/material";
-import React, { useState } from "react";
+
+import React from "react";
 
 export default function AuthLayout({
   children,

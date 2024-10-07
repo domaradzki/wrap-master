@@ -92,13 +92,13 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirecTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { error: "Invalid Credentials!" };
+          return { error: "Nie poprawne dane logowania!" };
         default:
           return { error: "Coś poszlo nie tak! :)" };
       }

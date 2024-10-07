@@ -8,7 +8,7 @@ import AuthLogin from "./authentication/auth/AuthLogin";
 
 const HomePage = () => {
   return (
-    <PageContainer title="Login" description="this is Login page">
+    <PageContainer auth title="Login" description="this is Login page">
       <Box
         sx={{
           position: "relative",

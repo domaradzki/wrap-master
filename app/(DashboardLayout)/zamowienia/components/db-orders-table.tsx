@@ -15,11 +15,12 @@ import {
   IconButton,
 } from "@mui/material";
 import Link from "next/link";
+import { z } from "zod";
+
 import CustomTablePagination from "./table-pagination";
-import { useSession } from "next-auth/react";
 import { IconEdit } from "@tabler/icons-react";
 import { DocumentSchema } from "../../../../schemas/document";
-import { z } from "zod";
+import { useAuthSession } from "@/context/sessionContext";
 
 const HeadCell = styled(TableCell)({
   fontWeight: "bold",
@@ -27,7 +28,7 @@ const HeadCell = styled(TableCell)({
 });
 
 interface DBOrdersTableProps {
-  orders: z.infer<typeof DocumentSchema>[];
+  documents: z.infer<typeof DocumentSchema>[];
   page: number;
   rowsPerPage: number;
   emptyRows: number;
@@ -42,7 +43,7 @@ interface DBOrdersTableProps {
 }
 
 const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
-  orders,
+  documents,
   page,
   rowsPerPage,
   emptyRows,
@@ -50,7 +51,7 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
   handleChangePage,
   handleChangeRowsPerPage,
 }) => {
-  const name = useSession().data?.user?.name;
+  const name = useAuthSession().user?.name;
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer>
@@ -61,33 +62,38 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
               <HeadCell>Numer dokumentu</HeadCell>
               <HeadCell>Zamawiający</HeadCell>
               <HeadCell>Handlowiec</HeadCell>
-              <HeadCell>Szczegóły</HeadCell>
+              <HeadCell>Wartość</HeadCell>
               <HeadCell>Status</HeadCell>
-              <HeadCell>Dodaj</HeadCell>
+              <HeadCell>Edycja</HeadCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders &&
-              orders.length > 0 &&
+            {documents &&
+              documents.length > 0 &&
               (rowsPerPage > 0
-                ? orders
+                ? documents
                     .filter((doc) => doc.trader === name || isAdmin)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : orders
-              ).map((order: z.infer<typeof DocumentSchema>) => (
-                <TableRow key={order.id}>
+                : documents
+              ).map((document: z.infer<typeof DocumentSchema>) => (
+                <TableRow key={document.id}>
                   <TableCell>
-                    {new Date(order.dateInsert).toLocaleDateString()}
+                    {new Date(document.dateInsert).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>{order.signature}</TableCell>
-                  <TableCell>{order.company.name}</TableCell>
-                  <TableCell>{order.trader}</TableCell>
-                  <TableCell>{order.closed ? "Tak" : "Nie"}</TableCell>
-                  <TableCell>{order.details}</TableCell>
+                  <TableCell>{document.signature}</TableCell>
+                  <TableCell>{document.company.name}</TableCell>
+                  <TableCell>{document.trader}</TableCell>
+                  <TableCell>
+                    {/* {document.orders.reduce(
+                      (prev, next) => prev.netValue + next.netValue,
+                      0
+                    )} */}
+                  </TableCell>
+                  <TableCell>{document.details}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
                       <Link
-                        href={`/zamowienia/wprowadzone/${order.id}`}
+                        href={`/zamowienia/wprowadzone/${document.id}`}
                         passHref
                       >
                         <Tooltip title="Edytuj">
@@ -102,17 +108,18 @@ const DBOrdersTable: React.FC<DBOrdersTableProps> = ({
               ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+                <TableCell colSpan={5} />
               </TableRow>
             )}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[6, 12, 24, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[5, 10, 20, { label: "All", value: -1 }]}
                 colSpan={8}
                 count={
-                  orders.filter((doc) => doc.trader === name || isAdmin).length
+                  documents.filter((doc) => doc.trader === name || isAdmin)
+                    .length
                 }
                 rowsPerPage={rowsPerPage}
                 page={page}

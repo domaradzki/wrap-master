@@ -34,12 +34,12 @@ export default function NavbarBreadcrumbs({ title }: { title: string }) {
       separator={<NavigateNextRoundedIcon fontSize="small" />}
     >
       <Typography variant="body1">
+        <StyledLink href="/">Home</StyledLink>
+      </Typography>
+      <Typography variant="body1">
         <StyledLink href={removeAccents(title).toLocaleLowerCase()}>
           {title}
         </StyledLink>
-      </Typography>
-      <Typography variant="body1">
-        <StyledLink href="/">Home</StyledLink>
       </Typography>
     </StyledBreadcrumbs>
   );

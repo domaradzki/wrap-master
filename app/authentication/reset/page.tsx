@@ -9,7 +9,7 @@ import AuthReset from "../auth/AuthReset";
 
 const ResetPage = () => {
   return (
-    <PageContainer title="Reset hasła" description="strona resetowania">
+    <PageContainer auth title="Reset hasła" description="strona resetowania">
       <Box
         sx={{
           position: "relative",

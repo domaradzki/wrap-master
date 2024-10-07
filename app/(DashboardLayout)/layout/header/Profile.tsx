@@ -1,20 +1,20 @@
+"use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { Avatar, Box, Menu, Button, IconButton } from "@mui/material";
 
-import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { IconUser } from "@tabler/icons-react";
 import { LogoutButton } from "@/app/authentication/auth/logout-button";
 import ProfileItem from "@/components/profile-item";
 
-const Profile = () => {
-  const user = useCurrentUser();
-  const [anchorEl2, setAnchorEl2] = useState(null);
-  const handleClick2 = (event: any) => {
-    setAnchorEl2(event.currentTarget);
+const Profile = ({ name }: { name: string }) => {
+  const [anchor, setAnchor] = useState(null);
+  const handleClick = (event: any) => {
+    setAnchor(event.currentTarget);
   };
-  const handleClose2 = () => {
-    setAnchorEl2(null);
+  const handleClose = () => {
+    setAnchor(null);
   };
 
   return (
@@ -26,11 +26,11 @@ const Profile = () => {
         aria-controls="msgs-menu"
         aria-haspopup="true"
         sx={{
-          ...(typeof anchorEl2 === "object" && {
+          ...(typeof anchor === "object" && {
             color: "primary.main",
           }),
         }}
-        onClick={handleClick2}
+        onClick={handleClick}
       >
         <Avatar
           src="/images/profile/user-1.jpg"
@@ -46,10 +46,10 @@ const Profile = () => {
       {/* ------------------------------------------- */}
       <Menu
         id="msgs-menu"
-        anchorEl={anchorEl2}
+        anchorEl={anchor}
         keepMounted
-        open={Boolean(anchorEl2)}
-        onClose={handleClose2}
+        open={Boolean(anchor)}
+        onClose={handleClose}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         sx={{
@@ -58,7 +58,14 @@ const Profile = () => {
           },
         }}
       >
-        <ProfileItem title="Móje konto" href="/konto" icon={IconUser} />
+        <ProfileItem name={name} />
+        <ProfileItem
+          title="Moje konto"
+          href="/konto"
+          icon={IconUser}
+          level={1}
+        />
+
         <Box mt={1} py={1} px={2}>
           <LogoutButton>
             <Button

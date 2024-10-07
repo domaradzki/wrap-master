@@ -6,16 +6,17 @@ type Props = {
   description?: string;
   children: JSX.Element | JSX.Element[];
   title?: string;
+  auth?: boolean;
 };
 
-const PageContainer = ({ title, description, children }: Props) => (
+const PageContainer = ({ auth, title, description, children }: Props) => (
   <HelmetProvider>
     <div>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet>
-      <NavbarBreadcrumbs title={title ?? ""} />
+      {!auth && <NavbarBreadcrumbs title={title ?? ""} />}
       {children}
     </div>
   </HelmetProvider>

@@ -2,7 +2,6 @@
 
 import React, { SyntheticEvent, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import {
   Typography,
   Stack,
@@ -20,10 +19,12 @@ import DBOrdersTable from "./components/db-orders-table";
 import { getDocuments } from "@/actions/get-documents";
 import { newOrdersFetch } from "@/data/new-orders";
 import { DocumentSchema } from "@/schemas/document";
+import { z } from "zod";
+import { useAuthSession } from "@/context/sessionContext";
 
 const OrdersPage = () => {
-  const name = useSession().data?.user?.name;
-  const role = useSession().data?.user?.role;
+  const name = useAuthSession().user?.name;
+  const role = useAuthSession().user?.role;
 
   const [value, setValue] = useState("1");
   const [page, setPage] = useState(0);
@@ -75,8 +76,6 @@ const OrdersPage = () => {
     setIsAdmin(!isAdmin);
   };
 
-  const validatedDocuments = DocumentSchema.array().parse(documents);
-
   if (isLoading) {
     return <Typography>Loading...</Typography>;
   }
@@ -120,7 +119,7 @@ const OrdersPage = () => {
               <Typography variant="h4">Nowe zamówienia</Typography>
             </Stack>
             <NewOrdersTable
-              orders={orders ?? []}
+              documents={orders ?? []}
               page={page}
               rowsPerPage={rowsPerPage}
               emptyRows={emptyRows}
@@ -138,9 +137,11 @@ const OrdersPage = () => {
             >
               <Typography variant="h4">Aktualne zamówienia</Typography>
             </Stack>
-            {!DBisLoading && (
+            {!DBisLoading && documents && (
               <DBOrdersTable
-                orders={validatedDocuments ?? []}
+                documents={
+                  documents as unknown as z.infer<typeof DocumentSchema>[]
+                }
                 page={page}
                 rowsPerPage={rowsPerPage}
                 emptyRows={emptyRows}

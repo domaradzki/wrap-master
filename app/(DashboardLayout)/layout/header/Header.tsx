@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Box,
@@ -14,15 +16,17 @@ import Link from "next/link";
 // components
 import Profile from "./Profile";
 import { IconBellRinging, IconMenu } from "@tabler/icons-react";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useAuthSession } from "@/context/sessionContext";
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const Header = ({ toggleMobileSidebar }: ItemType) => {
-  const user = useCurrentUser();
-
+  const session = useAuthSession();
+  const user = session?.user;
+  const name = user?.name;
+  const status = session?.status;
   // const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   // const lgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
@@ -70,7 +74,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
         </IconButton>
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
-          {!user ? (
+          {status !== "authenticated" && !user ? (
             <Button
               variant="contained"
               component={Link}
@@ -81,7 +85,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
               Zaloguj
             </Button>
           ) : (
-            <Profile />
+            <Profile name={name} />
           )}
         </Stack>
       </ToolbarStyled>

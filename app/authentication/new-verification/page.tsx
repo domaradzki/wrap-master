@@ -8,7 +8,7 @@ import AuthNewVerification from "../auth/AuthNewVerification";
 
 const NewVerificationPage = () => {
   return (
-    <PageContainer title="Reset hasła" description="strona resetowania">
+    <PageContainer auth title="Reset hasła" description="strona resetowania">
       <Box
         sx={{
           position: "relative",

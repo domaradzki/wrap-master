@@ -9,7 +9,7 @@ import AuthNewPassword from "../auth/AuthNewPassword";
 
 const NewPasswordPage = () => {
   return (
-    <PageContainer title="Nowe hasło" description="strona resetowania">
+    <PageContainer auth title="Nowe hasło" description="strona resetowania">
       <Box
         sx={{
           position: "relative",

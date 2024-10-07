@@ -18,7 +18,7 @@ import Link from "next/link";
 import QueueOutlinedIcon from "@mui/icons-material/QueueOutlined";
 import { ReducedDocument } from "@/lib/reducer";
 import CustomTablePagination from "./table-pagination";
-import { useSession } from "next-auth/react";
+import { useAuthSession } from "@/context/sessionContext";
 
 const HeadCell = styled(TableCell)({
   fontWeight: "bold",
@@ -26,7 +26,7 @@ const HeadCell = styled(TableCell)({
 });
 
 interface NewOrdersTableProps {
-  orders: ReducedDocument[];
+  documents: ReducedDocument[];
   page: number;
   rowsPerPage: number;
   emptyRows: number;
@@ -41,7 +41,7 @@ interface NewOrdersTableProps {
 }
 
 const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
-  orders,
+  documents,
   page,
   rowsPerPage,
   emptyRows,
@@ -49,7 +49,7 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
   handleChangePage,
   handleChangeRowsPerPage,
 }) => {
-  const name = useSession().data?.user?.name;
+  const name = useAuthSession().user?.name;
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer>
@@ -65,24 +65,27 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders &&
+            {documents &&
               (rowsPerPage > 0
-                ? orders
+                ? documents
                     .filter((doc) => doc.trader === name || isAdmin)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : orders
-              ).map((order: ReducedDocument) => (
-                <TableRow key={order.documentId}>
+                : documents
+              ).map((document: ReducedDocument) => (
+                <TableRow key={document.documentId}>
                   <TableCell>
-                    {new Date(order.dateInsert).toLocaleDateString()}
+                    {new Date(document.dateInsert).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>{order.signature}</TableCell>
-                  <TableCell>{order.company.name}</TableCell>
-                  <TableCell>{order.trader}</TableCell>
-                  <TableCell>{order.details}</TableCell>
+                  <TableCell>{document.signature}</TableCell>
+                  <TableCell>{document.company.name}</TableCell>
+                  <TableCell>{document.trader}</TableCell>
+                  <TableCell>{document.details}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
-                      <Link href={`/zamowienia/${order.documentId}`} passHref>
+                      <Link
+                        href={`/zamowienia/${document.documentId}`}
+                        passHref
+                      >
                         <Tooltip title="Wprowadź">
                           <IconButton>
                             <QueueOutlinedIcon />
@@ -95,17 +98,18 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
               ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+                <TableCell colSpan={5} />
               </TableRow>
             )}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[6, 12, 24, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[5, 10, 20, { label: "All", value: -1 }]}
                 colSpan={8}
                 count={
-                  orders.filter((doc) => doc.trader === name || isAdmin).length
+                  documents.filter((doc) => doc.trader === name || isAdmin)
+                    .length
                 }
                 rowsPerPage={rowsPerPage}
                 page={page}
