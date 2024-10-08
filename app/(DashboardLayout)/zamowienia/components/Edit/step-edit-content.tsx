@@ -7,6 +7,7 @@ import StepEditDocumentForm from "./step-edit-document-form";
 import StepEditTapeForm from "./step-edit-tape-form";
 import StepEditStretchForm from "./step-edit-stretch-form";
 import StepEditProductForm from "./step-edit-product-form";
+import StepEditReview from "./step-edit-review";
 
 interface StepEditContentProps {
   step: number;
@@ -15,12 +16,27 @@ interface StepEditContentProps {
   handleDocumentChange: (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<string>
+      | SelectChangeEvent<string | number>
   ) => void;
   handleOrderChange: (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<string>
+      | SelectChangeEvent<string | number>
+  ) => void;
+  handleProductChange: (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string | number>
+  ) => void;
+  handleTapeChange: (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string | number>
+  ) => void;
+  handleStretchChange: (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string | number>
   ) => void;
   handleChangeFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleInsertDateChange: (value: Dayjs) => void;
@@ -34,6 +50,9 @@ const StepEditContent = ({
   document,
   handleDocumentChange,
   handleOrderChange,
+  handleProductChange,
+  handleTapeChange,
+  handleStretchChange,
   handleInsertDateChange,
   handleRealisationDateChange,
   handleAcceptationnDateChange,
@@ -64,6 +83,24 @@ const StepEditContent = ({
                 | SelectChangeEvent<string>
             )
           }
+          handleProductChange={(event) =>
+            handleProductChange(
+              event as
+                | React.ChangeEvent<
+                    HTMLInputElement | { name?: string; value: unknown }
+                  >
+                | SelectChangeEvent<string>
+            )
+          }
+          handleTapeChange={(event) =>
+            handleTapeChange(
+              event as
+                | React.ChangeEvent<
+                    HTMLInputElement | { name?: string; value: unknown }
+                  >
+                | SelectChangeEvent<string>
+            )
+          }
           handleRealisationDateChange={handleRealisationDateChange}
           handleAcceptationnDateChange={handleAcceptationnDateChange}
           handleChangeFile={handleChangeFile}
@@ -87,6 +124,24 @@ const StepEditContent = ({
                 | SelectChangeEvent<string>
             )
           }
+          handleProductChange={(event) =>
+            handleProductChange(
+              event as
+                | React.ChangeEvent<
+                    HTMLInputElement | { name?: string; value: unknown }
+                  >
+                | SelectChangeEvent<string>
+            )
+          }
+          handleStretchChange={(event) =>
+            handleStretchChange(
+              event as
+                | React.ChangeEvent<
+                    HTMLInputElement | { name?: string; value: unknown }
+                  >
+                | SelectChangeEvent<string>
+            )
+          }
           handleRealisationDateChange={handleRealisationDateChange}
         />
       );
@@ -103,14 +158,22 @@ const StepEditContent = ({
                 | SelectChangeEvent<string>
             )
           }
+          handleProductChange={(event) =>
+            handleProductChange(
+              event as
+                | React.ChangeEvent<
+                    HTMLInputElement | { name?: string; value: unknown }
+                  >
+                | SelectChangeEvent<string>
+            )
+          }
           handleRealisationDateChange={handleRealisationDateChange}
         />
       );
     }
   }
   if (step === stepsLength - 1) {
-    return <></>;
-    // return <StepReview document={{ ...input, orders: items }} />;
+    return <StepEditReview document={document} />;
   } else return <></>;
 };
 

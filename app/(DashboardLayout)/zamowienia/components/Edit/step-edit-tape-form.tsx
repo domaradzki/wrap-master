@@ -19,10 +19,20 @@ import { OrderSchema } from "@/schemas/document";
 
 interface StepEditTapeFormProps {
   order: z.infer<typeof OrderSchema>;
+  handleOrderChange: (
+    event:
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<number | string>
+  ) => void;
   handleProductChange: (
     event:
       | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<number>
+      | SelectChangeEvent<number | string>
+  ) => void;
+  handleTapeChange: (
+    event:
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string | number | null>
   ) => void;
   handleChangeFile: (event: ChangeEvent<HTMLInputElement>) => void;
   handleRealisationDateChange: (value: Dayjs) => void;
@@ -31,7 +41,9 @@ interface StepEditTapeFormProps {
 
 export default function StepEditTapeForm({
   order,
+  handleOrderChange,
   handleProductChange,
+  handleTapeChange,
   handleRealisationDateChange,
   handleAcceptationnDateChange,
   handleChangeFile,
@@ -50,7 +62,7 @@ export default function StepEditTapeForm({
               name="assortment"
               label="Nazwa produktu"
               onChange={handleProductChange}
-              value={order.assortment}
+              value={order.product.assortment}
               type="text"
               fullWidth
             />
@@ -71,7 +83,7 @@ export default function StepEditTapeForm({
               id="price"
               name="price"
               label="Cena"
-              onChange={handleProductChange}
+              onChange={handleOrderChange}
               value={order.price.toFixed(2)}
               type="number"
               InputProps={{
@@ -89,14 +101,16 @@ export default function StepEditTapeForm({
               id="quantity"
               name="quantity"
               label="Ilość"
-              onChange={handleProductChange}
+              onChange={handleOrderChange}
               value={order.quantity}
               type="number"
               fullWidth
               autoComplete="quantity"
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">{item.unit}</InputAdornment>
+                  <InputAdornment position="end">
+                    {order.product.unit}
+                  </InputAdornment>
                 ),
               }}
             />
@@ -108,7 +122,7 @@ export default function StepEditTapeForm({
               id="netValue"
               name="netValue"
               label="Wartość"
-              onChange={handleProductChange}
+              onChange={handleOrderChange}
               value={order.netValue.toFixed(2)}
               type="number"
               InputProps={{
@@ -130,7 +144,7 @@ export default function StepEditTapeForm({
                 name="margin"
                 value={order.margin}
                 type="number"
-                onChange={handleProductChange}
+                onChange={handleOrderChange}
               >
                 <MenuItem value={0}>0</MenuItem>
                 <MenuItem value={0.25}>0.25</MenuItem>
@@ -147,8 +161,8 @@ export default function StepEditTapeForm({
               id="printName"
               name="printName"
               label="Nazwa nadruku"
-              onChange={handleProductChange}
-              value={order.printName}
+              onChange={handleTapeChange}
+              value={order.product.tape?.printName}
               type="text"
               fullWidth
             />
@@ -157,7 +171,7 @@ export default function StepEditTapeForm({
             <DatePicker
               name="dateOfAcceptation"
               label="Data akceptacji"
-              value={dayjs(order.dateOfAcceptation)}
+              value={dayjs(order.product.tape?.dateOfAcceptation)}
               onChange={(newValue) =>
                 handleAcceptationnDateChange(newValue as Dayjs)
               }
@@ -171,9 +185,9 @@ export default function StepEditTapeForm({
                 label="Wałek"
                 id="roller"
                 name="roller"
-                value={order.roller}
+                value={order.product.tape?.roller}
                 type="number"
-                onChange={handleProductChange}
+                onChange={handleTapeChange}
               >
                 <MenuItem value={144}>144</MenuItem>
                 <MenuItem value={180}>180</MenuItem>
@@ -189,8 +203,8 @@ export default function StepEditTapeForm({
               id="tapeLong"
               name="tapeLong"
               label="Długość"
-              onChange={handleProductChange}
-              value={order.tapeLong}
+              onChange={handleTapeChange}
+              value={order.product.tape?.tapeLong}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -206,8 +220,8 @@ export default function StepEditTapeForm({
               id="tapeWidth"
               name="tapeWidth"
               label="Szerokość"
-              onChange={handleProductChange}
-              value={order.tapeWidth}
+              onChange={handleTapeChange}
+              value={order.product.tape?.tapeWidth}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -223,8 +237,8 @@ export default function StepEditTapeForm({
               id="tapeThickness"
               name="tapeThickness"
               label="Grubość"
-              onChange={handleProductChange}
-              value={order.tapeThickness}
+              onChange={handleTapeChange}
+              value={order.product.tape?.tapeThickness}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -240,8 +254,8 @@ export default function StepEditTapeForm({
               id="tapeColor"
               name="tapeColor"
               label="Kolor taśmy"
-              onChange={handleProductChange}
-              value={order.tapeColor}
+              onChange={handleTapeChange}
+              value={order.product.tape?.tapeColor}
               type="text"
               fullWidth
             />
@@ -252,8 +266,8 @@ export default function StepEditTapeForm({
               id="glue"
               name="glue"
               label="Klej"
-              onChange={handleProductChange}
-              value={order.glue}
+              onChange={handleTapeChange}
+              value={order.product.tape?.glue}
               type="text"
               fullWidth
             />
@@ -264,8 +278,8 @@ export default function StepEditTapeForm({
               id="numberOfColors"
               name="numberOfColors"
               label="Ilość kolorów"
-              onChange={handleProductChange}
-              value={order.numberOfColors}
+              onChange={handleTapeChange}
+              value={order.product.tape?.numberOfColors}
               type="number"
               fullWidth
             />
@@ -276,33 +290,33 @@ export default function StepEditTapeForm({
               id="color1"
               name="color1"
               label="Kolor 1"
-              onChange={handleProductChange}
-              value={order.color1}
+              onChange={handleTapeChange}
+              value={order.product.tape?.color1}
               type="text"
               fullWidth
             />
           </Grid>
-          {+(order.numberOfColors ?? 0) >= 2 && (
+          {+(order.product.tape?.numberOfColors ?? 0) >= 2 && (
             <Grid item xs={12} md={2}>
               <TextField
                 id="color2"
                 name="color2"
                 label="Kolor 2"
-                onChange={handleProductChange}
-                value={order.color2}
+                onChange={handleTapeChange}
+                value={order.product.tape?.color2}
                 type="text"
                 fullWidth
               />
             </Grid>
           )}
-          {+(order.numberOfColors ?? 0) === 3 && (
+          {+(order.product.tape?.numberOfColors ?? 0) === 3 && (
             <Grid item xs={12} md={2}>
               <TextField
                 id="color3"
                 name="color3"
                 label="Kolor 3"
-                onChange={handleProductChange}
-                value={order.color3}
+                onChange={handleTapeChange}
+                value={order.product.tape?.color3}
                 type="text"
                 fullWidth
               />
@@ -330,11 +344,15 @@ export default function StepEditTapeForm({
             </label>
           </Grid>
           <Grid item xs={12} md={3}>
-            {order.file && (
+            {order.product.tape?.file && (
               <img
-                src={order.file ? URL.createObjectURL(order.file) : undefined}
+                src={
+                  order.product.tape?.file
+                    ? URL.createObjectURL(order.product.tape?.file)
+                    : undefined
+                }
                 width="100%"
-                alt={order.file ? "Projekt" : ""}
+                alt={order.product.tape?.file ? "Projekt" : ""}
               />
             )}
           </Grid>

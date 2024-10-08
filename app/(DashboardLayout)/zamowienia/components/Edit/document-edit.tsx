@@ -13,7 +13,6 @@ import StepSuccess from "../step-success";
 import StepButtons from "../step-buttons";
 
 import { DocumentSchema } from "@/schemas/document";
-import { addDocumentWithItems } from "@/actions/add-document-with-items";
 
 interface DocumentEditProps {
   document: z.infer<typeof DocumentSchema>;
@@ -65,7 +64,7 @@ const DocumentEdit = ({
   const handleDocumentChange = (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<string>
+      | SelectChangeEvent<number | string>
   ) => {
     const { name, value } = event.target as
       | HTMLInputElement
@@ -79,59 +78,82 @@ const DocumentEdit = ({
   const handleOrderChange = (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<string>
+      | SelectChangeEvent<number | string>
   ) => {
     const { name, value } = event.target as
       | HTMLInputElement
       | { name?: string; value: unknown };
-    const data = {...activeDocument};
-    (data as any)[name!] = value;
-    setActiveDocument({...data});
+    const data = { ...activeDocument };
+    (data as any).orders[activeStep - 1][name!] = value;
+    setActiveDocument({ ...data });
   };
 
   const handleProductChange = (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<string>
+      | SelectChangeEvent<number | string>
   ) => {
     const { name, value } = event.target as
       | HTMLInputElement
       | { name?: string; value: unknown };
-    const data = [...items];
-    const currentOrder = data[activeStep - 1];
-    (currentOrder as any)[name!] = value;
-    setItems([...data]);
+    const data = { ...activeDocument };
+    (data as any).orders[activeStep - 1].product[name!] = value;
+    setActiveDocument({ ...data });
   };
 
-  const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const data = [...items];
-    const currentOrder = data[activeStep - 1];
-    const { files } = event.target;
-    if (files) {
-      (currentOrder as any).file = files[0];
-    }
-    setItems([...data]);
+  const handleTapeChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<number | string>
+  ) => {
+    const { name, value } = event.target as
+      | HTMLInputElement
+      | { name?: string; value: unknown };
+    const data = { ...activeDocument };
+    (data as any).orders[activeStep - 1].product.tape[name!] = value;
+    setActiveDocument({ ...data });
   };
 
-  const handleRealisationDateChange = (value: Dayjs) => {
-    const data = [...items];
-    const currentOrder = data[activeStep - 1];
-    (currentOrder as any).dateOfRealisation = value.toString();
-    setItems([...data]);
-  };
-
-  const handleAcceptationnDateChange = (value: Dayjs) => {
-    const data = [...items];
-    const currentOrder = data[activeStep - 1];
-    (currentOrder as any).dateOfAcceptation = value.toString();
-    setItems([...data]);
+  const handleStretchChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<number | string>
+  ) => {
+    const { name, value } = event.target as
+      | HTMLInputElement
+      | { name?: string; value: unknown };
+    const data = { ...activeDocument };
+    (data as any).orders[activeStep - 1].product.stretch[name!] = value;
+    setActiveDocument({ ...data });
   };
 
   const handleInsertDateChange = (value: Dayjs) => {
-    setInput({
-      ...input,
-      dateInsert: value.toString(),
+    setActiveDocument({
+      ...activeDocument,
+      dateInsert: value.toDate(),
     });
+  };
+
+  const handleRealisationDateChange = (value: Dayjs) => {
+    const data = { ...activeDocument };
+    (data as any).orders[activeStep - 1].product.dateOfRealisation = value;
+    setActiveDocument({ ...data });
+  };
+
+  const handleAcceptationnDateChange = (value: Dayjs) => {
+    const data = { ...activeDocument };
+    (data as any).orders[activeStep - 1].product.tape.dateOfAcceptation = value;
+    setActiveDocument({ ...data });
+  };
+
+  const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const data = { ...activeDocument };
+
+    const { files } = event.target;
+    if (files) {
+      (data as any).orders[activeStep - 1].product.tape.file = files[0];
+    }
+    setActiveDocument({ ...data });
   };
 
   const handleNext = (event: { preventDefault: () => void }) => {
@@ -146,6 +168,7 @@ const DocumentEdit = ({
 
   const handleAddOrder = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log("activeDocument", activeDocument);
     // const data = JSON.parse(JSON.stringify({ ...input, orders: [...items] }));
     // startTransition(() => {
     //   addDocumentWithItems(data)
@@ -191,7 +214,10 @@ const DocumentEdit = ({
                 stepsLength={steps.length}
                 document={activeDocument}
                 handleDocumentChange={handleDocumentChange}
+                handleOrderChange={handleOrderChange}
                 handleProductChange={handleProductChange}
+                handleTapeChange={handleTapeChange}
+                handleStretchChange={handleStretchChange}
                 handleChangeFile={handleChangeFile}
                 handleInsertDateChange={handleInsertDateChange}
                 handleRealisationDateChange={handleRealisationDateChange}

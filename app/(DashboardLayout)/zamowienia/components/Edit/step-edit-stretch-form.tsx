@@ -13,20 +13,34 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
+import { OrderSchema } from "@/schemas/document";
+import { z } from "zod";
 
 interface StepEditStretchFormProps {
-  item: Stretch;
+  order: z.infer<typeof OrderSchema>;
+  handleOrderChange: (
+    event:
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<number | string>
+  ) => void;
   handleProductChange: (
     event:
       | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-      | SelectChangeEvent<number>
+      | SelectChangeEvent<number | string>
+  ) => void;
+  handleStretchChange: (
+    event:
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<number | string>
   ) => void;
   handleRealisationDateChange: (value: Dayjs) => void;
 }
 
 export default function StepEditStretchForm({
-  item,
+  order,
+  handleOrderChange,
   handleProductChange,
+  handleStretchChange,
   handleRealisationDateChange,
 }: StepEditStretchFormProps) {
   return (
@@ -43,7 +57,7 @@ export default function StepEditStretchForm({
               name="assortment"
               label="Nazwa produktu"
               onChange={handleProductChange}
-              value={item.assortment}
+              value={order.product.assortment}
               type="text"
               fullWidth
             />
@@ -52,7 +66,7 @@ export default function StepEditStretchForm({
             <DatePicker
               name="dateOfRealisation"
               label="Data realizacji"
-              value={dayjs(item.dateOfRealisation)}
+              value={dayjs(order.dateOfRealisation)}
               onChange={(newValue) =>
                 handleRealisationDateChange(newValue as Dayjs)
               }
@@ -64,8 +78,8 @@ export default function StepEditStretchForm({
               id="stretchColor"
               name="stretchColor"
               label="Kolor folii"
-              onChange={handleProductChange}
-              value={item.stretchColor}
+              onChange={handleStretchChange}
+              value={order.product.stretch?.stretchColor}
               type="text"
               fullWidth
             />
@@ -76,8 +90,8 @@ export default function StepEditStretchForm({
               id="sleeve"
               name="sleeve"
               label="Tuleja"
-              onChange={handleProductChange}
-              value={item.sleeve}
+              onChange={handleStretchChange}
+              value={order.product.stretch?.sleeve}
               type="number"
               InputProps={{
                 endAdornment: <InputAdornment position="end">g</InputAdornment>,
@@ -91,8 +105,8 @@ export default function StepEditStretchForm({
               id="stretchThickness"
               name="stretchThickness"
               label="Grubość folii"
-              onChange={handleProductChange}
-              value={item.stretchThickness}
+              onChange={handleStretchChange}
+              value={order.product.stretch?.stretchThickness}
               type="text"
               InputProps={{
                 endAdornment: (
@@ -108,8 +122,8 @@ export default function StepEditStretchForm({
               id="netWeight"
               name="netWeight"
               label="Waga netto"
-              onChange={handleProductChange}
-              value={(item.netWeight ?? 0).toFixed(2)}
+              onChange={handleStretchChange}
+              value={(order.product.stretch?.netWeight ?? 0).toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -125,8 +139,8 @@ export default function StepEditStretchForm({
               id="grossWeight"
               name="grossWeight"
               label="Waga brutto"
-              onChange={handleProductChange}
-              value={(item.grossWeight ?? 0).toFixed(2)}
+              onChange={handleStretchChange}
+              value={(order.product.stretch?.grossWeight ?? 0).toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -142,8 +156,8 @@ export default function StepEditStretchForm({
               id="price"
               name="price"
               label="Cena"
-              onChange={handleProductChange}
-              value={item.price.toFixed(2)}
+              onChange={handleOrderChange}
+              value={order.price.toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -160,14 +174,14 @@ export default function StepEditStretchForm({
               id="quantity"
               name="quantity"
               label="Ilość"
-              onChange={handleProductChange}
-              value={item.quantity}
+              onChange={handleOrderChange}
+              value={order.quantity}
               type="number"
               fullWidth
               autoComplete="quantity"
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">{item.unit}</InputAdornment>
+                  <InputAdornment position="end">{order.product.unit}</InputAdornment>
                 ),
               }}
             />
@@ -179,8 +193,8 @@ export default function StepEditStretchForm({
               id="netValue"
               name="netValue"
               label="Wartość"
-              onChange={handleProductChange}
-              value={item.netValue.toFixed(2)}
+              onChange={handleOrderChange}
+              value={order.netValue.toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -199,9 +213,9 @@ export default function StepEditStretchForm({
                 label="Marża"
                 id="margin"
                 name="margin"
-                value={item.margin}
+                value={order.margin}
                 type="number"
-                onChange={handleProductChange}
+                onChange={handleOrderChange}
               >
                 <MenuItem value={0}>0</MenuItem>
                 <MenuItem value={0.25}>0.25</MenuItem>

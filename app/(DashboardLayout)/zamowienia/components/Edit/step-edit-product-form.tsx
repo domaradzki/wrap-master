@@ -7,18 +7,23 @@ import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import { MenuItem } from "@mui/material";
+import { z } from "zod";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
-import { DocumentSchema } from "@/schemas/document";
-import { z } from "zod";
+import { OrderSchema } from "@/schemas/document";
 
 interface StepEditProductFormProps {
-  document: z.infer<typeof DocumentSchema>;
+  order: z.infer<typeof OrderSchema>;
   handleOrderChange: (
+    event:
+      | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<number>
+  ) => void;
+  handleProductChange: (
     event:
       | ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent<number>
@@ -27,8 +32,9 @@ interface StepEditProductFormProps {
 }
 
 export default function StepEditProductForm({
-  document,
+  order,
   handleOrderChange,
+  handleProductChange,
   handleRealisationDateChange,
 }: StepEditProductFormProps) {
   return (
@@ -44,8 +50,8 @@ export default function StepEditProductForm({
               id="assortment"
               name="assortment"
               label="Nazwa produktu"
-              onChange={handleOrderChange}
-              value={document.assortment}
+              onChange={handleProductChange}
+              value={order.product.assortment}
               type="text"
               fullWidth
             />
@@ -54,7 +60,7 @@ export default function StepEditProductForm({
             <DatePicker
               name="dateOfRealisation"
               label="Data realizacji"
-              value={dayjs(document.dateOfRealisation)}
+              value={dayjs(order.dateOfRealisation)}
               onChange={(newValue) =>
                 handleRealisationDateChange(newValue as Dayjs)
               }
@@ -67,7 +73,7 @@ export default function StepEditProductForm({
               name="price"
               label="Cena"
               onChange={handleOrderChange}
-              value={document.price.toFixed(2)}
+              value={order.price.toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -85,14 +91,14 @@ export default function StepEditProductForm({
               name="quantity"
               label="Ilość"
               onChange={handleOrderChange}
-              value={document.quantity}
+              value={order.quantity}
               type="number"
               fullWidth
               autoComplete="quantity"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {document.unit}
+                    {order.product.unit}
                   </InputAdornment>
                 ),
               }}
@@ -106,7 +112,7 @@ export default function StepEditProductForm({
               name="netValue"
               label="Wartość"
               onChange={handleOrderChange}
-              value={document.netValue.toFixed(2)}
+              value={order.netValue.toFixed(2)}
               type="number"
               InputProps={{
                 endAdornment: (
@@ -125,7 +131,7 @@ export default function StepEditProductForm({
                 label="Marża"
                 id="margin"
                 name="margin"
-                value={document.margin}
+                value={order.margin}
                 type="number"
                 onChange={handleOrderChange}
               >
