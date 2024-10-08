@@ -48,23 +48,21 @@ export const ProductSchema = z.object({
   stretch: StretchSchema,
 });
 
-export const OrderSchema = z.array(
-  z.object({
-    id: z.string(),
-    orderId: z.number(),
-    code: z.string(),
-    kind: z.string(),
-    margin: z.number(),
-    price: z.number(),
-    netValue: z.number(),
-    type: z.string(),
-    quantity: z.number(),
-    unit: z.string(),
-    dateOfRealisation: z.string(),
-    postfix: z.string().optional(),
-    product: ProductSchema,
-  })
-);
+export const OrderSchema = z.object({
+  id: z.string(),
+  orderId: z.number(),
+  code: z.string(),
+  kind: z.string(),
+  margin: z.number(),
+  price: z.number(),
+  netValue: z.number(),
+  type: z.string(),
+  quantity: z.number(),
+  unit: z.string(),
+  dateOfRealisation: z.string(),
+  postfix: z.string().optional(),
+  product: ProductSchema,
+});
 
 export const DocumentSchema = z.object({
   id: z.string(),

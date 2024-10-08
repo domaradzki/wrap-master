@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { getDocumentByIdWithItems } from "@/actions/get-documents";
 import { z } from "zod";
 import { DocumentSchema } from "@/schemas/document";
+import DocumentEdit from "../../components/Edit/document-edit";
 
 const HeadCell = styled(TableCell)({
   fontWeight: "bold",
@@ -58,7 +59,7 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (document) {
-      setActiveDocument({ ...document });
+      setActiveDocument(document as unknown as z.infer<typeof DocumentSchema>);
     }
   }, [document]);
 
@@ -68,6 +69,7 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
   //   console.log("Form submitted:", activeDocument);
   //   handleCloseEditModal();
   // };
+  console.log("documentactive", activeDocument);
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -181,13 +183,13 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
             overflowY: "scroll",
           }}
         >
-          {/* {activeDocument && (
-            <Checkout
+          {activeDocument && (
+            <DocumentEdit
               document={activeDocument}
               // onSubmit={handleSubmit}
               onClose={handleCloseEditModal}
             />
-          )} */}
+          )}
         </Box>
       </Modal>
     </PageContainer>

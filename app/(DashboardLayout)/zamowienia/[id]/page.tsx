@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import PageContainer from "../../components/container/PageContainer";
 import { useEffect, useState } from "react";
-import Checkout from "../components/checkout";
+import DocumentCheckout from "../components/Add/document-checkout";
 import { newOrderActiveFetch } from "@/data/new-active-order";
 import { Document, Order } from "@/utils/structure";
 
@@ -38,7 +38,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     error,
   } = useQuery({
     queryKey: ["order"], // Key for the query
-    queryFn: () => newOrderActiveFetch({ id }), // Function to fetch the data
+    queryFn: () => newOrderActiveFetch(id), // Function to fetch the data
   });
 
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -179,7 +179,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
           }}
         >
           {activeDocument && (
-            <Checkout
+            <DocumentCheckout
               document={activeDocument}
               // onSubmit={handleSubmit}
               onClose={handleCloseEditModal}

@@ -11,8 +11,8 @@ const StepSuccess = () => {
         Sukces!!!
       </Typography>
       <Typography variant="subtitle1">
-        Twoje zamówienie zostało poprawnie dodane. Możesz je monitorować, lub
-        edytować w zakładce zlecone, gdzie znajdziesz wszystkie swoje
+        Twoje zamówienie zostało poprawnie zapisane. Możesz je monitorować, lub
+        edytować w zakładce wprowadzone, gdzie znajdziesz wszystkie swoje
         zamówienia.
       </Typography>
       <Stack sx={{ display: "flex", justifyContent: "flex-end" }}>

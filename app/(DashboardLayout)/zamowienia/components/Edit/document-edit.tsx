@@ -3,20 +3,20 @@ import { Fragment, useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
-import CheckoutStepper from "./stepper";
-import StepContent from "./step-content";
-import StepSuccess from "./step-success";
-import StepButtons from "./step-buttons";
-
-import { Document } from "@/utils/structure";
-
+import { z } from "zod";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
+
+import CheckoutStepper from "../stepper";
+import StepEditContent from "./step-edit-content";
+import StepSuccess from "../step-success";
+import StepButtons from "../step-buttons";
+
+import { DocumentSchema } from "@/schemas/document";
 import { addDocumentWithItems } from "@/actions/add-document-with-items";
 
-interface CheckoutProps {
-  document: Document;
-  // onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+interface DocumentEditProps {
+  document: z.infer<typeof DocumentSchema>;
   onClose: () => void;
 }
 
@@ -33,49 +33,15 @@ const stepsLegend: stepsKeys = {
   FSRG: "Folia Stretch",
 };
 
-const Checkout = ({
+const DocumentEdit = ({
   document,
   //  onSubmit,
   onClose,
-}: CheckoutProps) => {
+}: DocumentEditProps) => {
   const router = useRouter();
-  const { orders } = document;
 
-  const orderItems = orders.map((order) => {
-    return {
-      ...order.product,
-      orderId: order.orderId,
-      dateOfRealisation: dayjs(order.dateOfRealisation).locale("pl"),
-      price: order.price,
-      quantity: order.quantity,
-      netValue: order.netValue,
-      margin: "",
-      roller: "",
-    };
-  });
-
-  const documentValues = {
-    documentId: document.documentId,
-    name: document.company.name,
-    companyId: document.company.companyId,
-    closed: document.closed,
-    deliveryAddress: document.company.deliveryAddress,
-    dateInsert: document.dateInsert,
-    details: document.details,
-    documentStatus: document.documentStatus,
-    exchangeRate: document.exchangeRate,
-    currency: document.currency,
-    signature: document.signature,
-    symbol: document.symbol,
-    timestamp: document.timestamp,
-    trader: document.trader,
-    transport: "",
-    paymentMethod: "",
-  };
-
+  const [activeDocument, setActiveDocument] = useState(document);
   const [activeStep, setActiveStep] = useState(0);
-  const [input, setInput] = useState(documentValues);
-  const [items, setItems] = useState<any[]>(orderItems);
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const { update } = useSession();
@@ -96,7 +62,7 @@ const Checkout = ({
     { id: 999, stepName: "Weryfikacja" },
   ];
 
-  const handleInputChange = (
+  const handleDocumentChange = (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent<string>
@@ -104,10 +70,23 @@ const Checkout = ({
     const { name, value } = event.target as
       | HTMLInputElement
       | { name?: string; value: unknown };
-    setInput({
-      ...input,
+    setActiveDocument({
+      ...activeDocument,
       [name!]: value,
     });
+  };
+
+  const handleOrderChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent<string>
+  ) => {
+    const { name, value } = event.target as
+      | HTMLInputElement
+      | { name?: string; value: unknown };
+    const data = {...activeDocument};
+    (data as any)[name!] = value;
+    setActiveDocument({...data});
   };
 
   const handleProductChange = (
@@ -167,28 +146,28 @@ const Checkout = ({
 
   const handleAddOrder = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = JSON.parse(JSON.stringify({ ...input, orders: [...items] }));
-    startTransition(() => {
-      addDocumentWithItems(data)
-        .then((data) => {
-          if (data.error) {
-            console.log("Error:", data.error);
-            setError(data.error);
-          }
-          if (data.success) {
-            console.log("Success:", data.success);
-            update();
-            setSuccess(data.success);
-          }
-        })
-        .catch((error) => {
-          console.error("Unexpected error:", error);
-          setError("Coś poszło nie tak!");
-        });
-    });
+    // const data = JSON.parse(JSON.stringify({ ...input, orders: [...items] }));
+    // startTransition(() => {
+    //   addDocumentWithItems(data)
+    //     .then((data) => {
+    //       if (data.error) {
+    //         console.log("Error:", data.error);
+    //         setError(data.error);
+    //       }
+    //       if (data.success) {
+    //         console.log("Success:", data.success);
+    //         update();
+    //         setSuccess(data.success);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error("Unexpected error:", error);
+    //       setError("Coś poszło nie tak!");
+    //     });
+    // });
 
-    onClose();
-    router.back();
+    // onClose();
+    // router.back();
   };
 
   return (
@@ -207,12 +186,11 @@ const Checkout = ({
               encType="multipart/form-data"
               method="POST"
             >
-              <StepContent
+              <StepEditContent
                 step={activeStep}
                 stepsLength={steps.length}
-                input={input}
-                items={items}
-                handleInputChange={handleInputChange}
+                document={activeDocument}
+                handleDocumentChange={handleDocumentChange}
                 handleProductChange={handleProductChange}
                 handleChangeFile={handleChangeFile}
                 handleInsertDateChange={handleInsertDateChange}
@@ -236,4 +214,4 @@ const Checkout = ({
   );
 };
 
-export default Checkout;
+export default DocumentEdit;
