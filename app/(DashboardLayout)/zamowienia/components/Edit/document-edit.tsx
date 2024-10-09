@@ -1,8 +1,9 @@
 import { Typography, Paper, SelectChangeEvent } from "@mui/material";
 import { Fragment, useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { useSession } from "next-auth/react";
+
+import { toast } from "sonner";
 import { z } from "zod";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
@@ -177,16 +178,19 @@ const DocumentEdit = ({
           if (data.error) {
             console.log("Error:", data.error);
             setError(data.error);
+            toast.error("Aktualizacja nie powiodła się!");
           }
           if (data.success) {
             console.log("Success:", data.success);
             update();
             setSuccess(data.success);
+            toast.success("Aktualizacja zakończona sukcesem!");
           }
         })
         .catch((error) => {
           console.error("Unexpected error:", error);
           setError("Coś poszło nie tak!");
+          toast.error("Aktualizacja nie powiodła się!");
         });
     });
 

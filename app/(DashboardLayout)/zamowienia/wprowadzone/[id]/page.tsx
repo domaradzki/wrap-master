@@ -73,7 +73,7 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <PageContainer title="Zamówienie" description="Szczegóły zamówienia">
+    <PageContainer title="Zamówienia" description="Szczegóły zamówienia">
       <Container sx={{ maxWidth: "100%", padding: 2 }}>
         <Box sx={{ marginBottom: 2 }}>
           <Typography variant="h4">Dane dokumentu</Typography>

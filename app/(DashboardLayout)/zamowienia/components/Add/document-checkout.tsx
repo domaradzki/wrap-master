@@ -1,8 +1,9 @@
 import { Typography, Paper, SelectChangeEvent } from "@mui/material";
 import { Fragment, useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+
 import CheckoutStepper from "../stepper";
 import StepContent from "./step-content";
 import StepSuccess from "../step-success";
@@ -120,16 +121,6 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
     setItems([...data]);
   };
 
-  const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const data = [...items];
-    const currentOrder = data[activeStep - 1];
-    const { files } = event.target;
-    if (files) {
-      (currentOrder as any).file = files[0];
-    }
-    setItems([...data]);
-  };
-
   const handleRealisationDateChange = (value: Dayjs) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
@@ -151,6 +142,16 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
     });
   };
 
+  const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const data = [...items];
+    const currentOrder = data[activeStep - 1];
+    const { files } = event.target;
+    if (files) {
+      (currentOrder as any).file = files[0];
+    }
+    setItems([...data]);
+  };
+
   const handleNext = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     setActiveStep(activeStep + 1);
@@ -170,19 +171,22 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
           if (data.error) {
             console.log("Error:", data.error);
             setError(data.error);
+            toast.error("Coś poszło nie tak!");
           }
           if (data.success) {
             console.log("Success:", data.success);
             update();
             setSuccess(data.success);
+            toast.success("Dodano zamówienie!");
           }
         })
         .catch((error) => {
           console.error("Unexpected error:", error);
           setError("Coś poszło nie tak!");
+          toast.error("Coś poszło nie tak!");
         });
     });
-
+    console.log("document-!!!", { ...input, orders: [...items] });
     onClose();
     router.back();
   };
