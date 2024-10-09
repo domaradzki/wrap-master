@@ -31,6 +31,9 @@ const HeadCell = styled(TableCell)({
 });
 
 const DocumentPage = ({ params }: { params: { id: string } }) => {
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [activeDocument, setActiveDocument] =
+    useState<z.infer<typeof DocumentSchema>>();
   const { id } = params;
 
   const {
@@ -42,8 +45,6 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
     queryFn: () => getDocumentByIdWithItems(id), // Function to fetch the data
   });
 
-  const [openEditModal, setOpenEditModal] = useState(false);
-
   const handleOpenEditModal = () => {
     setOpenEditModal(true);
   };
@@ -52,24 +53,16 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
     setOpenEditModal(false);
   };
 
-  console.log("document", document);
-
-  const [activeDocument, setActiveDocument] =
-    useState<z.infer<typeof DocumentSchema>>();
-
   useEffect(() => {
     if (document) {
       setActiveDocument(document as unknown as z.infer<typeof DocumentSchema>);
     }
   }, [document]);
 
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   // Handle form submission logic here
-  //   console.log("Form submitted:", activeDocument);
-  //   handleCloseEditModal();
-  // };
-  console.log("documentactive", activeDocument);
+  let zloty = Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+  });
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -78,10 +71,7 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
   if (error) {
     return <Typography color="error">{error.message}</Typography>;
   }
-  let zloty = Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: "PLN",
-  });
+
   return (
     <PageContainer title="Zamówienie" description="Szczegóły zamówienia">
       <Container sx={{ maxWidth: "100%", padding: 2 }}>
@@ -186,7 +176,6 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
           {activeDocument && (
             <DocumentEdit
               document={activeDocument}
-              // onSubmit={handleSubmit}
               onClose={handleCloseEditModal}
             />
           )}

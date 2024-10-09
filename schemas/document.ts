@@ -62,6 +62,7 @@ export const OrderSchema = z.object({
   quantity: z.number(),
   dateOfRealisation: z.string(),
   postfix: z.string().optional(),
+  productId: z.string(),
   product: ProductSchema,
 });
 

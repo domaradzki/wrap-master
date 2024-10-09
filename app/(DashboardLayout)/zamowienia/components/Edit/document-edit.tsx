@@ -13,6 +13,7 @@ import StepSuccess from "../step-success";
 import StepButtons from "../step-buttons";
 
 import { DocumentSchema } from "@/schemas/document";
+import { editDocumentWithItems } from "@/actions/edit-document-with-items";
 
 interface DocumentEditProps {
   document: z.infer<typeof DocumentSchema>;
@@ -170,27 +171,26 @@ const DocumentEdit = ({
     event.preventDefault();
     console.log("activeDocument", activeDocument);
     // const data = JSON.parse(JSON.stringify({ ...input, orders: [...items] }));
-    // startTransition(() => {
-    //   addDocumentWithItems(data)
-    //     .then((data) => {
-    //       if (data.error) {
-    //         console.log("Error:", data.error);
-    //         setError(data.error);
-    //       }
-    //       if (data.success) {
-    //         console.log("Success:", data.success);
-    //         update();
-    //         setSuccess(data.success);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error("Unexpected error:", error);
-    //       setError("Coś poszło nie tak!");
-    //     });
-    // });
+    startTransition(() => {
+      editDocumentWithItems(activeDocument)
+        .then((data) => {
+          if (data.error) {
+            console.log("Error:", data.error);
+            setError(data.error);
+          }
+          if (data.success) {
+            console.log("Success:", data.success);
+            update();
+            setSuccess(data.success);
+          }
+        })
+        .catch((error) => {
+          console.error("Unexpected error:", error);
+          setError("Coś poszło nie tak!");
+        });
+    });
 
-    // onClose();
-    // router.back();
+    onClose();
   };
 
   return (

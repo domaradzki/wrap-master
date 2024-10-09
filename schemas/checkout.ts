@@ -49,7 +49,7 @@ export const CheckoutSchema = z.object({
       color1: z.string().optional().nullable(),
       color2: z.string().optional().nullable(),
       color3: z.string().optional().nullable(),
-      dateOfAcceptaion: z.string().optional().nullable(),
+      dateOfAcceptation: z.string().optional().nullable(),
       printName: z.string().optional().nullable(),
     })
   ),

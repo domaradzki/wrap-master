@@ -33,11 +33,7 @@ const stepsLegend: stepsKeys = {
   FSRG: "Folia Stretch",
 };
 
-const DocumentCheckout = ({
-  document,
-  //  onSubmit,
-  onClose,
-}: DocumentCheckoutProps) => {
+const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
   const router = useRouter();
   const { orders } = document;
 

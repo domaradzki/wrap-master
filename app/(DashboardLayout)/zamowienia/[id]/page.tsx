@@ -30,6 +30,8 @@ const HeadCell = styled(TableCell)({
 });
 
 const OrderPage = ({ params }: { params: { id: string } }) => {
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [activeDocument, setActiveDocument] = useState<Document | null>(null);
   const { id } = params;
 
   const {
@@ -41,8 +43,6 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     queryFn: () => newOrderActiveFetch(id), // Function to fetch the data
   });
 
-  const [openEditModal, setOpenEditModal] = useState(false);
-
   const handleOpenEditModal = () => {
     setOpenEditModal(true);
   };
@@ -51,20 +51,16 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     setOpenEditModal(false);
   };
 
-  const [activeDocument, setActiveDocument] = useState<Document | null>(null);
-
   useEffect(() => {
     if (order) {
       setActiveDocument({ ...order });
     }
   }, [order]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", activeDocument);
-    handleCloseEditModal();
-  };
+  let zloty = Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+  });
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -73,10 +69,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
   if (error) {
     return <Typography color="error">{error.message}</Typography>;
   }
-  let zloty = Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: "PLN",
-  });
+
   return (
     <PageContainer title="Zamówienie" description="Szczegóły zamówienia">
       <Container sx={{ maxWidth: "100%", padding: 2 }}>
@@ -181,7 +174,6 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
           {activeDocument && (
             <DocumentCheckout
               document={activeDocument}
-              // onSubmit={handleSubmit}
               onClose={handleCloseEditModal}
             />
           )}

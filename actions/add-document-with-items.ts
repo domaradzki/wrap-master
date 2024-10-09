@@ -97,7 +97,7 @@ export const addDocumentWithItems = async (data: Document) => {
                         color1: order.color1 || "",
                         color2: order.color2 || "",
                         color3: order.color3 || "",
-                        dateOfAcceptaion: order.dateOfAcceptaion ?? null,
+                        dateOfAcceptation: order.dateOfAcceptation ?? null,
                         printName: order.printName || "",
                       },
                     },
