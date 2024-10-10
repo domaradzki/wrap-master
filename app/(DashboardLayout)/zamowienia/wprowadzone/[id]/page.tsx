@@ -24,6 +24,8 @@ import { getDocumentByIdWithItems } from "@/actions/get-documents";
 import { z } from "zod";
 import { DocumentSchema } from "@/schemas/document";
 import DocumentEdit from "../../components/Edit/document-edit";
+import DocumentDelete from "../../components/document-delete";
+import { useRouter } from "next/navigation";
 
 const HeadCell = styled(TableCell)({
   fontWeight: "bold",
@@ -32,6 +34,8 @@ const HeadCell = styled(TableCell)({
 
 const DocumentPage = ({ params }: { params: { id: string } }) => {
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const router = useRouter();
   const [activeDocument, setActiveDocument] =
     useState<z.infer<typeof DocumentSchema>>();
   const { id } = params;
@@ -45,12 +49,13 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
     queryFn: () => getDocumentByIdWithItems(id), // Function to fetch the data
   });
 
-  const handleOpenEditModal = () => {
-    setOpenEditModal(true);
+  const handleChaneEditModal = () => {
+    setOpenEditModal(!openEditModal);
   };
 
-  const handleCloseEditModal = () => {
-    setOpenEditModal(false);
+  const handleChangeDeleteModal = () => {
+    setOpenDeleteModal(!openDeleteModal);
+    router.push("/zamowienia");
   };
 
   useEffect(() => {
@@ -149,15 +154,19 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
           sx={{ marginTop: 2, justifyContent: "end" }}
         >
           <Grid item xs={12}>
-            <Button onClick={handleOpenEditModal} variant="outlined">
+            <Button onClick={handleChaneEditModal} variant="outlined">
               <i className="fa fa-save"></i> Edycja
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button onClick={handleChangeDeleteModal} variant="outlined">
+              <i className="fa fa-save"></i> Usuń
             </Button>
           </Grid>
         </Stack>
       </Container>
-
       {/* Modal for editing document */}
-      <Modal open={openEditModal} onClose={handleCloseEditModal}>
+      <Modal open={openEditModal} onClose={handleChaneEditModal}>
         <Box
           sx={{
             position: "absolute",
@@ -176,7 +185,31 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
           {activeDocument && (
             <DocumentEdit
               document={activeDocument}
-              onClose={handleCloseEditModal}
+              onClose={handleChaneEditModal}
+            />
+          )}
+        </Box>
+      </Modal>
+      <Modal open={openDeleteModal} onClose={handleChangeDeleteModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 800,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+            maxHeight: "98%",
+            overflowY: "scroll",
+          }}
+        >
+          {activeDocument && (
+            <DocumentDelete
+              id={activeDocument.id}
+              onClose={handleChangeDeleteModal}
             />
           )}
         </Box>

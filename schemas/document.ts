@@ -25,7 +25,7 @@ export const TapeSchema = z
     tapeWidth: z.number(),
     tapeThickness: z.number(),
     numberOfColors: z.number(),
-    roller: z.string().optional().nullable(),
+    roller: z.number().optional().nullable(),
     glue: z.string(),
     tapeColor: z.string(),
     color1: z.string().optional().nullable(),

@@ -1,6 +1,9 @@
 import { z } from "zod"; // Import zod if you're using it for validation
-
+import { File } from "buffer";
 // Assuming you have a Zod schema for validation
+
+const fileSchema = z.custom<File | undefined>().nullable();
+
 export const CheckoutSchema = z.object({
   name: z.string(),
   closed: z.boolean(),
@@ -36,7 +39,7 @@ export const CheckoutSchema = z.object({
       postfix: z.string().optional(),
       grossWeight: z.number().optional().nullable(),
       netWeight: z.number().optional().nullable(),
-      roller: z.string().optional().nullable(),
+      roller: z.number().optional().nullable(),
       sleeve: z.number().optional().nullable(),
       stretchColor: z.string().optional().nullable(),
       stretchThickness: z.number().optional().nullable(),
@@ -51,6 +54,7 @@ export const CheckoutSchema = z.object({
       color3: z.string().optional().nullable(),
       dateOfAcceptation: z.string().optional().nullable(),
       printName: z.string().optional().nullable(),
+      file: fileSchema,
     })
   ),
 });

@@ -14,6 +14,8 @@ import { Document } from "@/utils/structure";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/pl";
 import { addDocumentWithItems } from "@/actions/add-document-with-items";
+import { z } from "zod";
+import { File } from "buffer";
 
 interface DocumentCheckoutProps {
   document: Document;
@@ -93,6 +95,25 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
     { id: 999, stepName: "Weryfikacja" },
   ];
 
+  const apiCall = async () => {
+    const formData = new FormData();
+
+    // Append order data to formData
+    const data = { ...input, orders: [...items] };
+
+    // Convert orders to JSON and append to FormData
+    formData.append("data", JSON.stringify(data));
+
+    // Append each file in items to FormData
+    if (items[0].file) {
+      formData.append(`file`, items[0].file);
+    }
+    fetch("/api/image", {
+      method: "POST",
+      body: formData,
+    });
+  };
+
   const handleInputChange = (
     event:
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
@@ -146,9 +167,9 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
     const { files } = event.target;
-    
+
     if (files) {
-      (currentOrder as any).file = files[0];
+      (currentOrder as any).file = files[0].name;
     }
     setItems([...data]);
   };
@@ -167,6 +188,7 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
     event.preventDefault();
     const data = JSON.parse(JSON.stringify({ ...input, orders: [...items] }));
     startTransition(() => {
+      // apiCall();
       addDocumentWithItems(data)
         .then((data) => {
           if (data.error) {
@@ -176,6 +198,7 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
           }
           if (data.success) {
             console.log("Success:", data.success);
+
             update();
             setSuccess(data.success);
             toast.success("Dodano zamówienie!");
@@ -187,6 +210,7 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
           toast.error("Coś poszło nie tak!");
         });
     });
+    // apiCall(data.orders[0].file);
     console.log("document-!!!", { ...input, orders: [...items] });
     onClose();
     router.back();

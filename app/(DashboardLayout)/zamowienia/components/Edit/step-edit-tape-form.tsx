@@ -296,7 +296,7 @@ export default function StepEditTapeForm({
               fullWidth
             />
           </Grid>
-          {+(order.product.tape?.numberOfColors ?? 0) >= 2 && (
+          {(order.product.tape?.numberOfColors ?? 0) >= 2 && (
             <Grid item xs={12} md={2}>
               <TextField
                 id="color2"
@@ -309,7 +309,7 @@ export default function StepEditTapeForm({
               />
             </Grid>
           )}
-          {+(order.product.tape?.numberOfColors ?? 0) === 3 && (
+          {(order.product.tape?.numberOfColors ?? 0) === 3 && (
             <Grid item xs={12} md={2}>
               <TextField
                 id="color3"

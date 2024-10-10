@@ -281,7 +281,7 @@ export default function StepTapeForm({
               fullWidth
             />
           </Grid>
-          {+(item.numberOfColors ?? 0) >= 2 && (
+          {(item.numberOfColors ?? 0) >= 2 && (
             <Grid item xs={12} md={2}>
               <TextField
                 id="color2"
@@ -294,7 +294,7 @@ export default function StepTapeForm({
               />
             </Grid>
           )}
-          {+(item.numberOfColors ?? 0) === 3 && (
+          {(item.numberOfColors ?? 0) === 3 && (
             <Grid item xs={12} md={2}>
               <TextField
                 id="color3"

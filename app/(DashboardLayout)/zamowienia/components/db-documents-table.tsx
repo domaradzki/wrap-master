@@ -64,7 +64,7 @@ const DBDocumentsTable: React.FC<DBDocumentsTableProps> = ({
               <HeadCell>Handlowiec</HeadCell>
               <HeadCell>Wartość</HeadCell>
               <HeadCell>Status</HeadCell>
-              <HeadCell>Edycja</HeadCell>
+              <HeadCell>Akcje</HeadCell>
             </TableRow>
           </TableHead>
           <TableBody>

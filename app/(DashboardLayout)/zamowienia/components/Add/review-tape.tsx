@@ -219,7 +219,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
               }}
             />
           </Grid>
-          {item.numberOfColors && +item.numberOfColors >= 2 && (
+          {item.numberOfColors && item.numberOfColors >= 2 && (
             <Grid item xs={12} sm={2}>
               <TextField
                 id="outlined-read-only-input"
@@ -233,7 +233,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
               />
             </Grid>
           )}
-          {item.numberOfColors && +item.numberOfColors === 3 && (
+          {item.numberOfColors && item.numberOfColors === 3 && (
             <Grid item xs={12} sm={2}>
               <TextField
                 id="outlined-read-only-input"

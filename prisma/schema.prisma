@@ -165,4 +165,5 @@ model Tape {
   printName         String?
   productId         String    @unique
   product           Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  file              String?
 }
