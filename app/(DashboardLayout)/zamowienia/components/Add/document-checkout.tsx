@@ -146,6 +146,7 @@ const DocumentCheckout = ({ document, onClose }: DocumentCheckoutProps) => {
     const data = [...items];
     const currentOrder = data[activeStep - 1];
     const { files } = event.target;
+    
     if (files) {
       (currentOrder as any).file = files[0];
     }

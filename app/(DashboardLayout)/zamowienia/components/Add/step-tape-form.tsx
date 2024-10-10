@@ -331,7 +331,7 @@ export default function StepTapeForm({
           <Grid item xs={12} md={3}>
             {item.file && (
               <img
-                src={item.file ? URL.createObjectURL(item.file) : undefined}
+                src={URL.createObjectURL(item.file)}
                 width="100%"
                 alt={item.file ? "Projekt" : ""}
               />
