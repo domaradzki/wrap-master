@@ -14,10 +14,10 @@ import {
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 import PageContainer from "../components/container/PageContainer";
-import NewOrdersTable from "./components/new-orders-table";
-import DBOrdersTable from "./components/db-orders-table";
+import NewDocumentsTable from "./components/new-documents-table";
+import DBDocumentsTable from "./components/db-documents-table";
 import { getDocuments } from "@/actions/get-documents";
-import { newOrdersFetch } from "@/data/new-orders";
+import { newDocumentsFetch } from "@/data/new-documents";
 import { DocumentSchema } from "@/schemas/document";
 import { z } from "zod";
 import { useAuthSession } from "@/context/sessionContext";
@@ -28,7 +28,7 @@ const OrdersPage = () => {
 
   const [value, setValue] = useState("1");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isAdmin, setIsAdmin] = useState(role === "ADMIN");
 
   const {
@@ -37,7 +37,7 @@ const OrdersPage = () => {
     error,
   } = useQuery({
     queryKey: ["orders"], // Key for the query
-    queryFn: newOrdersFetch, // Function to fetch the data
+    queryFn: newDocumentsFetch, // Function to fetch the data
   });
 
   const {
@@ -118,7 +118,7 @@ const OrdersPage = () => {
             >
               <Typography variant="h4">Nowe zamówienia</Typography>
             </Stack>
-            <NewOrdersTable
+            <NewDocumentsTable
               documents={orders ?? []}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -138,7 +138,7 @@ const OrdersPage = () => {
               <Typography variant="h4">Aktualne zamówienia</Typography>
             </Stack>
             {!DBisLoading && documents && (
-              <DBOrdersTable
+              <DBDocumentsTable
                 documents={
                   documents as unknown as z.infer<typeof DocumentSchema>[]
                 }

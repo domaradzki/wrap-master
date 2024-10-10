@@ -1,6 +1,6 @@
 import { reduceDocuments } from "@/lib/reducer";
 
-export const newOrdersFetch = async () => {
+export const newDocumentsFetch = async () => {
   const response = await fetch("../../orders.json");
   const documents = await fetch("/api/dborders");
 

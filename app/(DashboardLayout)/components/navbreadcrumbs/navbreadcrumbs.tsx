@@ -37,7 +37,7 @@ export default function NavbarBreadcrumbs({ title }: { title: string }) {
         <StyledLink href="/">Home</StyledLink>
       </Typography>
       <Typography variant="body1">
-        <StyledLink href={removeAccents(title).toLocaleLowerCase()}>
+        <StyledLink href={`/${removeAccents(title).toLocaleLowerCase()}`}>
           {title}
         </StyledLink>
       </Typography>

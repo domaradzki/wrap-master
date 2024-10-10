@@ -224,7 +224,7 @@ const structureDocumentWithProducts = (document: ReducedDocument) => {
             tapeLong: +productSize.slice(0, ind - 2),
             tapeWidth: +productSize.slice(ind - 2, ind),
             tapeThickness: productCode === "TPD32" ? 32 : 28,
-            numberOfColors: productSize.slice(-1),
+            numberOfColors: Number(productSize.slice(-1)),
             glue: productSize.slice(ind, ind + 1),
             tapeColor: (() => {
               const indR =

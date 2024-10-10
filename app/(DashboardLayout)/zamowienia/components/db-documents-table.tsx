@@ -15,9 +15,11 @@ import {
   IconButton,
 } from "@mui/material";
 import Link from "next/link";
-import QueueOutlinedIcon from "@mui/icons-material/QueueOutlined";
-import { ReducedDocument } from "@/lib/reducer";
+import { z } from "zod";
+
 import CustomTablePagination from "./table-pagination";
+import { IconEdit } from "@tabler/icons-react";
+import { DocumentSchema } from "../../../../schemas/document";
 import { useAuthSession } from "@/context/sessionContext";
 
 const HeadCell = styled(TableCell)({
@@ -25,8 +27,8 @@ const HeadCell = styled(TableCell)({
   backgroundColor: "#f5f5f5",
 });
 
-interface NewOrdersTableProps {
-  documents: ReducedDocument[];
+interface DBDocumentsTableProps {
+  documents: z.infer<typeof DocumentSchema>[];
   page: number;
   rowsPerPage: number;
   emptyRows: number;
@@ -40,7 +42,7 @@ interface NewOrdersTableProps {
   ) => void;
 }
 
-const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
+const DBDocumentsTable: React.FC<DBDocumentsTableProps> = ({
   documents,
   page,
   rowsPerPage,
@@ -60,35 +62,43 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
               <HeadCell>Numer dokumentu</HeadCell>
               <HeadCell>Zamawiający</HeadCell>
               <HeadCell>Handlowiec</HeadCell>
-              <HeadCell>Szczegóły</HeadCell>
+              <HeadCell>Wartość</HeadCell>
+              <HeadCell>Status</HeadCell>
               <HeadCell>Akcje</HeadCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {documents &&
+              documents.length > 0 &&
               (rowsPerPage > 0
                 ? documents
                     .filter((doc) => doc.trader === name || isAdmin)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : documents
-              ).map((document: ReducedDocument) => (
-                <TableRow key={document.documentId}>
+              ).map((document: z.infer<typeof DocumentSchema>) => (
+                <TableRow key={document.id}>
                   <TableCell>
                     {new Date(document.dateInsert).toLocaleDateString()}
                   </TableCell>
                   <TableCell>{document.signature}</TableCell>
                   <TableCell>{document.company.name}</TableCell>
                   <TableCell>{document.trader}</TableCell>
+                  <TableCell>
+                    {/* {document.orders.reduce(
+                      (prev, next) => prev.netValue + next.netValue,
+                      0
+                    )} */}
+                  </TableCell>
                   <TableCell>{document.details}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
                       <Link
-                        href={`/zamowienia/${document.documentId}`}
+                        href={`/zamowienia/wprowadzone/${document.id}`}
                         passHref
                       >
-                        <Tooltip title="Wprowadź">
+                        <Tooltip title="Edytuj">
                           <IconButton>
-                            <QueueOutlinedIcon />
+                            <IconEdit />
                           </IconButton>
                         </Tooltip>
                       </Link>
@@ -135,4 +145,4 @@ const NewOrdersTable: React.FC<NewOrdersTableProps> = ({
   );
 };
 
-export default NewOrdersTable;
+export default DBDocumentsTable;

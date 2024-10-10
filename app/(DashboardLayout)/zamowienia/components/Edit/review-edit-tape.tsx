@@ -7,10 +7,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import "dayjs/locale/pl";
+import { OrderSchema } from "@/schemas/document";
+import { z } from "zod";
 
-import { Tape } from "./step-content";
-
-export default function ReviewTape({ item }: { item: Tape }) {
+export default function ReviewTape({
+  order,
+}: {
+  order: z.infer<typeof OrderSchema>;
+}) {
   let zloty = Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency: "PLN",
@@ -26,7 +30,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Nazwa produktu"
-              defaultValue={item.assortment}
+              defaultValue={order.product.assortment}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -38,7 +42,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Data realizacji"
-              defaultValue={dayjs(item.dateOfRealisation)
+              defaultValue={dayjs(order.dateOfRealisation)
                 .format("DD/MM/YYYY")
                 .toString()}
               variant="outlined"
@@ -52,7 +56,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Cena"
-              defaultValue={`${zloty.format(item.price)}`}
+              defaultValue={`${zloty.format(order.price)}`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -64,7 +68,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Ilość"
-              defaultValue={`${item.quantity} ${item.unit}`}
+              defaultValue={`${order.quantity} ${order.product.unit}`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -76,7 +80,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Wartość"
-              defaultValue={`${zloty.format(item.netValue)}`}
+              defaultValue={`${zloty.format(order.netValue)}`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -88,7 +92,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Marża"
-              defaultValue={`${item.margin}%`}
+              defaultValue={`${order.margin}%`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -100,7 +104,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Nadruk"
-              defaultValue={item.printName}
+              defaultValue={order.product.tape?.printName}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -112,7 +116,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Data akceptacji projektu"
-              defaultValue={dayjs(item.dateOfAcceptation)
+              defaultValue={dayjs(order.product.tape?.dateOfAcceptation)
                 .format("DD/MM/YYYY")
                 .toString()}
               variant="outlined"
@@ -126,7 +130,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Wałek"
-              defaultValue={`${item.roller}mm`}
+              defaultValue={`${order.product.tape?.roller}mm`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -139,7 +143,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Długość"
-              defaultValue={`${item.tapeLong}mm`}
+              defaultValue={`${order.product.tape?.tapeLong}mm`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -151,7 +155,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Szerokość"
-              defaultValue={`${item.tapeWidth}mm`}
+              defaultValue={`${order.product.tape?.tapeWidth}mm`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -163,7 +167,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Grubość"
-              defaultValue={`${item.tapeThickness}my`}
+              defaultValue={`${order.product.tape?.tapeThickness}my`}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -175,7 +179,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Kolor taśmy"
-              defaultValue={item.tapeColor}
+              defaultValue={order.product.tape?.tapeColor}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -187,7 +191,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Klej"
-              defaultValue={item.glue}
+              defaultValue={order.product.tape?.glue}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -199,7 +203,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Kolory"
-              defaultValue={item.numberOfColors}
+              defaultValue={order.product.tape?.numberOfColors}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -211,7 +215,7 @@ export default function ReviewTape({ item }: { item: Tape }) {
             <TextField
               id="outlined-read-only-input"
               label="Kolor 1"
-              defaultValue={item.color1}
+              defaultValue={order.product.tape?.color1}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -219,40 +223,46 @@ export default function ReviewTape({ item }: { item: Tape }) {
               }}
             />
           </Grid>
-          {item.numberOfColors && +item.numberOfColors >= 2 && (
-            <Grid item xs={12} sm={2}>
-              <TextField
-                id="outlined-read-only-input"
-                label="Kolor 2"
-                defaultValue={item.color2}
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
-          )}
-          {item.numberOfColors && +item.numberOfColors === 3 && (
-            <Grid item xs={12} sm={2}>
-              <TextField
-                id="outlined-read-only-input"
-                label="Kolor 3"
-                defaultValue={item.color3}
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
-          )}
+          {order.product.tape?.numberOfColors &&
+            order.product.tape?.numberOfColors >= 2 && (
+              <Grid item xs={12} sm={2}>
+                <TextField
+                  id="outlined-read-only-input"
+                  label="Kolor 2"
+                  defaultValue={order.product.tape?.color2}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+            )}
+          {order.product.tape?.numberOfColors &&
+            order.product.tape?.numberOfColors === 3 && (
+              <Grid item xs={12} sm={2}>
+                <TextField
+                  id="outlined-read-only-input"
+                  label="Kolor 3"
+                  defaultValue={order.product.tape?.color3}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+            )}
           <Grid item xs={12} md={3}>
-            {item.file && (
+            {order.product.tape?.file && (
               <img
-                src={item.file ? URL.createObjectURL(item.file) : undefined}
+                src={
+                  order.product.tape?.file
+                    ? URL.createObjectURL(order.product.tape?.file)
+                    : undefined
+                }
                 width="100%"
-                alt={item.file ? "Projekt" : ""}
+                alt={order.product.tape?.file ? "Projekt" : ""}
               />
             )}
           </Grid>

@@ -1,7 +1,7 @@
 import { reduceDocuments } from "@/lib/reducer";
 import structureDocumentWithProducts, { Document } from "@/utils/structure";
 
-export const newOrderActiveFetch = async ({ id }: { id: string }) => {
+export const newOrderActiveFetch = async (id: string) => {
   const response = await fetch("../../orders.json");
   // const response = await fetch("/api/orders");
 

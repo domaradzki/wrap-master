@@ -23,6 +23,9 @@ import { useEffect, useState } from "react";
 import { getDocumentByIdWithItems } from "@/actions/get-documents";
 import { z } from "zod";
 import { DocumentSchema } from "@/schemas/document";
+import DocumentEdit from "../../components/Edit/document-edit";
+import DocumentDelete from "../../components/document-delete";
+import { useRouter } from "next/navigation";
 
 const HeadCell = styled(TableCell)({
   fontWeight: "bold",
@@ -30,6 +33,11 @@ const HeadCell = styled(TableCell)({
 });
 
 const DocumentPage = ({ params }: { params: { id: string } }) => {
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const router = useRouter();
+  const [activeDocument, setActiveDocument] =
+    useState<z.infer<typeof DocumentSchema>>();
   const { id } = params;
 
   const {
@@ -41,33 +49,25 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
     queryFn: () => getDocumentByIdWithItems(id), // Function to fetch the data
   });
 
-  const [openEditModal, setOpenEditModal] = useState(false);
-
-  const handleOpenEditModal = () => {
-    setOpenEditModal(true);
+  const handleChaneEditModal = () => {
+    setOpenEditModal(!openEditModal);
   };
 
-  const handleCloseEditModal = () => {
-    setOpenEditModal(false);
+  const handleChangeDeleteModal = () => {
+    setOpenDeleteModal(!openDeleteModal);
+    router.push("/zamowienia");
   };
-
-  console.log("document", document);
-
-  const [activeDocument, setActiveDocument] =
-    useState<z.infer<typeof DocumentSchema>>();
 
   useEffect(() => {
     if (document) {
-      setActiveDocument({ ...document });
+      setActiveDocument(document as unknown as z.infer<typeof DocumentSchema>);
     }
   }, [document]);
 
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   // Handle form submission logic here
-  //   console.log("Form submitted:", activeDocument);
-  //   handleCloseEditModal();
-  // };
+  let zloty = Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+  });
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -76,12 +76,9 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
   if (error) {
     return <Typography color="error">{error.message}</Typography>;
   }
-  let zloty = Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: "PLN",
-  });
+
   return (
-    <PageContainer title="Zamówienie" description="Szczegóły zamówienia">
+    <PageContainer title="Zamówienia" description="Szczegóły zamówienia">
       <Container sx={{ maxWidth: "100%", padding: 2 }}>
         <Box sx={{ marginBottom: 2 }}>
           <Typography variant="h4">Dane dokumentu</Typography>
@@ -157,15 +154,19 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
           sx={{ marginTop: 2, justifyContent: "end" }}
         >
           <Grid item xs={12}>
-            <Button onClick={handleOpenEditModal} variant="outlined">
+            <Button onClick={handleChaneEditModal} variant="outlined">
               <i className="fa fa-save"></i> Edycja
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button onClick={handleChangeDeleteModal} variant="outlined">
+              <i className="fa fa-save"></i> Usuń
             </Button>
           </Grid>
         </Stack>
       </Container>
-
       {/* Modal for editing document */}
-      <Modal open={openEditModal} onClose={handleCloseEditModal}>
+      <Modal open={openEditModal} onClose={handleChaneEditModal}>
         <Box
           sx={{
             position: "absolute",
@@ -181,13 +182,36 @@ const DocumentPage = ({ params }: { params: { id: string } }) => {
             overflowY: "scroll",
           }}
         >
-          {/* {activeDocument && (
-            <Checkout
+          {activeDocument && (
+            <DocumentEdit
               document={activeDocument}
-              // onSubmit={handleSubmit}
-              onClose={handleCloseEditModal}
+              onClose={handleChaneEditModal}
             />
-          )} */}
+          )}
+        </Box>
+      </Modal>
+      <Modal open={openDeleteModal} onClose={handleChangeDeleteModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 800,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+            maxHeight: "98%",
+            overflowY: "scroll",
+          }}
+        >
+          {activeDocument && (
+            <DocumentDelete
+              id={activeDocument.id}
+              onClose={handleChangeDeleteModal}
+            />
+          )}
         </Box>
       </Modal>
     </PageContainer>

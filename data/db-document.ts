@@ -8,3 +8,12 @@ export const getDocumentByDocumentId = async (documentId: number) => {
     return null;
   }
 };
+
+export const getDocumentById = async (id: string) => {
+  try {
+    const document = await db.document.findUnique({ where: { id } });
+    return document;
+  } catch {
+    return null;
+  }
+};

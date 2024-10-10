@@ -9,41 +9,49 @@ import { Document } from "@/utils/structure"; // Assuming this is your Document 
 export const addDocumentWithItems = async (data: Document) => {
   try {
     // Validate the data using Zod schema
-    const validatedData = CheckoutSchema.parse(data);
+    const validatedData = CheckoutSchema.safeParse(data);
 
-    const dbDocument = await getDocumentByDocumentId(validatedData.documentId);
+    if (!validatedData.success) {
+      return {
+        error: `Validation failed. Errors: ${validatedData.error}`,
+      };
+    }
+
+    const dbDocument = await getDocumentByDocumentId(
+      validatedData.data.documentId
+    );
 
     if (dbDocument) {
       return {
-        error: `Dokument o numerze ${validatedData.documentId} juz istnieje w bazie!`,
+        error: `Dokument o numerze ${validatedData.data.documentId} juz istnieje w bazie!`,
       };
     }
     // Create the document in the database
     const createdDocument = await db.document.create({
       data: {
-        documentId: validatedData.documentId,
-        dateInsert: validatedData.dateInsert,
-        details: validatedData.details,
-        documentStatus: validatedData.documentStatus,
-        deliveryAddress: validatedData.deliveryAddress,
-        symbol: validatedData.symbol,
-        signature: validatedData.signature,
-        trader: validatedData.trader,
-        currency: validatedData.currency,
-        exchangeRate: validatedData.exchangeRate || null,
-        timestamp: validatedData.timestamp,
-        closed: validatedData.closed,
-        paymentMethod: validatedData.paymentMethod,
-        transport: validatedData.transport,
+        documentId: validatedData.data.documentId,
+        dateInsert: validatedData.data.dateInsert,
+        details: validatedData.data.details,
+        documentStatus: validatedData.data.documentStatus,
+        deliveryAddress: validatedData.data.deliveryAddress,
+        symbol: validatedData.data.symbol,
+        signature: validatedData.data.signature,
+        trader: validatedData.data.trader,
+        currency: validatedData.data.currency,
+        exchangeRate: validatedData.data.exchangeRate || null,
+        timestamp: validatedData.data.timestamp,
+        closed: validatedData.data.closed,
+        paymentMethod: validatedData.data.paymentMethod,
+        transport: validatedData.data.transport,
         paymentDate: null, // Set as needed
         company: {
           connectOrCreate: {
             where: {
-              companyId: validatedData.companyId,
+              companyId: validatedData.data.companyId,
             },
             create: {
-              name: validatedData.name,
-              companyId: validatedData.companyId,
+              name: validatedData.data.name,
+              companyId: validatedData.data.companyId,
             },
           },
         },
@@ -56,7 +64,7 @@ export const addDocumentWithItems = async (data: Document) => {
 
     // Create associated orders in the database
     const orders = await Promise.all(
-      validatedData.orders.map(async (order) => {
+      validatedData.data.orders.map(async (order) => {
         return await db.order.create({
           data: {
             orderId: order.orderId,
@@ -97,8 +105,9 @@ export const addDocumentWithItems = async (data: Document) => {
                         color1: order.color1 || "",
                         color2: order.color2 || "",
                         color3: order.color3 || "",
-                        dateOfAcceptaion: order.dateOfAcceptaion ?? null,
+                        dateOfAcceptation: order.dateOfAcceptation ?? null,
                         printName: order.printName || "",
+                        file: order.file?.name || null,
                       },
                     },
                   }),

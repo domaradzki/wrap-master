@@ -151,18 +151,19 @@ model FS {
 }
 
 model Tape {
-  id               String    @id @default(cuid())
-  tapeLong         Int?
-  tapeWidth        Int?
-  tapeThickness    Int?
-  numberOfColors   Int?
-  glue             String?
-  tapeColor        String?
-  color1           String?
-  color2           String?
-  color3           String?
-  dateOfAcceptaion DateTime?
-  printName        String?
-  productId        String    @unique
-  product          Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id                String    @id @default(cuid())
+  tapeLong          Int?
+  tapeWidth         Int?
+  tapeThickness     Int?
+  numberOfColors    Int?
+  glue              String?
+  tapeColor         String?
+  color1            String?
+  color2            String?
+  color3            String?
+  dateOfAcceptation DateTime?
+  printName         String?
+  productId         String    @unique
+  product           Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  file              String?
 }
